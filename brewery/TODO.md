@@ -1,8 +1,6 @@
 Coding:
 
-* enforce linter (golangci)
-* enforce 90% test coverage on master
-* enable linters on pre-merge
+[none]
 
 Persistance layer:
 
