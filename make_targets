@@ -1,0 +1,16 @@
+.PHONY: lint
+lint: #lints the package for common code smells
+	which golangci-lint || curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | bash -s -- -b $$GOPATH/bin v1.10
+	golangci-lint run
+
+# tests runs all test except those found in ./vendor
+.PHONY: tests
+tests: generatestash lint 
+	@echo "tests:"
+	@cd ${GOREPO} && LOG_LEVEL=debug USE_STATSD=false richgo test -cover $(shell glide nv)
+
+
+.PHONY: fmt
+fmt:
+	@echo "fmt:"
+	@cd ${GOREPO} && script/fmt
