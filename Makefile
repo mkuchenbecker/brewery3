@@ -10,13 +10,19 @@ lint: fmt
 .PHONY: tests
 tests: fmt lint
 	@echo "tests:"
-	${GOPATH}/bin/richgo test -timeout 10s -cover -race -tags test ./...
+	${GOPATH}/bin/richgo test \
+	-timeout 10s \
+	-cover \
+	-v \
+	-covermode=count \
+	-coverprofile=coverage.out \
+	-tags test \
+	./...
 
 .PHONY: coverage-ci
-coverage: generate
+coverage:
 	@echo "coverage:"
-	go test -v -covermode=count -coverprofile=coverage.out
-	goveralls -coverprofile=coverage.out -service=travis-ci
+	${GOPATH}/bin/goveralls -coverprofile=coverage.out -service=travis-ci
 
 .PHONY: fmt
 fmt:

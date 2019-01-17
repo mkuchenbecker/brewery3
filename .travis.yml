@@ -14,4 +14,4 @@ install:
 
 script:
   - make tests
-  - make coverage-ci
+  - ${GOPATH}/bin/goveralls -coverprofile=coverage.out -service=travis-ci
