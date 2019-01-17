@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package brewery.model;
+
+message GetRequest {
+
+}
+
+message GetResponse {
+    double temperature = 1;
+}
+
+service Thermometer {
+    rpc Get(GetRequest) returns (GetResponse) {}
+}
