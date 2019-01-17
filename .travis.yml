@@ -1,0 +1,13 @@
+language: go
+
+# Force-enable Go modules. This will be unnecessary when Go 1.12 lands.
+env:
+  - GO111MODULE=on
+
+install:
+  - go get -u github.com/golang/dep/cmd/dep
+  - go get github.com/kyoh86/richgo
+  - dep ensure -v
+
+script:
+  - make tests

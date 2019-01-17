@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+path="${1:-.}"
+
+# echo "goimports ${path} (auto-fixing)"
+# goimports -w $(find "${path}" -type f -name '*.go' -not -path "./vendor/*")
+
+echo "gofmt ${path} (auto-fixing)"
+gofmt -s -w $(find "${path}" -type f -name '*.go' -not -path "./vendor/*")

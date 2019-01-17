@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package brewery.model;
+
+message OnRequest {
+
+}
+
+message OnResponse {
+
+}
+
+message OffRequest {
+
+}
+
+message OffResponse {
+
+}
+
+
+service Switch {
+    rpc On(OnRequest) returns (OnResponse) {}
+    rpc Off(OffRequest) returns (OffResponse) {}
+}
+
