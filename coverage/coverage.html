@@ -1,0 +1,529 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/mkuchenbecker/brewery3/brewery/rpi/brewery.go (92.8%)</option>
+				
+				<option value="file1">github.com/mkuchenbecker/brewery3/brewery/rpi/element/heater.go (100.0%)</option>
+				
+				<option value="file2">github.com/mkuchenbecker/brewery3/brewery/rpi/element/main.go (0.0%)</option>
+				
+				<option value="file3">github.com/mkuchenbecker/brewery3/brewery/rpi/gpio/controller.go (100.0%)</option>
+				
+				<option value="file4">github.com/mkuchenbecker/brewery3/brewery/rpi/gpio/sensors.go (0.0%)</option>
+				
+				<option value="file5">github.com/mkuchenbecker/brewery3/brewery/rpi/sensors/main.go (0.0%)</option>
+				
+				<option value="file6">github.com/mkuchenbecker/brewery3/brewery/rpi/sensors/temperature.go (100.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">no coverage</span>
+				<span class="cov1">low coverage</span>
+				<span class="cov2">*</span>
+				<span class="cov3">*</span>
+				<span class="cov4">*</span>
+				<span class="cov5">*</span>
+				<span class="cov6">*</span>
+				<span class="cov7">*</span>
+				<span class="cov8">*</span>
+				<span class="cov9">*</span>
+				<span class="cov10">high coverage</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package rpi
+
+import (
+        "context"
+        "fmt"
+        "sync"
+        "time"
+
+        model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
+)
+
+func print(s string) <span class="cov2" title="2">{
+        fmt.Printf("%s %s\n", time.Now().Format(time.StampMilli), s)
+}</span>
+
+type Brewery struct {
+        scheme *model.ControlScheme
+        mux    sync.RWMutex
+
+        mashSensor  model.ThermometerClient
+        boilSensor  model.ThermometerClient
+        hermsSensor model.ThermometerClient
+
+        element model.SwitchClient
+}
+
+func (c *Brewery) ReplaceConfig(scheme *model.ControlScheme) <span class="cov4" title="4">{
+        c.mux.Lock()
+        defer c.mux.Unlock()
+        c.scheme = scheme
+}</span>
+
+func (c *Brewery) getTempConstraints() ([]Constraint, error) <span class="cov6" title="7">{
+        resBoil, err := c.boilSensor.Get(context.Background(), &amp;model.GetRequest{})
+        if err != nil </span><span class="cov1" title="1">{
+                return []Constraint{}, err
+        }</span>
+        <span class="cov5" title="6">resHerms, err := c.hermsSensor.Get(context.Background(), &amp;model.GetRequest{})
+        if err != nil </span><span class="cov1" title="1">{
+                return []Constraint{}, err
+        }</span>
+        <span class="cov5" title="5">resMash, err := c.mashSensor.Get(context.Background(), &amp;model.GetRequest{})
+        if err != nil </span><span class="cov1" title="1">{
+                return []Constraint{}, err
+        }</span>
+
+        <span class="cov4" title="4">return []Constraint{
+                {
+                        min: c.scheme.GetMash().BoilMinTemp,
+                        max: c.scheme.GetMash().BoilMaxTemp,
+                        val: resBoil.Temperature,
+                },
+                {
+                        min: c.scheme.GetMash().HermsMinTemp,
+                        max: c.scheme.GetMash().HermsMaxTemp,
+                        val: resHerms.Temperature,
+                },
+                {
+                        min: c.scheme.GetMash().MashMinTemp,
+                        max: c.scheme.GetMash().MashMaxTemp,
+                        val: resMash.Temperature,
+                },
+        }, nil</span>
+}
+
+func (c *Brewery) mashThermOn() (on bool, err error) <span class="cov4" title="3">{
+        constraints, err := c.getTempConstraints()
+        if err != nil </span><span class="cov0" title="0">{
+                return false, err
+        }</span>
+        <span class="cov4" title="3">val := checkTempConstraints(constraints)
+        return val &lt; 0, nil</span>
+}
+
+type Constraint struct {
+        min float64
+        max float64
+        val float64
+}
+
+func (c *Constraint) Check() int <span class="cov10" title="27">{
+        if c.val &lt; c.min </span><span class="cov4" title="4">{
+                return -1
+        }</span>
+        <span class="cov9" title="23">if c.val &gt;= c.max </span><span class="cov5" title="5">{
+                return 1
+        }</span>
+        <span class="cov8" title="18">return 0</span>
+}
+
+// Returns -1 if some val is too low, 0 if all are met, and 1 if val is too high.
+func checkTempConstraints(constriants []Constraint) int <span class="cov7" title="12">{
+        for _, constriant := range constriants </span><span class="cov10" title="27">{
+                if val := constriant.Check(); val != 0 </span><span class="cov7" title="9">{
+                        return val
+                }</span>
+        }
+        <span class="cov4" title="3">return 0</span>
+}
+
+func (c *Brewery) ElementOff() error <span class="cov9" title="22">{
+        var err error
+        for i := 0; i &lt; 3; i++ </span><span class="cov9" title="26">{
+                _, err = c.element.Off(context.Background(), &amp;model.OffRequest{})
+                if err == nil </span><span class="cov9" title="20">{
+                        return err
+                }</span>
+        }
+        <span class="cov2" title="2">return err</span>
+}
+
+func (b *Brewery) Run(ttlSec int) error <span class="cov4" title="4">{
+        b.mux.RLock()
+        defer b.mux.RUnlock()
+        ttl := time.Duration(ttlSec) * time.Second
+        config := b.scheme
+        switch sch := config.Scheme.(type) </span>{
+        case *model.ControlScheme_Boil_:<span class="cov1" title="1">
+                err := b.ElementOn(ttl)
+                return err</span>
+        case *model.ControlScheme_Mash_:<span class="cov2" title="2">
+                on, err := b.mashThermOn()
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+                <span class="cov2" title="2">if !on </span><span class="cov1" title="1">{
+                        err := b.ElementOff()
+                        if err != nil </span><span class="cov0" title="0">{
+                                return err
+                        }</span>
+                        <span class="cov1" title="1">return nil</span>
+                }
+                <span class="cov1" title="1">return b.ElementOn(ttl)</span>
+        case *model.ControlScheme_Power_:<span class="cov1" title="1">
+                return b.ElementPowerLevel(int(sch.Power.PowerLevel), ttlSec)</span> // Toggle for one hour.
+        default:</span><span class="cov0" title="0">
+        }
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (b *Brewery) ElementOn(ttl time.Duration) (err error) <span class="cov9" title="19">{
+        defer func() </span><span class="cov9" title="19">{
+                offErr := b.ElementOff()
+                if offErr != nil || err != nil </span><span class="cov4" title="4">{
+                        err = fmt.Errorf("errors occured: '%s', '%s", offErr, err)
+                }</span>
+        }()
+
+        <span class="cov9" title="19">_, err = b.element.On(context.Background(), &amp;model.OnRequest{})
+        if err != nil </span><span class="cov2" title="2">{
+                print(fmt.Sprintf("encountered error turning coil on: %+v", err))
+                return err
+        }</span>
+        <span class="cov8" title="17">timer := time.NewTimer(ttl)
+        &lt;-timer.C
+        return err</span>
+}
+
+func (b *Brewery) ElementPowerLevel(powerLevel int, ttlSeconds int) error <span class="cov4" title="4">{
+        ttl := time.Duration(ttlSeconds) * time.Second
+        if powerLevel &lt; 1 </span><span class="cov1" title="1">{
+                err := b.ElementOff()
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+        }
+        <span class="cov4" title="4">if powerLevel &gt; 100 </span><span class="cov1" title="1">{
+                err := b.ElementOff()
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+        }
+        <span class="cov4" title="4">if powerLevel == 100 </span><span class="cov2" title="2">{
+                err := b.ElementOn(ttl)
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+        }
+        <span class="cov4" title="4">interval := 2
+        delay := time.Duration(powerLevel / 100 * interval)
+        return b.elementPowerLevelToggle(delay, ttl, time.Duration(interval)*time.Second)</span>
+}
+
+func (b *Brewery) elementPowerLevelToggle(delay time.Duration, ttl time.Duration, interval time.Duration) error <span class="cov6" title="8">{
+        ticker := time.NewTicker(interval)
+        quit := make(chan bool)
+        resErr := make(chan error)
+
+        go func() </span><span class="cov6" title="8">{
+                for </span><span class="cov9" title="19">{
+                        select </span>{
+                        case &lt;-ticker.C:<span class="cov8" title="13">
+                                err := b.ElementOn(delay)
+                                if err != nil </span><span class="cov2" title="2">{
+                                        resErr &lt;- err
+                                        return
+                                }</span>
+                        case &lt;-quit:<span class="cov5" title="6">
+                                ticker.Stop()
+                                resErr &lt;- nil
+                                return</span>
+                        }
+                }
+        }()
+
+        <span class="cov6" title="8">go func() </span><span class="cov6" title="8">{ // Make sure the process always exits.
+                timer := time.NewTimer(ttl)
+                &lt;-timer.C
+                quit &lt;- true
+        }</span>()
+
+        <span class="cov6" title="8">return &lt;-resErr</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package element
+
+import (
+        "context"
+        "fmt"
+        "time"
+
+        model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
+        gpio "github.com/mkuchenbecker/brewery3/brewery/rpi/gpio/igpio"
+)
+
+// HeaterServer implements switch.
+type HeaterServer struct {
+        ctrl gpio.Controller
+        pin  int
+}
+
+func (s *HeaterServer) On(ctx context.Context, req *model.OnRequest) (*model.OnResponse, error) <span class="cov10" title="2">{
+        fmt.Printf("On: %s - %s\n", "req.ID", time.Now().String())
+        err := s.ctrl.PowerPin(s.pin, true)
+        return &amp;model.OnResponse{}, err
+}</span>
+
+func (s *HeaterServer) Off(ctx context.Context, req *model.OffRequest) (*model.OffResponse, error) <span class="cov10" title="2">{
+        fmt.Printf("Off: %s - %s\n", "req.ID", time.Now().String())
+        err := s.ctrl.PowerPin(s.pin, false)
+        return &amp;model.OffResponse{}, err
+}</span>
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">//+build !test
+
+package element
+
+import (
+        "fmt"
+        "log"
+        "net"
+
+        model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
+        "google.golang.org/grpc"
+        "google.golang.org/grpc/reflection"
+)
+
+func StartHeater(port int, pin int) <span class="cov0" title="0">{
+        lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+        if err != nil </span><span class="cov0" title="0">{
+                log.Fatalf("failed to listen: %v", err)
+        }</span>
+        <span class="cov0" title="0">serve := grpc.NewServer()
+        model.RegisterSwitchServer(serve, &amp;HeaterServer{pin: pin})
+        // Register reflection service on gRPC server.
+        reflection.Register(serve)
+        if err := serve.Serve(lis); err != nil </span><span class="cov0" title="0">{
+                log.Fatalf("failed to serve: %v", err)
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package gpio
+
+import (
+        "github.com/mkuchenbecker/brewery3/brewery/rpi/gpio/igpio"
+        "github.com/mkuchenbecker/brewery3/brewery/utils"
+)
+
+type GPIOController struct {
+        sensors  igpio.SensorArray
+        gpioPins igpio.IGpio
+}
+
+func (gpio *GPIOController) PowerPin(pinNum uint8, on bool) (err error) <span class="cov10" title="4">{
+        err = gpio.gpioPins.Open()
+        if err != nil </span><span class="cov1" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="3">defer utils.DeferErrReturn(gpio.gpioPins.Close, &amp;err)
+        pin := gpio.gpioPins.Pin(pinNum)
+        if on </span><span class="cov1" title="1">{
+                pin.High()
+        }</span> else<span class="cov5" title="2"> {
+                pin.Low()
+        }</span>
+        <span class="cov8" title="3">return nil</span>
+}
+
+func (gp *GPIOController) ReadTemperature(sensor igpio.Sensor) (igpio.Celsius, error) <span class="cov1" title="1">{
+        return gp.sensors.Temperature(sensor)
+}</span>
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">//+build !test
+
+package gpio
+
+import (
+        "fmt"
+
+        "github.com/mkuchenbecker/brewery3/brewery/rpi/gpio/igpio"
+        temperature "github.com/yryz/ds18b20"
+)
+
+type DefaultSensorArray struct {
+}
+
+func (d *DefaultSensorArray) Sensors() ([]igpio.Sensor, error) <span class="cov0" title="0">{
+        strSli, err := temperature.Sensors()
+        retSli := make([]igpio.Sensor, 0)
+        if err != nil </span><span class="cov0" title="0">{
+                return retSli, err
+        }</span>
+        <span class="cov0" title="0">for _, s := range strSli </span><span class="cov0" title="0">{
+                retSli = append(retSli, igpio.Sensor(s))
+        }</span>
+        <span class="cov0" title="0">return retSli, nil</span>
+}
+
+func (d *DefaultSensorArray) Temperature(sensor igpio.Sensor) (igpio.Celsius, error) <span class="cov0" title="0">{
+        temp, err := temperature.Temperature(string(sensor))
+        return igpio.Celsius(temp), err
+}</span>
+
+func NewTemperatureAddress(address string, sensorArray igpio.SensorArray) (igpio.TemperatureAddress, error) <span class="cov0" title="0">{
+        sensors, err := sensorArray.Sensors()
+        if err != nil </span><span class="cov0" title="0">{
+                return "", err
+        }</span>
+
+        <span class="cov0" title="0">for _, sensor := range sensors </span><span class="cov0" title="0">{
+                if sensor == igpio.Sensor(address) </span><span class="cov0" title="0">{
+                        return igpio.TemperatureAddress(address), nil
+                }</span>
+        }
+
+        <span class="cov0" title="0">return "", fmt.Errorf("sensor not found %s", address)</span>
+}
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">//+build !test
+
+package sensors
+
+import (
+        "fmt"
+        "log"
+        "net"
+
+        model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
+        "github.com/mkuchenbecker/brewery3/brewery/rpi/gpio"
+        "google.golang.org/grpc"
+        "google.golang.org/grpc/reflection"
+)
+
+func StartThermometer(port int, address string) <span class="cov0" title="0">{
+        lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+        if err != nil </span><span class="cov0" title="0">{
+                log.Fatalf("failed to listen: %v", err)
+        }</span>
+        <span class="cov0" title="0">serve := grpc.NewServer()
+        addr, err := gpio.NewTemperatureAddress(address, &amp;gpio.DefaultSensorArray{})
+        if err != nil </span><span class="cov0" title="0">{
+                log.Fatalf("failed to read address: %v", err)
+        }</span>
+        <span class="cov0" title="0">model.RegisterThermometerServer(serve, &amp;ThermometerServer{address: addr})
+        // Register reflection service on gRPC server.
+        reflection.Register(serve)
+        if err := serve.Serve(lis); err != nil </span><span class="cov0" title="0">{
+                log.Fatalf("failed to serve: %v", err)
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package sensors
+
+import (
+        "context"
+
+        model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
+        gpio "github.com/mkuchenbecker/brewery3/brewery/rpi/gpio/igpio"
+)
+
+// HeaterServer implements switch.
+type ThermometerServer struct {
+        ctrl    gpio.Controller
+        address gpio.TemperatureAddress
+}
+
+func (s *ThermometerServer) Get(ctx context.Context, req *model.GetRequest) (*model.GetResponse, error) <span class="cov10" title="2">{
+        temp, err := s.ctrl.ReadTemperature(s.address)
+        return &amp;model.GetResponse{Temperature: temp}, err
+}</span>
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
