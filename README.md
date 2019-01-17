@@ -1,9 +1,6 @@
 # brewery3
 
-brewery3 is a go monorepo for multiple projects under the same umbrella with the same set of tooling.
+brewery3 is a project to build a modular microservice RaspberryPi brewery.
 
-**Projects**
-
-* DeltaV
-* FaultInjection
-* HelloWorld
+It's the third set of brewery software I've built. Brewery1 was an arduino brewery,
+and brewery2 was a RaspberryPi python brewery with a Django frontend.
