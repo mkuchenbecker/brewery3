@@ -140,12 +140,6 @@ func TestElementPowerLevel100(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func boilScheme() *model.ControlScheme {
-	cs := model.ControlScheme{}
-	cs.Scheme = &model.ControlScheme_Boil_{}
-	return &cs
-}
-
 func NewMockBrewery(mockCtrl *gomock.Controller) *Brewery {
 	return &Brewery{
 		hermsSensor: mocks.NewMockThermometerClient(mockCtrl),
