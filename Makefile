@@ -12,10 +12,11 @@ tests: fmt lint
 	@echo "tests:"
 	${GOPATH}/bin/richgo test -timeout 10s -cover -race -tags test ./...
 
-.PHONY: coverage
+.PHONY: coverage-ci
 coverage: generate
 	@echo "coverage:"
-	${GOPATH}/bin/richgo test -covermode=atomic -coverprofile ${COVERAGE_FILE} ./...
+	go test -v -covermode=count -coverprofile=coverage.out
+	goveralls -coverprofile=coverage.out -service=travis-ci
 	go tool cover -func=${COVERAGE_FILE} -o ${COVERAGE_ANALYSIS_FILE}
 	go tool cover -html=${COVERAGE_FILE} -o ${COVERAGE_ANALYSIS_FILE_HTML}
 	gocover-cobertura < ${COVERAGE_FILE} > ${COVERAGE_ANALYSIS_FILE_XML}

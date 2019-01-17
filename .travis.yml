@@ -9,7 +9,9 @@ install:
   - go get github.com/kyoh86/richgo
   - go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
   - go get github.com/t-yuki/gocover-cobertura
+  - go get github.com/mattn/goveralls
   - dep ensure -v
 
 script:
   - make tests
+  - make coverage-ci
