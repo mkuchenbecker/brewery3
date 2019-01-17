@@ -12,6 +12,10 @@ env:
 git:
   depth: 1
 
+ before_install:
+  - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+  - dep ensure
+
 install:
   - go get github.com/kyoh86/richgo
 
