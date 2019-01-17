@@ -8,10 +8,6 @@ language: go
 env:
   - GO111MODULE=on
 
-# Only clone the most recent commit.
-git:
-  depth: 1
-
 before_install:
   - go get -u github.com/golang/dep/cmd/dep
   - dep ensure
