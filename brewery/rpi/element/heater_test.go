@@ -7,10 +7,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	model "github.com/brewery3/brewery/model/gomodel"
+	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
 
-	mocks "github.com/brewery3/brewery/rpi/gpio/mocks"
 	"github.com/golang/mock/gomock"
+	mocks "github.com/mkuchenbecker/brewery3/brewery/rpi/gpio/mocks"
 )
 
 func TestHeaterOn(t *testing.T) {

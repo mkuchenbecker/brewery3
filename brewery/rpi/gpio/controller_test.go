@@ -9,8 +9,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/brewery3/brewery/rpi/gpio/igpio"
-	mocks "github.com/brewery3/brewery/rpi/gpio/mocks"
+	"github.com/mkuchenbecker/brewery3/brewery/rpi/gpio/igpio"
+	mocks "github.com/mkuchenbecker/brewery3/brewery/rpi/gpio/mocks"
 )
 
 type fakeSensor struct {

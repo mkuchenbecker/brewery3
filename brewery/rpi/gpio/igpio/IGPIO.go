@@ -1,6 +1,6 @@
 package igpio
 
-//go:generate mockgen -destination=../mocks/mock_gpio.go github.com/brewery3/brewery/rpi/gpio/igpio IGpio,Controller,PinGpio
+//go:generate mockgen -destination=../mocks/mock_gpio.go github.com/mkuchenbecker/brewery3/brewery/rpi/gpio/igpio IGpio,Controller,PinGpio
 
 type TemperatureAddress string
 

@@ -5,7 +5,7 @@ package gpio
 import (
 	"fmt"
 
-	"github.com/brewery3/brewery/rpi/gpio/igpio"
+	"github.com/mkuchenbecker/brewery3/brewery/rpi/gpio/igpio"
 	temperature "github.com/yryz/ds18b20"
 )
 

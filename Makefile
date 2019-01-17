@@ -27,7 +27,7 @@ proto:
 .PHONY: protomockgen
 protomockgen:
 	@echo "generating mocks from protos:"
-	mockgen github.com/brewery3/brewery/model/gomodel \
+	mockgen github.com/mkuchenbecker/brewery3/brewery/model/gomodel \
 	SwitchClient,\
 	ThermometerClient \
 	> brewery/model/gomock/gomock_models.go

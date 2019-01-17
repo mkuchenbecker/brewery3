@@ -7,7 +7,7 @@ import (
 	"log"
 	"net"
 
-	model "github.com/brewery3/brewery/model/gomodel"
+	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )

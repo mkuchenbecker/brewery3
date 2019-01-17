@@ -3,8 +3,8 @@ package sensors
 import (
 	"context"
 
-	model "github.com/brewery3/brewery/model/gomodel"
-	gpio "github.com/brewery3/brewery/rpi/gpio/igpio"
+	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
+	gpio "github.com/mkuchenbecker/brewery3/brewery/rpi/gpio/igpio"
 )
 
 // HeaterServer implements switch.

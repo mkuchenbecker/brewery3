@@ -1,8 +1,8 @@
 package gpio
 
 import (
-	"github.com/brewery3/brewery/rpi/gpio/igpio"
-	"github.com/brewery3/brewery/utils"
+	"github.com/mkuchenbecker/brewery3/brewery/rpi/gpio/igpio"
+	"github.com/mkuchenbecker/brewery3/brewery/utils"
 )
 
 type GPIOController struct {

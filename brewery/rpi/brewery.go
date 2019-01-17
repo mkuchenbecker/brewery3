@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	model "github.com/brewery3/brewery/model/gomodel"
+	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
 )
 
 func print(s string) {

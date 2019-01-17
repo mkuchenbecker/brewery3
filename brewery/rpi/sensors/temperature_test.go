@@ -7,11 +7,11 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	model "github.com/brewery3/brewery/model/gomodel"
-	gpio "github.com/brewery3/brewery/rpi/gpio/igpio"
+	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
+	gpio "github.com/mkuchenbecker/brewery3/brewery/rpi/gpio/igpio"
 
-	mocks "github.com/brewery3/brewery/rpi/gpio/mocks"
 	"github.com/golang/mock/gomock"
+	mocks "github.com/mkuchenbecker/brewery3/brewery/rpi/gpio/mocks"
 )
 
 func TestReadTemperature(t *testing.T) {

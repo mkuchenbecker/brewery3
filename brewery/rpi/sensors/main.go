@@ -7,8 +7,8 @@ import (
 	"log"
 	"net"
 
-	model "github.com/brewery3/brewery/model/gomodel"
-	"github.com/brewery3/brewery/rpi/gpio"
+	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
+	"github.com/mkuchenbecker/brewery3/brewery/rpi/gpio"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
