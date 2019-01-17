@@ -12,9 +12,8 @@ env:
 git:
   depth: 1
 
-# Skip the install step. Don't `go get` dependencies. Only build with the code
-# in vendor/
-install: true
+install:
+  - go get github.com/kyoh86/richgo
 
 # script always runs to completion (set +e). If we have linter issues AND a
 # failing test, we want to see both. Configure golangci-lint with a
