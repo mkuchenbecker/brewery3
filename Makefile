@@ -7,7 +7,7 @@ lint: fmt
 .PHONY: tests
 tests: fmt
 	@echo "tests:"
-	${GOPATH}/bin/richgo test -timeout 10s -cover -tags test ./...
+	${GOPATH}/bin/richgo test -timeout 10s -cover -race -tags test ./...
 
 .PHONY: fmt
 fmt:
