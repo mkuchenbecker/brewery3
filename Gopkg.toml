@@ -11,9 +11,9 @@ required = [
 
 source = "https://github.com/mkuchenbecker/brewery3.git"
 
-# [[constraint]]
-#   name = "github.com/mkuchenbecker/brewery3"
-#   branch = "master"
+[[constraint]]
+  name = "github.com/mkuchenbecker/brewery3"
+  branch = "master"
 
 [[constraint]]
   name = "github.com/stretchr/testify"
