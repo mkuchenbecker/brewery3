@@ -7,6 +7,7 @@
 required = [
     "github.com/golang/protobuf/protoc-gen-go",
     "github.com/kyoh86/richgo",
+    "github.com/t-yuki/gocover-cobertura"
 ]
 
 [[constraint]]

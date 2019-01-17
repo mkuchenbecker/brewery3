@@ -1,12 +1,24 @@
+COVERAGE_FILE := coverage/cover.out
+COVERAGE_ANALYSIS_FILE := coverage/cover.analysis
+COVERAGE_ANALYSIS_FILE_XML := coverage/coverage.xml
+COVERAGE_ANALYSIS_FILE_HTML := coverage/coverage.html
+
 .PHONY: lint
 lint: fmt
 	golangci-lint run
 
-# tests runs all tests and coverage.
 .PHONY: tests
 tests: fmt lint
 	@echo "tests:"
 	${GOPATH}/bin/richgo test -timeout 10s -cover -race -tags test ./...
+
+.PHONY: coverage
+coverage: generate
+	@echo "coverage:"
+	${GOPATH}/bin/richgo test -covermode=atomic -coverprofile ${COVERAGE_FILE} ./...
+	go tool cover -func=${COVERAGE_FILE} -o ${COVERAGE_ANALYSIS_FILE}
+	go tool cover -html=${COVERAGE_FILE} -o ${COVERAGE_ANALYSIS_FILE_HTML}
+	gocover-cobertura < ${COVERAGE_FILE} > ${COVERAGE_ANALYSIS_FILE_XML}
 
 .PHONY: fmt
 fmt:
