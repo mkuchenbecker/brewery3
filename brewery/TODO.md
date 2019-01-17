@@ -1,8 +1,7 @@
 Coding:
-* get to 90% test coverage
+* enforce linter (golangci)
 * enforce 90% test coverage on master
 * enable linters on pre-merge
-* make brewery into own repo?
 
 
 Persistance layer:

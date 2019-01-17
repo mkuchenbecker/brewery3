@@ -6,6 +6,8 @@
 #
 required = [
     "github.com/golang/protobuf/protoc-gen-go",
+    "github.com/kyoh86/richgo",
+
 ]
 # ignored = ["github.com/user/project/pkgX", "bitbucket.org/user/project/pkgA/pkgY"]
 #
