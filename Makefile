@@ -1,8 +1,3 @@
-COVERAGE_FILE := coverage/cover.out
-COVERAGE_ANALYSIS_FILE := coverage/cover.analysis
-COVERAGE_ANALYSIS_FILE_XML := coverage/coverage.xml
-COVERAGE_ANALYSIS_FILE_HTML := coverage/coverage.html
-
 .PHONY: lint
 lint: fmt
 	golangci-lint run
@@ -18,11 +13,6 @@ tests: fmt lint
 	-coverprofile=coverage.out \
 	-tags test \
 	./...
-
-.PHONY: coverage-ci
-coverage:
-	@echo "coverage:"
-	${GOPATH}/bin/goveralls -coverprofile=coverage.out -service=travis-ci
 
 .PHONY: fmt
 fmt:
