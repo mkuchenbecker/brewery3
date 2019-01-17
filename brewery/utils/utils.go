@@ -11,5 +11,4 @@ func DeferErrReturn(f func() error, err *error) {
 		}
 		*err = fnErr
 	}
-	return
 }

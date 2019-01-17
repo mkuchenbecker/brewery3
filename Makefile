@@ -1,11 +1,10 @@
 .PHONY: lint
 lint: fmt
-	which golangci-lint || curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | bash -s -- -b $$GOPATH/bin v1.10
 	golangci-lint run
 
 # tests runs all tests and coverage.
 .PHONY: tests
-tests: fmt
+tests: fmt lint
 	@echo "tests:"
 	${GOPATH}/bin/richgo test -timeout 10s -cover -race -tags test ./...
 

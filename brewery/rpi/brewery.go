@@ -130,10 +130,9 @@ func (b *Brewery) Run(ttlSec int) error {
 			}
 			return nil
 		}
-		b.ElementOn(ttl)
-		return err
+		return b.ElementOn(ttl)
 	case *model.ControlScheme_Power_:
-		b.ElementPowerLevel(int(sch.Power.PowerLevel), ttlSec) // Toggle for one hour.
+		return b.ElementPowerLevel(int(sch.Power.PowerLevel), ttlSec) // Toggle for one hour.
 	default:
 	}
 	return nil
