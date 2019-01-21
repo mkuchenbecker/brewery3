@@ -78,12 +78,12 @@ func MakeTemperatureClient(port int, address string) model.ThermometerClient {
 // }
 
 func main() {
-	MakeTemperatureClient(8090, "28-031571188aff")
+	MakeTemperatureClient(8090, "28-0315715039ff")
 
 	// brewery := rpi.Brewery{
-	// 	MashSensor:  MakeTemperatureClient(8090, "28-031571188aff"),
+	// 	MashSensor:  MakeTemperatureClient(8090, "28-0315715039ff"),
 	// 	HermsSensor: MakeTemperatureClient(8091, "28-0315712c08ff"),
-	// 	BoilSensor:  MakeTemperatureClient(8092, "28-0315715039ff"),
+	// 	BoilSensor:  MakeTemperatureClient(8092, "28-031571188aff"),
 	// 	Element:     MakeSwitchClient(8110, 11),
 	// }
 	// rpi.StartBrewery(8100, &brewery)

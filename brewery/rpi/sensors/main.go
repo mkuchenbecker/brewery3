@@ -7,6 +7,7 @@ import (
 
 	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
 	"github.com/mkuchenbecker/brewery3/brewery/rpi/gpio"
+	"github.com/mkuchenbecker/brewery3/brewery/utils"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -25,7 +26,7 @@ func StartThermometer(port int, address string) {
 		ctrl: &gpio.GPIOController{Sensors: &gpio.DefaultSensorArray{}}}
 	model.RegisterThermometerServer(serve, server)
 
-	fmt.Printf("serving traffic\n")
+	utils.Print("Serving Traffic")
 
 	reflection.Register(serve)
 	if err := serve.Serve(lis); err != nil {
