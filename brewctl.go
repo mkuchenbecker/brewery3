@@ -15,11 +15,11 @@ import (
 )
 
 func MakeTemperatureClient(port int, address string) model.ThermometerClient {
-	fmt.Printf("Starting temperature server on port: %d/n", port)
-	go sensors.StartThermometer(port, address)
-	fmt.Printf("Waiting for discovery on port: %d/n", port)
+	fmt.Printf("Starting temperature server on port: %d\n", port)
+	sensors.StartThermometer(port, address)
+	fmt.Printf("Waiting for discovery on port: %d\n", port)
 	time.Sleep(5 * time.Second)
-	fmt.Printf("Connecting to client: %d/n", port)
+	fmt.Printf("Connecting to client: %d\n", port)
 	conn, err := grpc.Dial(fmt.Sprintf("localhost://%d", port), grpc.WithInsecure())
 	if err != nil {
 		panic(err)
@@ -34,11 +34,11 @@ func MakeTemperatureClient(port int, address string) model.ThermometerClient {
 }
 
 func MakeSwitchClient(port int, pin int) model.SwitchClient {
-	fmt.Printf("Starting switch server on port: %d/n", port)
+	fmt.Printf("Starting switch server on port: %d\n", port)
 	go element.StartHeater(port, pin)
-	fmt.Printf("Waiting for discovery on port: %d/n", port)
+	fmt.Printf("Waiting for discovery on port: %d\n", port)
 	time.Sleep(5 * time.Second)
-	fmt.Printf("Connecting to client: %d/n", port)
+	fmt.Printf("Connecting to client: %d\n", port)
 	conn, err := grpc.Dial(fmt.Sprintf("localhost://%d", port), grpc.WithInsecure())
 	if err != nil {
 		panic(err)
@@ -80,14 +80,15 @@ func parseTemp(in string) (float64, error) {
 }
 
 func main() {
+	MakeTemperatureClient(8090, "28-031571188aff"),
 
-	brewery := rpi.Brewery{
-		MashSensor:  MakeTemperatureClient(8090, "28-031571188aff"),
-		HermsSensor: MakeTemperatureClient(8091, "28-0315712c08ff"),
-		BoilSensor:  MakeTemperatureClient(8092, "28-0315715039ff"),
-		Element:     MakeSwitchClient(8110, 11),
-	}
-	rpi.StartBrewery(8100, &brewery)
+	// brewery := rpi.Brewery{
+	// 	MashSensor:  MakeTemperatureClient(8090, "28-031571188aff"),
+	// 	HermsSensor: MakeTemperatureClient(8091, "28-0315712c08ff"),
+	// 	BoilSensor:  MakeTemperatureClient(8092, "28-0315715039ff"),
+	// 	Element:     MakeSwitchClient(8110, 11),
+	// }
+	// rpi.StartBrewery(8100, &brewery)
 
 	// app := cli.NewApp()
 
