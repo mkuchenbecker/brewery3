@@ -9,10 +9,6 @@ import (
 	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
 )
 
-func print(s string) {
-	fmt.Printf("%s %s\n", time.Now().Format(time.StampMilli), s)
-}
-
 type Brewery struct {
 	Scheme *model.ControlScheme
 	mux    sync.RWMutex

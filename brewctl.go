@@ -7,15 +7,16 @@ import (
 
 	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
 	"github.com/mkuchenbecker/brewery3/brewery/rpi/sensors"
+	"github.com/mkuchenbecker/brewery3/brewery/utils"
 	"google.golang.org/grpc"
 )
 
 func MakeTemperatureClient(port int, address string) model.ThermometerClient {
-	fmt.Printf("Starting temperature server on port: %d\n", port)
+	utils.Print(fmt.Sprintf("Starting temperature server on port: %d", port))
 	go sensors.StartThermometer(port, address)
-	fmt.Printf("Waiting for discovery on port: %d\n", port)
+	utils.Print(fmt.Sprintf("Waiting for discovery on port: %d", port))
 	time.Sleep(5 * time.Second)
-	fmt.Printf("Connecting to client: %d\n", port)
+	utils.Print(fmt.Sprintf("Connecting to client: %d", port))
 	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", port), grpc.WithInsecure())
 	if err != nil {
 		panic(err)
@@ -26,16 +27,16 @@ func MakeTemperatureClient(port int, address string) model.ThermometerClient {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("temp: %f", res.Temperature)
+	utils.Print(fmt.Sprintf("temp: %f", res.Temperature))
 	return client
 }
 
 // func MakeSwitchClient(port int, pin uint8) model.SwitchClient {
-// 	fmt.Printf("Starting switch server on port: %d\n", port)
+// 	utils.Print(fmt.Sprintf("Starting switch server on port: %d", port)
 // 	go element.StartHeater(port, pin)
-// 	fmt.Printf("Waiting for discovery on port: %d\n", port)
+// 	utils.Print(fmt.Sprintf("Waiting for discovery on port: %d", port)
 // 	time.Sleep(5 * time.Second)
-// 	fmt.Printf("Connecting to client: %d\n", port)
+// 	utils.Print(fmt.Sprintf("Connecting to client: %d", port)
 // 	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", port), grpc.WithInsecure())
 // 	if err != nil {
 // 		panic(err)
@@ -102,17 +103,17 @@ func main() {
 	// app.Usage = "mash the beer!"
 	// app.Action = func(c *cli.Context) error {
 	// 	if !c.IsSet("mash") {
-	// 		fmt.Printf("Must set temp flag!\n")
+	// 		utils.Print(fmt.Sprintf("Must set temp flag!")
 	// 		os.Exit(1)
 	// 	}
 	// 	temp, err := parseTemp(c.String("mash"))
 	// 	if err != nil {
-	// 		fmt.Printf("%+v", err)
+	// 		utils.Print(fmt.Sprintf("%+v", err)
 	// 		os.Exit(1)
 	// 	}
 
-	// 	fmt.Printf("Input Temp: %s\n", c.String("temp"))
-	// 	fmt.Printf("Mashing @ %fC\n", temp)
+	// 	utils.Print(fmt.Sprintf("Input Temp: %s", c.String("temp"))
+	// 	utils.Print(fmt.Sprintf("Mashing @ %fC", temp)
 
 	// 	_, err = client.Control(context.Background(),
 	// 		&model.ControlRequest{Scheme: &model.ControlScheme{

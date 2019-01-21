@@ -1,6 +1,9 @@
 package utils
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 func DeferErrReturn(f func() error, err *error) {
 	fnErr := f()
@@ -11,4 +14,8 @@ func DeferErrReturn(f func() error, err *error) {
 		}
 		*err = fnErr
 	}
+}
+
+func Print(s string) {
+	fmt.Printf("%s - %s\n", time.Now().Format(time.StampMilli), s)
 }

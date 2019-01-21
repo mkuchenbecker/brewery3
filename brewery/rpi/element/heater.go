@@ -2,8 +2,8 @@ package element
 
 import (
 	"context"
-	"fmt"
-	"time"
+
+	"github.com/mkuchenbecker/brewery3/brewery/utils"
 
 	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
 	gpio "github.com/mkuchenbecker/brewery3/brewery/rpi/gpio/igpio"
@@ -16,13 +16,13 @@ type HeaterServer struct {
 }
 
 func (s *HeaterServer) On(ctx context.Context, req *model.OnRequest) (*model.OnResponse, error) {
-	fmt.Printf("On: %s - %s\n", "req.ID", time.Now().String())
+	utils.Print("Heater On")
 	err := s.ctrl.PowerPin(s.pin, true)
 	return &model.OnResponse{}, err
 }
 
 func (s *HeaterServer) Off(ctx context.Context, req *model.OffRequest) (*model.OffResponse, error) {
-	fmt.Printf("Off: %s - %s\n", "req.ID", time.Now().String())
+	utils.Print("Heater Off")
 	err := s.ctrl.PowerPin(s.pin, false)
 	return &model.OffResponse{}, err
 }
