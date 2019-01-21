@@ -8,7 +8,6 @@ import (
 	"time"
 
 	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
-	"github.com/mkuchenbecker/brewery3/brewery/rpi"
 	"github.com/mkuchenbecker/brewery3/brewery/rpi/element"
 	"github.com/mkuchenbecker/brewery3/brewery/rpi/sensors"
 	"google.golang.org/grpc"
@@ -26,10 +25,11 @@ func MakeTemperatureClient(port int, address string) model.ThermometerClient {
 	}
 	defer conn.Close()
 	client := model.NewThermometerClient(conn)
-	_, err = client.Get(context.Background(), &model.GetRequest{})
+	res, err := client.Get(context.Background(), &model.GetRequest{})
 	if err != nil {
 		panic(err)
 	}
+	fmt.Printf("temp: %f", res.Temperature)
 	return client
 }
 
@@ -80,7 +80,7 @@ func parseTemp(in string) (float64, error) {
 }
 
 func main() {
-	MakeTemperatureClient(8090, "28-031571188aff"),
+	MakeTemperatureClient(8090, "28-031571188aff")
 
 	// brewery := rpi.Brewery{
 	// 	MashSensor:  MakeTemperatureClient(8090, "28-031571188aff"),
