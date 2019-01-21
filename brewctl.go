@@ -15,9 +15,12 @@ import (
 )
 
 func MakeTemperatureClient(port int, address string) model.ThermometerClient {
+	fmt.Printf("Starting temperature server on port: %d", port)
 	go sensors.StartThermometer(port, address)
+	fmt.Printf("Waiting for discovery on port: %d", port)
 	time.Sleep(5 * time.Second)
-	conn, err := grpc.Dial(fmt.Sprintf("localhost://%d", port))
+	fmt.Printf("Connecting to client: %d", port)
+	conn, err := grpc.Dial(fmt.Sprintf("localhost://%d", port), grpc.WithInsecure())
 	if err != nil {
 		panic(err)
 	}
@@ -31,8 +34,12 @@ func MakeTemperatureClient(port int, address string) model.ThermometerClient {
 }
 
 func MakeSwitchClient(port int, pin int) model.SwitchClient {
+	fmt.Printf("Starting switch server on port: %d", port)
 	go element.StartHeater(port, pin)
-	conn, err := grpc.Dial(fmt.Sprintf("localhost://%d", port))
+	fmt.Printf("Waiting for discovery on port: %d", port)
+	time.Sleep(5 * time.Second)
+	fmt.Printf("Connecting to client: %d", port)
+	conn, err := grpc.Dial(fmt.Sprintf("localhost://%d", port), grpc.WithInsecure())
 	if err != nil {
 		panic(err)
 	}
