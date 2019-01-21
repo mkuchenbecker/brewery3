@@ -22,7 +22,8 @@ func StartThermometer(port int, address string) {
 		log.Fatalf("failed to read address: %v\n", err)
 	}
 	model.RegisterThermometerServer(serve, &ThermometerServer{address: addr})
-	// Register reflection service on gRPC server.
+
+	fmt.Printf("serving traffic\n")
 
 	reflection.Register(serve)
 	if err := serve.Serve(lis); err != nil {
