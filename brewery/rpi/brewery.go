@@ -14,50 +14,55 @@ func print(s string) {
 }
 
 type Brewery struct {
-	scheme *model.ControlScheme
+	Scheme *model.ControlScheme
 	mux    sync.RWMutex
 
-	mashSensor  model.ThermometerClient
-	boilSensor  model.ThermometerClient
-	hermsSensor model.ThermometerClient
+	MashSensor  model.ThermometerClient
+	BoilSensor  model.ThermometerClient
+	HermsSensor model.ThermometerClient
 
-	element model.SwitchClient
+	Element model.SwitchClient
+}
+
+func (c *Brewery) Control(ctx context.Context,
+	req *model.ControlRequest) (res *model.ControlResponse, err error) {
+	return nil, nil
 }
 
 func (c *Brewery) ReplaceConfig(scheme *model.ControlScheme) {
 	c.mux.Lock()
 	defer c.mux.Unlock()
-	c.scheme = scheme
+	c.Scheme = scheme
 }
 
 func (c *Brewery) getTempConstraints() ([]Constraint, error) {
-	resBoil, err := c.boilSensor.Get(context.Background(), &model.GetRequest{})
+	resBoil, err := c.BoilSensor.Get(context.Background(), &model.GetRequest{})
 	if err != nil {
 		return []Constraint{}, err
 	}
-	resHerms, err := c.hermsSensor.Get(context.Background(), &model.GetRequest{})
+	resHerms, err := c.HermsSensor.Get(context.Background(), &model.GetRequest{})
 	if err != nil {
 		return []Constraint{}, err
 	}
-	resMash, err := c.mashSensor.Get(context.Background(), &model.GetRequest{})
+	resMash, err := c.MashSensor.Get(context.Background(), &model.GetRequest{})
 	if err != nil {
 		return []Constraint{}, err
 	}
 
 	return []Constraint{
 		{
-			min: c.scheme.GetMash().BoilMinTemp,
-			max: c.scheme.GetMash().BoilMaxTemp,
+			min: c.Scheme.GetMash().BoilMinTemp,
+			max: c.Scheme.GetMash().BoilMaxTemp,
 			val: resBoil.Temperature,
 		},
 		{
-			min: c.scheme.GetMash().HermsMinTemp,
-			max: c.scheme.GetMash().HermsMaxTemp,
+			min: c.Scheme.GetMash().HermsMinTemp,
+			max: c.Scheme.GetMash().HermsMaxTemp,
 			val: resHerms.Temperature,
 		},
 		{
-			min: c.scheme.GetMash().MashMinTemp,
-			max: c.scheme.GetMash().MashMaxTemp,
+			min: c.Scheme.GetMash().MashMinTemp,
+			max: c.Scheme.GetMash().MashMaxTemp,
 			val: resMash.Temperature,
 		},
 	}, nil
@@ -101,7 +106,7 @@ func checkTempConstraints(constriants []Constraint) int {
 func (c *Brewery) ElementOff() error {
 	var err error
 	for i := 0; i < 3; i++ {
-		_, err = c.element.Off(context.Background(), &model.OffRequest{})
+		_, err = c.Element.Off(context.Background(), &model.OffRequest{})
 		if err == nil {
 			return err
 		}
@@ -113,7 +118,7 @@ func (b *Brewery) Run(ttlSec int) error {
 	b.mux.RLock()
 	defer b.mux.RUnlock()
 	ttl := time.Duration(ttlSec) * time.Second
-	config := b.scheme
+	config := b.Scheme
 	switch sch := config.Scheme.(type) {
 	case *model.ControlScheme_Boil_:
 		err := b.ElementOn(ttl)
@@ -146,7 +151,7 @@ func (b *Brewery) ElementOn(ttl time.Duration) (err error) {
 		}
 	}()
 
-	_, err = b.element.On(context.Background(), &model.OnRequest{})
+	_, err = b.Element.On(context.Background(), &model.OnRequest{})
 	if err != nil {
 		print(fmt.Sprintf("encountered error turning coil on: %+v", err))
 		return err

@@ -57,6 +57,18 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/t-yuki/gocover-cobertura"
+  packages = ["."]
+  revision = "aaee18c8195c3f2d90e5ef80ca918d265463842a"
+
+[[projects]]
+  name = "github.com/urfave/cli"
+  packages = ["."]
+  revision = "cfb38830724cc34fedffe9a2a29fb54fa9169cd1"
+  version = "v1.20.0"
+
+[[projects]]
+  branch = "master"
   name = "github.com/wacul/ptr"
   packages = ["."]
   revision = "91632201dfc876021121963a76f103bbe1756b09"
@@ -106,6 +118,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "23ab93cecfff0ca69df4cbbdaa50d4cff702017b2ded96f562c5c187dfbfc790"
+  inputs-digest = "fa6d19382e3eee4a61b800fa666f7529126ff222ebc191c91b44fafd716432cd"
   solver-name = "gps-cdcl"
   solver-version = 1
