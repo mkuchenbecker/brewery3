@@ -6,6 +6,7 @@ import (
 	"time"
 
 	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
+	"github.com/mkuchenbecker/brewery3/brewery/rpi"
 	"github.com/mkuchenbecker/brewery3/brewery/rpi/element"
 	"github.com/mkuchenbecker/brewery3/brewery/rpi/sensors"
 	"github.com/mkuchenbecker/brewery3/brewery/utils"
@@ -79,24 +80,21 @@ func MakeSwitchClient(port int, pin uint8) model.SwitchClient {
 // }
 
 const (
-	MashAddr  = "28-0315712c08ff"
-	HermsAddr = "28-0315715039ff"
-	BoilAddr  = "28-031571188aff"
+	MashAddr   = "28-0315712c08ff"
+	HermsAddr  = "28-0315715039ff"
+	BoilAddr   = "28-031571188aff"
+	ElementPin = 11
 )
 
 func main() {
-	MakeTemperatureClient(8090, MashAddr)
-	MakeTemperatureClient(8091, HermsAddr)
-	MakeTemperatureClient(8092, BoilAddr)
-	MakeSwitchClient(8110, 11)
 
-	// brewery := rpi.Brewery{
-	// 	MashSensor:  MakeTemperatureClient(8090, "28-0315715039ff"),
-	// 	HermsSensor: MakeTemperatureClient(8091, "28-0315712c08ff"),
-	// 	BoilSensor:  MakeTemperatureClient(8092, "28-031571188aff"),
-	// 	Element:     MakeSwitchClient(8110, 11),
-	// }
-	// rpi.StartBrewery(8100, &brewery)
+	brewery := rpi.Brewery{
+		MashSensor:  MakeTemperatureClient(8090, MashAddr),
+		HermsSensor: MakeTemperatureClient(8091, HermsAddr),
+		BoilSensor:  MakeTemperatureClient(8092, BoilAddr),
+		Element:     MakeSwitchClient(8110, ElementPin),
+	}
+	rpi.StartBrewery(8100, &brewery)
 
 	// app := cli.NewApp()
 
