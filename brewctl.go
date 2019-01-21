@@ -15,7 +15,7 @@ import (
 )
 
 func MakeBreweryClient(port int) model.BreweryClient {
-	conn, err := grpc.Dial(fmt.Sprintf("localhost://%d", port))
+	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", port))
 	if err != nil {
 		panic(err)
 	}
