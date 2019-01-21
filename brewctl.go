@@ -78,7 +78,7 @@ func MakeTemperatureClient(port int, address string) model.ThermometerClient {
 // }
 
 const (
-	MashAddr = "28-0315715039ff"
+	MashAddr = "28-0315712c08ff"
 )
 
 func main() {
