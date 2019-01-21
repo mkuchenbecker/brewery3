@@ -31,24 +31,24 @@ func MakeTemperatureClient(port int, address string) model.ThermometerClient {
 	return client
 }
 
-// func MakeSwitchClient(port int, pin uint8) model.SwitchClient {
-// 	utils.Print(fmt.Sprintf("Starting switch server on port: %d", port)
-// 	go element.StartHeater(port, pin)
-// 	utils.Print(fmt.Sprintf("Waiting for discovery on port: %d", port)
-// 	time.Sleep(5 * time.Second)
-// 	utils.Print(fmt.Sprintf("Connecting to client: %d", port)
-// 	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", port), grpc.WithInsecure())
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	defer conn.Close()
-// 	client := model.NewSwitchClient(conn)
-// 	_, err = client.Off(context.Background(), &model.OffRequest{})
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	return client
-// }
+func MakeSwitchClient(port int, pin uint8) model.SwitchClient {
+	utils.Print(fmt.Sprintf("Starting switch server on port: %d", port)
+	go element.StartHeater(port, pin)
+	utils.Print(fmt.Sprintf("Waiting for discovery on port: %d", port)
+	time.Sleep(5 * time.Second)
+	utils.Print(fmt.Sprintf("Connecting to client: %d", port)
+	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", port), grpc.WithInsecure())
+	if err != nil {
+		panic(err)
+	}
+	defer conn.Close()
+	client := model.NewSwitchClient(conn)
+	_, err = client.Off(context.Background(), &model.OffRequest{})
+	if err != nil {
+		panic(err)
+	}
+	return client
+}
 
 // func MakeBreweryClient(port int) model.BreweryClient {
 // 	conn, err := grpc.Dial(fmt.Sprintf("localhost://%d", port))
@@ -87,6 +87,7 @@ func main() {
 	MakeTemperatureClient(8090, MashAddr)
 	MakeTemperatureClient(8091, HermsAddr)
 	MakeTemperatureClient(8092, BoilAddr)
+	MakeSwitchClient(8110, 11)
 
 	// brewery := rpi.Brewery{
 	// 	MashSensor:  MakeTemperatureClient(8090, "28-0315715039ff"),
