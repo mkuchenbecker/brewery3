@@ -6,6 +6,7 @@ import (
 	"time"
 
 	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
+	"github.com/mkuchenbecker/brewery3/brewery/rpi/element"
 	"github.com/mkuchenbecker/brewery3/brewery/rpi/sensors"
 	"github.com/mkuchenbecker/brewery3/brewery/utils"
 	"google.golang.org/grpc"
@@ -32,11 +33,11 @@ func MakeTemperatureClient(port int, address string) model.ThermometerClient {
 }
 
 func MakeSwitchClient(port int, pin uint8) model.SwitchClient {
-	utils.Print(fmt.Sprintf("Starting switch server on port: %d", port)
+	utils.Print(fmt.Sprintf("Starting switch server on port: %d", port))
 	go element.StartHeater(port, pin)
-	utils.Print(fmt.Sprintf("Waiting for discovery on port: %d", port)
+	utils.Print(fmt.Sprintf("Waiting for discovery on port: %d", port))
 	time.Sleep(5 * time.Second)
-	utils.Print(fmt.Sprintf("Connecting to client: %d", port)
+	utils.Print(fmt.Sprintf("Connecting to client: %d", port))
 	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", port), grpc.WithInsecure())
 	if err != nil {
 		panic(err)
