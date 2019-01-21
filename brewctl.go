@@ -15,7 +15,7 @@ import (
 
 func MakeTemperatureClient(port int, address string) model.ThermometerClient {
 	fmt.Printf("Starting temperature server on port: %d\n", port)
-	sensors.StartThermometer(port, address)
+	go sensors.StartThermometer(port, address)
 	fmt.Printf("Waiting for discovery on port: %d\n", port)
 	time.Sleep(5 * time.Second)
 	fmt.Printf("Connecting to client: %d\n", port)
