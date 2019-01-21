@@ -50,6 +50,12 @@
   version = "v1.0.0"
 
 [[projects]]
+  name = "github.com/stianeikeland/go-rpio"
+  packages = ["."]
+  revision = "d43a3ce8186d47f497a6785f997400a1b2f1fdc7"
+  version = "v4.4.0"
+
+[[projects]]
   name = "github.com/stretchr/testify"
   packages = ["assert"]
   revision = "ffdc059bfe9ce6a4e144ba849dbedead332c6053"
@@ -60,12 +66,6 @@
   name = "github.com/t-yuki/gocover-cobertura"
   packages = ["."]
   revision = "aaee18c8195c3f2d90e5ef80ca918d265463842a"
-
-[[projects]]
-  name = "github.com/urfave/cli"
-  packages = ["."]
-  revision = "cfb38830724cc34fedffe9a2a29fb54fa9169cd1"
-  version = "v1.20.0"
 
 [[projects]]
   branch = "master"
@@ -118,6 +118,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "fa6d19382e3eee4a61b800fa666f7529126ff222ebc191c91b44fafd716432cd"
+  inputs-digest = "afb388f7070fcec2bfc13ff16405201c4b4a7fd56f9cc58835d93a0cc59621c3"
   solver-name = "gps-cdcl"
   solver-version = 1

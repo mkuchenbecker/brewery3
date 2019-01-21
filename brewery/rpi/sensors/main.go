@@ -23,7 +23,7 @@ func StartThermometer(port int, address string) {
 		log.Fatalf("failed to read address: %v\n", err)
 	}
 	server := &ThermometerServer{address: addr,
-		ctrl: &gpio.GPIOController{Sensors: &gpio.DefaultSensorArray{}}}
+		ctrl: gpio.GetDefaultController()}
 	model.RegisterThermometerServer(serve, server)
 
 	utils.Print("Serving Traffic")

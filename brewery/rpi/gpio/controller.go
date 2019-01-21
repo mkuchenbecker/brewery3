@@ -29,3 +29,7 @@ func (gp *GPIOController) ReadTemperature(sensor igpio.TemperatureAddress) (floa
 	temp, err := gp.Sensors.Temperature(igpio.Sensor(sensor))
 	return float64(temp), err
 }
+
+func GetDefaultController() *GPIOController {
+	return &GPIOController{Sensors: &DefaultSensorArray{}, gpioPins: &DefaultPins{}}
+}
