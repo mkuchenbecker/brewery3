@@ -16,7 +16,7 @@ func MakeTemperatureClient(port int, address string) model.ThermometerClient {
 	utils.Print(fmt.Sprintf("Starting temperature server on port: %d", port))
 	go sensors.StartThermometer(port, address)
 	utils.Print(fmt.Sprintf("Waiting for discovery on port: %d", port))
-	time.Sleep(5 * time.Second)
+	time.Sleep(2 * time.Second)
 	utils.Print(fmt.Sprintf("Connecting to client: %d", port))
 	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", port), grpc.WithInsecure())
 	if err != nil {

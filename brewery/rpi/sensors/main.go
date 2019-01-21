@@ -32,5 +32,4 @@ func StartThermometer(port int, address string) {
 	if err := serve.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v\n", err)
 	}
-
 }
