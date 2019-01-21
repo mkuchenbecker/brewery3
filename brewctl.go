@@ -88,6 +88,7 @@ func main() {
 
 	err := app.Run(os.Args)
 	if err != nil {
+		utils.Print("encountered an error:")
 		log.Fatal(err)
 	}
 }

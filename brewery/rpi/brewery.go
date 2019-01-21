@@ -23,6 +23,7 @@ type Brewery struct {
 
 func (c *Brewery) Control(ctx context.Context,
 	req *model.ControlRequest) (res *model.ControlResponse, err error) {
+	utils.Print("Recieved control request")
 	c.ReplaceConfig(req.Scheme)
 	return nil, nil
 }
