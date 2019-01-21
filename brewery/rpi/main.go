@@ -17,6 +17,12 @@ func StartBrewery(port int, brewery *Brewery) {
 	}
 	serve := grpc.NewServer()
 	model.RegisterBreweryServer(serve, brewery)
+	go func() {
+		err = brewery.RunLoop()
+		if err != nil {
+			panic(err)
+		}
+	}()
 	// Register reflection service on gRPC server.
 	reflection.Register(serve)
 	if err := serve.Serve(lis); err != nil {

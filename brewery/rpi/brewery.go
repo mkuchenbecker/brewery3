@@ -7,6 +7,7 @@ import (
 	"time"
 
 	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
+	"github.com/mkuchenbecker/brewery3/brewery/utils"
 )
 
 type Brewery struct {
@@ -22,6 +23,7 @@ type Brewery struct {
 
 func (c *Brewery) Control(ctx context.Context,
 	req *model.ControlRequest) (res *model.ControlResponse, err error) {
+	c.ReplaceConfig(req.Scheme)
 	return nil, nil
 }
 
@@ -44,6 +46,9 @@ func (c *Brewery) getTempConstraints() ([]Constraint, error) {
 	if err != nil {
 		return []Constraint{}, err
 	}
+
+	utils.Print(fmt.Sprintf("Mash: %f | Boil %f | Herms %f",
+		resMash.Temperature, resBoil.Temperature, resHerms.Temperature))
 
 	return []Constraint{
 		{
@@ -110,10 +115,26 @@ func (c *Brewery) ElementOff() error {
 	return err
 }
 
+func (b *Brewery) RunLoop() error {
+	ttl := 5
+	for {
+		fmt.Print("[RunLoop]")
+		err := b.Run(ttl)
+		if err != nil {
+			utils.Print(fmt.Sprintf("[RunLoop] %s", err.Error()))
+		}
+		time.Sleep(time.Duration(ttl) * time.Second)
+	}
+}
+
 func (b *Brewery) Run(ttlSec int) error {
 	b.mux.RLock()
 	defer b.mux.RUnlock()
 	ttl := time.Duration(ttlSec) * time.Second
+	if b.Scheme == nil {
+		utils.Print("[Brewery.Run] No scheme present")
+		return nil
+	}
 	config := b.Scheme
 	switch sch := config.Scheme.(type) {
 	case *model.ControlScheme_Boil_:
