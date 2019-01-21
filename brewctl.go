@@ -78,11 +78,15 @@ func MakeTemperatureClient(port int, address string) model.ThermometerClient {
 // }
 
 const (
-	MashAddr = "28-0315712c08ff"
+	MashAddr  = "28-0315712c08ff"
+	HermsAddr = "28-0315712c08ff"
+	BoilAddr  = "28-0315712c08ff"
 )
 
 func main() {
 	MakeTemperatureClient(8090, MashAddr)
+	MakeTemperatureClient(8090, HermsAddr)
+	MakeTemperatureClient(8090, BoilAddr)
 
 	// brewery := rpi.Brewery{
 	// 	MashSensor:  MakeTemperatureClient(8090, "28-0315715039ff"),
