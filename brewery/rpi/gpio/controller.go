@@ -6,7 +6,7 @@ import (
 )
 
 type GPIOController struct {
-	sensors  igpio.SensorArray
+	Sensors  igpio.SensorArray
 	gpioPins igpio.IGpio
 }
 
@@ -25,6 +25,7 @@ func (gpio *GPIOController) PowerPin(pinNum uint8, on bool) (err error) {
 	return nil
 }
 
-func (gp *GPIOController) ReadTemperature(sensor igpio.Sensor) (igpio.Celsius, error) {
-	return gp.sensors.Temperature(sensor)
+func (gp *GPIOController) ReadTemperature(sensor igpio.TemperatureAddress) (float64, error) {
+	temp, err := gp.Sensors.Temperature(igpio.Sensor(sensor))
+	return float64(temp), err
 }

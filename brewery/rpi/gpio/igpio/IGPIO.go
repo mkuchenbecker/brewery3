@@ -5,7 +5,7 @@ package igpio
 type TemperatureAddress string
 
 type Controller interface {
-	PowerPin(pin int, on bool) error
+	PowerPin(pin uint8, on bool) error
 	ReadTemperature(address TemperatureAddress) (float64, error)
 }
 

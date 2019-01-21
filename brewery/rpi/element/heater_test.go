@@ -19,7 +19,7 @@ func TestHeaterOn(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockController := mocks.NewMockController(mockCtrl)
-	mockController.EXPECT().PowerPin(5, true).Return(nil).Times(1)
+	mockController.EXPECT().PowerPin(uint8(5), true).Return(nil).Times(1)
 
 	server := HeaterServer{ctrl: mockController, pin: 5}
 
@@ -36,7 +36,7 @@ func TestHeaterOnError(t *testing.T) {
 	expErr := fmt.Errorf("error")
 
 	mockController := mocks.NewMockController(mockCtrl)
-	mockController.EXPECT().PowerPin(5, true).Return(expErr).Times(1)
+	mockController.EXPECT().PowerPin(uint8(5), true).Return(expErr).Times(1)
 
 	server := HeaterServer{ctrl: mockController, pin: 5}
 
@@ -51,7 +51,7 @@ func TestHeaterOff(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockController := mocks.NewMockController(mockCtrl)
-	mockController.EXPECT().PowerPin(5, false).Return(nil).Times(1)
+	mockController.EXPECT().PowerPin(uint8(5), false).Return(nil).Times(1)
 
 	server := HeaterServer{ctrl: mockController, pin: 5}
 
@@ -68,7 +68,7 @@ func TestHeaterOffError(t *testing.T) {
 	expErr := fmt.Errorf("error")
 
 	mockController := mocks.NewMockController(mockCtrl)
-	mockController.EXPECT().PowerPin(5, false).Return(expErr).Times(1)
+	mockController.EXPECT().PowerPin(uint8(5), false).Return(expErr).Times(1)
 
 	server := HeaterServer{ctrl: mockController, pin: 5}
 

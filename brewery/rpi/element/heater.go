@@ -12,7 +12,7 @@ import (
 // HeaterServer implements switch.
 type HeaterServer struct {
 	ctrl gpio.Controller
-	pin  int
+	pin  uint8
 }
 
 func (s *HeaterServer) On(ctx context.Context, req *model.OnRequest) (*model.OnResponse, error) {

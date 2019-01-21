@@ -3,12 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
-	"strconv"
-	"strings"
 	"time"
 
 	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
-	"github.com/mkuchenbecker/brewery3/brewery/rpi/element"
 	"github.com/mkuchenbecker/brewery3/brewery/rpi/sensors"
 	"google.golang.org/grpc"
 )
@@ -33,51 +30,51 @@ func MakeTemperatureClient(port int, address string) model.ThermometerClient {
 	return client
 }
 
-func MakeSwitchClient(port int, pin int) model.SwitchClient {
-	fmt.Printf("Starting switch server on port: %d\n", port)
-	go element.StartHeater(port, pin)
-	fmt.Printf("Waiting for discovery on port: %d\n", port)
-	time.Sleep(5 * time.Second)
-	fmt.Printf("Connecting to client: %d\n", port)
-	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", port), grpc.WithInsecure())
-	if err != nil {
-		panic(err)
-	}
-	defer conn.Close()
-	client := model.NewSwitchClient(conn)
-	_, err = client.Off(context.Background(), &model.OffRequest{})
-	if err != nil {
-		panic(err)
-	}
-	return client
-}
+// func MakeSwitchClient(port int, pin uint8) model.SwitchClient {
+// 	fmt.Printf("Starting switch server on port: %d\n", port)
+// 	go element.StartHeater(port, pin)
+// 	fmt.Printf("Waiting for discovery on port: %d\n", port)
+// 	time.Sleep(5 * time.Second)
+// 	fmt.Printf("Connecting to client: %d\n", port)
+// 	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", port), grpc.WithInsecure())
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	defer conn.Close()
+// 	client := model.NewSwitchClient(conn)
+// 	_, err = client.Off(context.Background(), &model.OffRequest{})
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	return client
+// }
 
-func MakeBreweryClient(port int) model.BreweryClient {
-	conn, err := grpc.Dial(fmt.Sprintf("localhost://%d", port))
-	if err != nil {
-		panic(err)
-	}
-	defer conn.Close()
-	return model.NewBreweryClient(conn)
-}
+// func MakeBreweryClient(port int) model.BreweryClient {
+// 	conn, err := grpc.Dial(fmt.Sprintf("localhost://%d", port))
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	defer conn.Close()
+// 	return model.NewBreweryClient(conn)
+// }
 
-func parseTemp(in string) (float64, error) {
-	i := strings.Index(in, "f")
-	str := in
-	if i > -1 {
-		str = str[:i]
-	}
-	t, err := strconv.ParseFloat(str, 64)
-	if err != nil {
-		return 0, err
-	}
+// func parseTemp(in string) (float64, error) {
+// 	i := strings.Index(in, "f")
+// 	str := in
+// 	if i > -1 {
+// 		str = str[:i]
+// 	}
+// 	t, err := strconv.ParseFloat(str, 64)
+// 	if err != nil {
+// 		return 0, err
+// 	}
 
-	if i > -1 {
-		return (t - 32) * 5 / 9, nil
-	}
+// 	if i > -1 {
+// 		return (t - 32) * 5 / 9, nil
+// 	}
 
-	return t, nil
-}
+// 	return t, nil
+// }
 
 func main() {
 	MakeTemperatureClient(8090, "28-031571188aff")

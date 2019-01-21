@@ -93,7 +93,7 @@ func (m *MockController) EXPECT() *MockControllerMockRecorder {
 }
 
 // PowerPin mocks base method
-func (m *MockController) PowerPin(arg0 int, arg1 bool) error {
+func (m *MockController) PowerPin(arg0 byte, arg1 bool) error {
 	ret := m.ctrl.Call(m, "PowerPin", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0

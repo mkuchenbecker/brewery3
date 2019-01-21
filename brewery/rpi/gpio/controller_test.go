@@ -53,12 +53,12 @@ func TestControllerReadTemperature(t *testing.T) {
 	sensor.sensors[igpio.Sensor("A")] = 50
 	sensor.sensors[igpio.Sensor("B")] = 40
 
-	ctrl := GPIOController{sensors: sensor}
+	ctrl := GPIOController{Sensors: sensor}
 
-	cel, err := ctrl.ReadTemperature(igpio.Sensor("A"))
+	cel, err := ctrl.ReadTemperature(igpio.TemperatureAddress("A"))
 
 	assert.NoError(t, err)
-	assert.Equal(t, igpio.Celsius(50), cel)
+	assert.Equal(t, float64(50), cel)
 }
 
 func TestControllerPowerPinHigh(t *testing.T) {
