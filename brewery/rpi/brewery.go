@@ -14,16 +14,16 @@ type Brewery struct {
 	Scheme *model.ControlScheme
 	mux    sync.RWMutex
 
+	// TODO: Should be refactored to an async updating thermometer with logging.
 	MashSensor  model.ThermometerClient
 	BoilSensor  model.ThermometerClient
 	HermsSensor model.ThermometerClient
-
-	mashTemp  float64
-	boilTemp  float64
-	hermsTemp float64
-	tempMux   sync.RWMutex
-
-	tempsRead bool
+	mashTemp    float64
+	boilTemp    float64
+	hermsTemp   float64
+	tempMux     sync.RWMutex
+	tempsRead   bool
+	// End TODO
 
 	Element model.SwitchClient
 }
