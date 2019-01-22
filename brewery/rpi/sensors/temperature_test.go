@@ -22,7 +22,7 @@ func TestReadTemperature(t *testing.T) {
 	mockController := mocks.NewMockController(mockCtrl)
 	mockController.EXPECT().ReadTemperature(gpio.TemperatureAddress("address123")).Return(float64(50), nil).Times(1)
 
-	server := ThermometerServer{ctrl: mockController, address: gpio.TemperatureAddress("address123")}
+	server := ThermometerServer{Controller: mockController, Address: gpio.TemperatureAddress("address123")}
 
 	res, err := server.Get(context.Background(), &model.GetRequest{})
 	assert.NoError(t, err)
@@ -37,7 +37,7 @@ func TestReadTemperatureError(t *testing.T) {
 	mockController := mocks.NewMockController(mockCtrl)
 	mockController.EXPECT().ReadTemperature(gpio.TemperatureAddress("address123")).Return(float64(0), fmt.Errorf("temperatureError")).Times(1)
 
-	server := ThermometerServer{ctrl: mockController, address: gpio.TemperatureAddress("address123")}
+	server := ThermometerServer{Controller: mockController, Address: gpio.TemperatureAddress("address123")}
 
 	_, err := server.Get(context.Background(), &model.GetRequest{})
 	assert.Error(t, err)

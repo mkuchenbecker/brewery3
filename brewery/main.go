@@ -1,17 +1,79 @@
+//+build !test
+
 package main
 
 import (
 	"context"
 	"fmt"
+	"log"
+	"net"
 	"time"
 
 	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
 	"github.com/mkuchenbecker/brewery3/brewery/rpi"
 	"github.com/mkuchenbecker/brewery3/brewery/rpi/element"
+	"github.com/mkuchenbecker/brewery3/brewery/rpi/gpio"
 	"github.com/mkuchenbecker/brewery3/brewery/rpi/sensors"
 	"github.com/mkuchenbecker/brewery3/brewery/utils"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
+
+func StartBrewery(port int, brewery *rpi.Brewery) {
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	serve := grpc.NewServer()
+	model.RegisterBreweryServer(serve, brewery)
+	go func() {
+		err = brewery.RunLoop()
+		if err != nil {
+			panic(err)
+		}
+	}()
+	// Register reflection service on gRPC server.
+	reflection.Register(serve)
+	if err := serve.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
+}
+
+func StartThermometer(port int, address string) {
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+	if err != nil {
+		log.Fatalf("failed to listen: %v\n", err)
+	}
+	serve := grpc.NewServer()
+	addr, err := gpio.NewTemperatureAddress(address, &gpio.DefaultSensorArray{})
+	if err != nil {
+		log.Fatalf("failed to read address: %v\n", err)
+	}
+	server := &sensors.ThermometerServer{Address: addr,
+		Controller: gpio.GetDefaultController()}
+	model.RegisterThermometerServer(serve, server)
+
+	utils.Print("Serving Traffic")
+
+	reflection.Register(serve)
+	if err := serve.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v\n", err)
+	}
+}
+
+func StartHeater(port int, pin uint8) {
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	serve := grpc.NewServer()
+	model.RegisterSwitchServer(serve, element.NewHeaterServer(gpio.GetDefaultController(), pin))
+	// Register reflection service on gRPC server.
+	reflection.Register(serve)
+	if err := serve.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
+}
 
 const (
 	MashAddr   = "28-0315712c08ff"
@@ -22,7 +84,7 @@ const (
 
 func MakeTemperatureClient(port int, address string) (model.ThermometerClient, *grpc.ClientConn) {
 	utils.Print(fmt.Sprintf("Starting temperature server on port: %d", port))
-	go sensors.StartThermometer(port, address)
+	go StartThermometer(port, address)
 	utils.Print(fmt.Sprintf("Waiting for discovery on port: %d", port))
 	time.Sleep(2 * time.Second)
 	utils.Print(fmt.Sprintf("Connecting to client: %d", port))
@@ -41,7 +103,7 @@ func MakeTemperatureClient(port int, address string) (model.ThermometerClient, *
 
 func MakeSwitchClient(port int, pin uint8) (model.SwitchClient, *grpc.ClientConn) {
 	utils.Print(fmt.Sprintf("Starting switch server on port: %d", port))
-	go element.StartHeater(port, pin)
+	go StartHeater(port, pin)
 	utils.Print(fmt.Sprintf("Waiting for discovery on port: %d", port))
 	time.Sleep(5 * time.Second)
 	utils.Print(fmt.Sprintf("Connecting to client: %d", port))
@@ -74,5 +136,5 @@ func main() {
 		BoilSensor:  boil,
 		Element:     element,
 	}
-	rpi.StartBrewery(8100, &brewery)
+	StartBrewery(8100, &brewery)
 }

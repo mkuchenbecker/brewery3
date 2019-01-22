@@ -9,11 +9,11 @@ import (
 
 // HeaterServer implements switch.
 type ThermometerServer struct {
-	ctrl    gpio.Controller
-	address gpio.TemperatureAddress
+	Controller gpio.Controller
+	Address    gpio.TemperatureAddress
 }
 
 func (s *ThermometerServer) Get(ctx context.Context, req *model.GetRequest) (*model.GetResponse, error) {
-	temp, err := s.ctrl.ReadTemperature(s.address)
+	temp, err := s.Controller.ReadTemperature(s.Address)
 	return &model.GetResponse{Temperature: temp}, err
 }

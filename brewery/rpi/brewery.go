@@ -79,7 +79,7 @@ func (c *Brewery) getTempConstraints() ([]Constraint, error) {
 			return []Constraint{}, err
 		}
 	} else {
-		go c.updateTemperatures()
+		go utils.BackgroundErrReturn(c.updateTemperatures)
 	}
 
 	c.tempMux.RLock()
@@ -215,26 +215,28 @@ func (b *Brewery) ElementPowerLevel(powerLevel int) error {
 	return b.elementPowerLevelToggle(delay, 10*time.Second, time.Duration(interval)*time.Second)
 }
 
-func (b *Brewery) elementPowerLevelToggle(delay time.Duration, ttl time.Duration, interval time.Duration) error {
+func (b *Brewery) elementPowerLevelToggle(delay time.Duration, ttl time.Duration, interval time.Duration) (err error) {
 	ticker := time.NewTicker(interval)
 	quit := make(chan bool)
 	resErr := make(chan error)
 
+	defer utils.DeferErrReturn(b.ElementOff, &err)
 	go func() {
 		for {
 			select {
 			case <-ticker.C:
-				timer := time.NewTimer(delay)
 				utils.Print(".")
 				err := b.ElementOn()
 				if err != nil {
+					utils.Print(err.Error())
 					resErr <- err
 					return
 				}
-
+				timer := time.NewTimer(delay)
 				<-timer.C
 				err = b.ElementOff()
 				if err != nil {
+					utils.Print(err.Error())
 					resErr <- err
 					return
 				}

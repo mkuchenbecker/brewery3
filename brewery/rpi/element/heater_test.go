@@ -21,7 +21,7 @@ func TestHeaterOn(t *testing.T) {
 	mockController := mocks.NewMockController(mockCtrl)
 	mockController.EXPECT().PowerPin(uint8(5), true).Return(nil).Times(1)
 
-	server := HeaterServer{ctrl: mockController, pin: 5}
+	server := NewHeaterServer(mockController, 5)
 
 	res, err := server.On(context.Background(), &model.OnRequest{})
 	assert.NoError(t, err)
@@ -38,7 +38,7 @@ func TestHeaterOnError(t *testing.T) {
 	mockController := mocks.NewMockController(mockCtrl)
 	mockController.EXPECT().PowerPin(uint8(5), true).Return(expErr).Times(1)
 
-	server := HeaterServer{ctrl: mockController, pin: 5}
+	server := NewHeaterServer(mockController, 5)
 
 	_, err := server.On(context.Background(), &model.OnRequest{})
 	assert.Error(t, err)
@@ -53,7 +53,7 @@ func TestHeaterOff(t *testing.T) {
 	mockController := mocks.NewMockController(mockCtrl)
 	mockController.EXPECT().PowerPin(uint8(5), false).Return(nil).Times(1)
 
-	server := HeaterServer{ctrl: mockController, pin: 5}
+	server := NewHeaterServer(mockController, 5)
 
 	res, err := server.Off(context.Background(), &model.OffRequest{})
 	assert.NoError(t, err)
@@ -70,7 +70,7 @@ func TestHeaterOffError(t *testing.T) {
 	mockController := mocks.NewMockController(mockCtrl)
 	mockController.EXPECT().PowerPin(uint8(5), false).Return(expErr).Times(1)
 
-	server := HeaterServer{ctrl: mockController, pin: 5}
+	server := NewHeaterServer(mockController, 5)
 
 	_, err := server.Off(context.Background(), &model.OffRequest{})
 	assert.Error(t, err)
