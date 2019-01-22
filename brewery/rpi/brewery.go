@@ -123,8 +123,9 @@ func (b *Brewery) RunLoop() error {
 		err := b.Run(ttl)
 		if err != nil {
 			utils.Print(fmt.Sprintf("[RunLoop] %s", err.Error()))
+			time.Sleep(time.Duration(ttl) * time.Second)
 		}
-		time.Sleep(time.Duration(ttl) * time.Second)
+		err = nil
 	}
 }
 
