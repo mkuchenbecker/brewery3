@@ -14,13 +14,12 @@ import (
 	"google.golang.org/grpc"
 )
 
-func MakeBreweryClient(port int) model.BreweryClient {
+func MakeBreweryClient(port int) (model.BreweryClient, *grpc.ClientConn) {
 	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", port), grpc.WithInsecure())
 	if err != nil {
 		panic(err)
 	}
-	//defer conn.Close() //TODO
-	return model.NewBreweryClient(conn)
+	return model.NewBreweryClient(conn), conn
 }
 
 func parseTemp(in string) (float64, error) {
@@ -44,7 +43,8 @@ func parseTemp(in string) (float64, error) {
 func main() {
 	app := cli.NewApp()
 
-	client := MakeBreweryClient(8100)
+	client, conn := MakeBreweryClient(8100)
+	defer conn.Close()
 
 	app.Flags = []cli.Flag{
 		cli.StringFlag{

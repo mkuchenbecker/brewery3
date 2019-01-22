@@ -20,7 +20,7 @@ const (
 	ElementPin = 11
 )
 
-func MakeTemperatureClient(port int, address string) model.ThermometerClient {
+func MakeTemperatureClient(port int, address string) (model.ThermometerClient, *grpc.ClientConn) {
 	utils.Print(fmt.Sprintf("Starting temperature server on port: %d", port))
 	go sensors.StartThermometer(port, address)
 	utils.Print(fmt.Sprintf("Waiting for discovery on port: %d", port))
@@ -30,17 +30,16 @@ func MakeTemperatureClient(port int, address string) model.ThermometerClient {
 	if err != nil {
 		panic(err)
 	}
-	defer conn.Close()
 	client := model.NewThermometerClient(conn)
 	res, err := client.Get(context.Background(), &model.GetRequest{})
 	if err != nil {
 		panic(err)
 	}
 	utils.Print(fmt.Sprintf("temp: %f", res.Temperature))
-	return client
+	return client, conn
 }
 
-func MakeSwitchClient(port int, pin uint8) model.SwitchClient {
+func MakeSwitchClient(port int, pin uint8) (model.SwitchClient, *grpc.ClientConn) {
 	utils.Print(fmt.Sprintf("Starting switch server on port: %d", port))
 	go element.StartHeater(port, pin)
 	utils.Print(fmt.Sprintf("Waiting for discovery on port: %d", port))
@@ -50,21 +49,30 @@ func MakeSwitchClient(port int, pin uint8) model.SwitchClient {
 	if err != nil {
 		panic(err)
 	}
-	defer conn.Close()
 	client := model.NewSwitchClient(conn)
 	_, err = client.Off(context.Background(), &model.OffRequest{})
 	if err != nil {
 		panic(err)
 	}
-	return client
+	return client, conn
 }
 
 func main() {
+	mash, mashConn := MakeTemperatureClient(8090, MashAddr)
+	defer mashConn.Close()
+	herms, hermsConn := MakeTemperatureClient(8091, HermsAddr)
+	defer hermsConn.Close()
+	boil, boilConn := MakeTemperatureClient(8092, BoilAddr)
+	defer boilConn.Close()
+
+	element, elementConn := MakeSwitchClient(8110, ElementPin)
+	defer elementConn.Close()
+
 	brewery := rpi.Brewery{
-		MashSensor:  MakeTemperatureClient(8090, MashAddr),
-		HermsSensor: MakeTemperatureClient(8091, HermsAddr),
-		BoilSensor:  MakeTemperatureClient(8092, BoilAddr),
-		Element:     MakeSwitchClient(8110, ElementPin),
+		MashSensor:  mash,
+		HermsSensor: herms,
+		BoilSensor:  boil,
+		Element:     element,
 	}
 	rpi.StartBrewery(8100, &brewery)
 }
