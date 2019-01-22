@@ -18,6 +18,13 @@ type Brewery struct {
 	BoilSensor  model.ThermometerClient
 	HermsSensor model.ThermometerClient
 
+	mashTemp  float64
+	boilTemp  float64
+	hermsTemp float64
+	tempMux   sync.RWMutex
+
+	tempsRead bool
+
 	Element model.SwitchClient
 }
 
@@ -34,38 +41,65 @@ func (c *Brewery) ReplaceConfig(scheme *model.ControlScheme) {
 	c.Scheme = scheme
 }
 
-func (c *Brewery) getTempConstraints() ([]Constraint, error) {
+func (c *Brewery) updateTemperatures() error {
 	resBoil, err := c.BoilSensor.Get(context.Background(), &model.GetRequest{})
 	if err != nil {
-		return []Constraint{}, err
+		return err
 	}
 	resHerms, err := c.HermsSensor.Get(context.Background(), &model.GetRequest{})
 	if err != nil {
-		return []Constraint{}, err
+		return err
 	}
 	resMash, err := c.MashSensor.Get(context.Background(), &model.GetRequest{})
 	if err != nil {
-		return []Constraint{}, err
+		return err
 	}
 
 	utils.Print(fmt.Sprintf("Mash: %f | Boil %f | Herms %f",
 		resMash.Temperature, resBoil.Temperature, resHerms.Temperature))
 
+	c.tempMux.Lock()
+	defer c.tempMux.Unlock()
+	c.boilTemp = resBoil.Temperature
+	c.mashTemp = resMash.Temperature
+	c.hermsTemp = resHerms.Temperature
+	c.tempsRead = true
+	return nil
+}
+
+func (c *Brewery) getTempConstraints() ([]Constraint, error) {
+
+	c.tempMux.RLock()
+	updateLive := !c.tempsRead
+	c.tempMux.RUnlock()
+
+	if updateLive {
+		err := c.updateTemperatures()
+		if err != nil {
+			return []Constraint{}, err
+		}
+	} else {
+		go c.updateTemperatures()
+	}
+
+	c.tempMux.RLock()
+	defer c.tempMux.RUnlock()
+
 	return []Constraint{
 		{
 			min: c.Scheme.GetMash().BoilMinTemp,
 			max: c.Scheme.GetMash().BoilMaxTemp,
-			val: resBoil.Temperature,
+			val: c.boilTemp,
 		},
 		{
 			min: c.Scheme.GetMash().HermsMinTemp,
 			max: c.Scheme.GetMash().HermsMaxTemp,
-			val: resHerms.Temperature,
+			val: c.hermsTemp,
 		},
 		{
 			min: c.Scheme.GetMash().MashMinTemp,
 			max: c.Scheme.GetMash().MashMaxTemp,
-			val: resMash.Temperature,
+			val: c.mashTemp,
 		},
 	}, nil
 }
@@ -120,7 +154,7 @@ func (b *Brewery) RunLoop() error {
 	ttl := 5
 	for {
 		utils.Print("[RunLoop]")
-		err := b.Run(ttl)
+		err := b.Run()
 		if err != nil {
 			utils.Print(fmt.Sprintf("[RunLoop] %s", err.Error()))
 			time.Sleep(time.Duration(ttl) * time.Second)
@@ -129,18 +163,17 @@ func (b *Brewery) RunLoop() error {
 	}
 }
 
-func (b *Brewery) Run(ttlSec int) error {
+func (b *Brewery) Run() error {
 	b.mux.RLock()
 	defer b.mux.RUnlock()
-	ttl := time.Duration(ttlSec) * time.Second
 	if b.Scheme == nil {
 		utils.Print("[Brewery.Run] No scheme present")
-		return nil
+		return fmt.Errorf("no scheme present")
 	}
 	config := b.Scheme
 	switch sch := config.Scheme.(type) {
 	case *model.ControlScheme_Boil_:
-		err := b.ElementOn(ttl)
+		err := b.ElementOn()
 		return err
 	case *model.ControlScheme_Mash_:
 		on, err := b.mashThermOn()
@@ -149,66 +182,37 @@ func (b *Brewery) Run(ttlSec int) error {
 			return err
 		}
 		if !on {
-			err := b.ElementOff()
-			if err != nil {
-				utils.Print(fmt.Sprintf("[Brewery.Run] Off Err: %s", err))
-				return err
-			}
-			return nil
+			return b.ElementOff()
 		}
-		err = b.ElementOn(ttl)
-		if err != nil {
-			utils.Print(fmt.Sprintf("[Brewery.Run] On Err: %s", err))
-		}
-		return err
+		return b.ElementOn()
 	case *model.ControlScheme_Power_:
-		return b.ElementPowerLevel(int(sch.Power.PowerLevel), ttlSec) // Toggle for one hour.
+		return b.ElementPowerLevel(int(sch.Power.PowerLevel)) // Toggle for one hour.
 	default:
 	}
 	return nil
 }
 
-func (b *Brewery) ElementOn(ttl time.Duration) (err error) {
-	defer func() {
-		offErr := b.ElementOff()
-		if offErr != nil || err != nil {
-			err = fmt.Errorf("errors occured: '%s', '%s", offErr, err)
-		}
-	}()
-
+func (b *Brewery) ElementOn() (err error) {
 	_, err = b.Element.On(context.Background(), &model.OnRequest{})
 	if err != nil {
 		print(fmt.Sprintf("encountered error turning coil on: %+v", err))
-		return err
 	}
-	timer := time.NewTimer(ttl)
-	<-timer.C
 	return err
 }
 
-func (b *Brewery) ElementPowerLevel(powerLevel int, ttlSeconds int) error {
-	ttl := time.Duration(ttlSeconds) * time.Second
+func (b *Brewery) ElementPowerLevel(powerLevel int) error {
 	if powerLevel < 1 {
-		err := b.ElementOff()
-		if err != nil {
-			return err
-		}
+		return b.ElementOff()
 	}
 	if powerLevel > 100 {
-		err := b.ElementOff()
-		if err != nil {
-			return err
-		}
+		return b.ElementOff()
 	}
 	if powerLevel == 100 {
-		err := b.ElementOn(ttl)
-		if err != nil {
-			return err
-		}
+		return b.ElementOn()
 	}
 	interval := 2
 	delay := time.Duration(powerLevel / 100 * interval)
-	return b.elementPowerLevelToggle(delay, ttl, time.Duration(interval)*time.Second)
+	return b.elementPowerLevelToggle(delay, 10*time.Second, time.Duration(interval)*time.Second)
 }
 
 func (b *Brewery) elementPowerLevelToggle(delay time.Duration, ttl time.Duration, interval time.Duration) error {
@@ -220,7 +224,16 @@ func (b *Brewery) elementPowerLevelToggle(delay time.Duration, ttl time.Duration
 		for {
 			select {
 			case <-ticker.C:
-				err := b.ElementOn(delay)
+				timer := time.NewTimer(delay)
+				utils.Print(".")
+				err := b.ElementOn()
+				if err != nil {
+					resErr <- err
+					return
+				}
+
+				<-timer.C
+				err = b.ElementOff()
 				if err != nil {
 					resErr <- err
 					return
