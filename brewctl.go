@@ -19,7 +19,7 @@ func MakeBreweryClient(port int) model.BreweryClient {
 	if err != nil {
 		panic(err)
 	}
-	defer conn.Close()
+	//defer conn.Close() //TODO
 	return model.NewBreweryClient(conn)
 }
 
