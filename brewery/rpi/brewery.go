@@ -119,7 +119,7 @@ func (c *Brewery) ElementOff() error {
 func (b *Brewery) RunLoop() error {
 	ttl := 5
 	for {
-		fmt.Print("[RunLoop]")
+		utils.Print("[RunLoop]")
 		err := b.Run(ttl)
 		if err != nil {
 			utils.Print(fmt.Sprintf("[RunLoop] %s", err.Error()))
@@ -144,16 +144,22 @@ func (b *Brewery) Run(ttlSec int) error {
 	case *model.ControlScheme_Mash_:
 		on, err := b.mashThermOn()
 		if err != nil {
+			utils.Print(fmt.Sprintf("[Brewery.Run] MashThemOnErr: %s", err))
 			return err
 		}
 		if !on {
 			err := b.ElementOff()
 			if err != nil {
+				utils.Print(fmt.Sprintf("[Brewery.Run] Off Err: %s", err))
 				return err
 			}
 			return nil
 		}
-		return b.ElementOn(ttl)
+		err = b.ElementOn(ttl)
+		if err != nil {
+			utils.Print(fmt.Sprintf("[Brewery.Run] On Err: %s", err))
+		}
+		return err
 	case *model.ControlScheme_Power_:
 		return b.ElementPowerLevel(int(sch.Power.PowerLevel), ttlSec) // Toggle for one hour.
 	default:
