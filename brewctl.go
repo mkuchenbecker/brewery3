@@ -39,11 +39,11 @@ func main() {
 
 	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", 8100),
 		grpc.WithInsecure())
+	defer conn.Close()
 	if err != nil {
 		panic(err)
 	}
-	return model.NewBreweryClient(conn), conn
-	defer conn.Close()
+	client := model.NewBreweryClient(conn)
 
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
@@ -85,7 +85,7 @@ func main() {
 		return err
 	}
 
-	err := app.Run(os.Args)
+	err = app.Run(os.Args)
 	if err != nil {
 		utils.Print("encountered an error:")
 		log.Fatal(err)
