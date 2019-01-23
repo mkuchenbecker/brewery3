@@ -14,6 +14,11 @@ tests: fmt lint
 	-tags test \
 	./brewery/...
 
+.PHONY: server
+server:
+	@echo "running server:"
+	go run entry/server/main.go
+
 .PHONY: fmt
 fmt:
 	@echo "fmt:"
