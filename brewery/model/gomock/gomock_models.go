@@ -71,6 +71,24 @@ func (mr *MockSwitchClientMockRecorder) On(arg0, arg1 interface{}, arg2 ...inter
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "On", reflect.TypeOf((*MockSwitchClient)(nil).On), varargs...)
 }
 
+// ToggleOn mocks base method
+func (m *MockSwitchClient) ToggleOn(arg0 context.Context, arg1 *gomodel.ToggleOnRequest, arg2 ...grpc.CallOption) (*gomodel.ToggleOnResponse, error) {
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ToggleOn", varargs...)
+	ret0, _ := ret[0].(*gomodel.ToggleOnResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ToggleOn indicates an expected call of ToggleOn
+func (mr *MockSwitchClientMockRecorder) ToggleOn(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ToggleOn", reflect.TypeOf((*MockSwitchClient)(nil).ToggleOn), varargs...)
+}
+
 // MockThermometerClient is a mock of ThermometerClient interface
 type MockThermometerClient struct {
 	ctrl     *gomock.Controller

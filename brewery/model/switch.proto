@@ -18,9 +18,17 @@ message OffResponse {
 
 }
 
+message ToggleOnRequest {
+    int64 interval_ms = 1;
+}
+
+message ToggleOnResponse {
+
+}
 
 service Switch {
     rpc On(OnRequest) returns (OnResponse) {}
     rpc Off(OffRequest) returns (OffResponse) {}
+    rpc ToggleOn(ToggleOnRequest) returns (ToggleOnResponse) {}
 }
 
