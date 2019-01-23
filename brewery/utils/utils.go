@@ -5,6 +5,8 @@ import (
 	"time"
 )
 
+const UpdateInterval = 5 * time.Second
+
 func DeferErrReturn(f func() error, err *error) {
 	fnErr := f()
 	if fnErr != nil {

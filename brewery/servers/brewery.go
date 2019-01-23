@@ -1,4 +1,4 @@
-package rpi
+package servers
 
 import (
 	"context"
@@ -10,6 +10,8 @@ import (
 	"github.com/mkuchenbecker/brewery3/brewery/utils"
 )
 
+// Brewery is the central controller for various heating elements, sensors, and switches.
+// It coordinates all actions of the brewery.
 type Brewery struct {
 	Scheme *model.ControlScheme
 	mux    sync.RWMutex
@@ -28,14 +30,16 @@ type Brewery struct {
 	Element model.SwitchClient
 }
 
+// Control implements the Brewery.Control method. Given a ControlScheme
+// The brewery will then attempt to follow the scheme.
 func (c *Brewery) Control(ctx context.Context,
 	req *model.ControlRequest) (res *model.ControlResponse, err error) {
 	utils.Print("Recieved control request")
-	c.ReplaceConfig(req.Scheme)
+	c.replaceConfig(req.Scheme)
 	return &model.ControlResponse{}, nil
 }
 
-func (c *Brewery) ReplaceConfig(scheme *model.ControlScheme) {
+func (c *Brewery) replaceConfig(scheme *model.ControlScheme) {
 	c.mux.Lock()
 	defer c.mux.Unlock()
 	c.Scheme = scheme
@@ -67,7 +71,7 @@ func (c *Brewery) updateTemperatures() error {
 	return nil
 }
 
-func (c *Brewery) getTempConstraints() ([]Constraint, error) {
+func (c *Brewery) getTempConstraints() ([]constraint, error) {
 
 	c.tempMux.RLock()
 	updateLive := !c.tempsRead
@@ -76,7 +80,7 @@ func (c *Brewery) getTempConstraints() ([]Constraint, error) {
 	if updateLive {
 		err := c.updateTemperatures()
 		if err != nil {
-			return []Constraint{}, err
+			return []constraint{}, err
 		}
 	} else {
 		go utils.BackgroundErrReturn(c.updateTemperatures)
@@ -85,7 +89,7 @@ func (c *Brewery) getTempConstraints() ([]Constraint, error) {
 	c.tempMux.RLock()
 	defer c.tempMux.RUnlock()
 
-	return []Constraint{
+	return []constraint{
 		{
 			min: c.Scheme.GetMash().BoilMinTemp,
 			max: c.Scheme.GetMash().BoilMaxTemp,
@@ -113,13 +117,13 @@ func (c *Brewery) mashThermOn() (on bool, err error) {
 	return val < 0, nil
 }
 
-type Constraint struct {
+type constraint struct {
 	min float64
 	max float64
 	val float64
 }
 
-func (c *Constraint) Check() int {
+func (c *constraint) check() int {
 	if c.val < c.min {
 		return -1
 	}
@@ -130,9 +134,9 @@ func (c *Constraint) Check() int {
 }
 
 // Returns -1 if some val is too low, 0 if all are met, and 1 if val is too high.
-func checkTempConstraints(constriants []Constraint) int {
+func checkTempConstraints(constriants []constraint) int {
 	for _, constriant := range constriants {
-		if val := constriant.Check(); val != 0 {
+		if val := constriant.check(); val != 0 {
 			return val
 		}
 	}

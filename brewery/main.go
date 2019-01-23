@@ -1,6 +1,6 @@
 //+build !test
 
-package main
+package brewery
 
 import (
 	"context"
@@ -9,11 +9,12 @@ import (
 	"net"
 	"time"
 
+	"github.com/golang001/brewery/rpi"
+	"github.com/mkuchenbecker/brewery3/brewery/gpio"
+	"github.com/mkuchenbecker/brewery3/brewery/gpio/integration"
 	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
-	"github.com/mkuchenbecker/brewery3/brewery/rpi"
-	"github.com/mkuchenbecker/brewery3/brewery/rpi/element"
-	"github.com/mkuchenbecker/brewery3/brewery/rpi/gpio"
-	"github.com/mkuchenbecker/brewery3/brewery/rpi/sensors"
+	"github.com/mkuchenbecker/brewery3/brewery/servers/element"
+	"github.com/mkuchenbecker/brewery3/brewery/servers/sensors"
 	"github.com/mkuchenbecker/brewery3/brewery/utils"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -45,12 +46,15 @@ func StartThermometer(port int, address string) {
 		log.Fatalf("failed to listen: %v\n", err)
 	}
 	serve := grpc.NewServer()
-	addr, err := gpio.NewTemperatureAddress(address, &gpio.DefaultSensorArray{})
+	addr, err := gpio.NewTemperatureAddress(address, &integration.Defaulttemperature{}) // make default function.
 	if err != nil {
 		log.Fatalf("failed to read address: %v\n", err)
 	}
-	server := &sensors.ThermometerServer{Address: addr,
-		Controller: gpio.GetDefaultController()}
+	server, err := sensors.NewThermometerServer(gpio.GetDefaultController(), addr)
+	if err != nil {
+		log.Fatalf("failed to make thermometer server: %v\n", err)
+	}
+
 	model.RegisterThermometerServer(serve, server)
 
 	utils.Print("Serving Traffic")

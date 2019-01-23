@@ -1,4 +1,4 @@
-package rpi
+package servers
 
 import (
 	"context"
@@ -170,7 +170,7 @@ func TestBreweryGetConstraints(t *testing.T) {
 
 	constraints, err := brewery.getTempConstraints()
 	assert.NoError(t, err)
-	assert.Equal(t, []Constraint{{min: 50, max: 100, val: 60},
+	assert.Equal(t, []constraint{{min: 50, max: 100, val: 60},
 		{min: 51, max: 60, val: 55},
 		{min: 49.5, max: 50.5, val: 50.25}}, constraints)
 }
@@ -225,7 +225,7 @@ func TestGetConstraintsBackground(t *testing.T) {
 
 	time.Sleep(100 * time.Millisecond) // Pause so the background RPCs can finish.
 	// The expected values are all 10 because the temperatures are read in the background.
-	assert.Equal(t, []Constraint{{min: 50, max: 100, val: 10},
+	assert.Equal(t, []constraint{{min: 50, max: 100, val: 10},
 		{min: 51, max: 60, val: 10},
 		{min: 49.5, max: 50.5, val: 10}}, constraints)
 }
@@ -341,55 +341,55 @@ func TestConstraints(t *testing.T) {
 	t.Parallel()
 
 	// Everything good.
-	assert.Equal(t, 0, checkTempConstraints([]Constraint{
+	assert.Equal(t, 0, checkTempConstraints([]constraint{
 		{min: 50, max: 100, val: 60},
 		{min: 51, max: 60, val: 55},
 		{min: 49.5, max: 50.5, val: 50.25},
 	}))
 
-	assert.Equal(t, -1, checkTempConstraints([]Constraint{
+	assert.Equal(t, -1, checkTempConstraints([]constraint{
 		{min: 50, max: 100, val: 45}, //Boil too low
 		{min: 51, max: 60, val: 55},
 		{min: 49.5, max: 50.5, val: 50.25},
 	}))
 
-	assert.Equal(t, 1, checkTempConstraints([]Constraint{
+	assert.Equal(t, 1, checkTempConstraints([]constraint{
 		{min: 50, max: 100, val: 101}, //Boil too high
 		{min: 51, max: 60, val: 55},
 		{min: 49.5, max: 50.5, val: 50.25},
 	}))
 
-	assert.Equal(t, -1, checkTempConstraints([]Constraint{
+	assert.Equal(t, -1, checkTempConstraints([]constraint{
 		{min: 50, max: 100, val: 60},
 		{min: 51, max: 60, val: 40}, // Stream too low
 		{min: 49.5, max: 50.5, val: 50.25},
 	}))
 
-	assert.Equal(t, 1, checkTempConstraints([]Constraint{
+	assert.Equal(t, 1, checkTempConstraints([]constraint{
 		{min: 50, max: 100, val: 60},
 		{min: 51, max: 60, val: 61}, // Stream too high
 		{min: 49.5, max: 50.5, val: 50.25},
 	}))
 
-	assert.Equal(t, -1, checkTempConstraints([]Constraint{
+	assert.Equal(t, -1, checkTempConstraints([]constraint{
 		{min: 50, max: 100, val: 60},
 		{min: 51, max: 60, val: 55},
 		{min: 49.5, max: 50.5, val: 40}, // Mash too low
 	}))
 
-	assert.Equal(t, 1, checkTempConstraints([]Constraint{
+	assert.Equal(t, 1, checkTempConstraints([]constraint{
 		{min: 50, max: 100, val: 60},
 		{min: 51, max: 60, val: 55},
 		{min: 49.5, max: 50.5, val: 52}, // Mash too high
 	}))
 
-	assert.Equal(t, 1, checkTempConstraints([]Constraint{
+	assert.Equal(t, 1, checkTempConstraints([]constraint{
 		{min: 50, max: 100, val: 110},
 		{min: 51, max: 60, val: 50},     //Stream too low
 		{min: 49.5, max: 50.5, val: 51}, // Mash too high
 	}))
 
-	assert.Equal(t, 1, checkTempConstraints([]Constraint{
+	assert.Equal(t, 1, checkTempConstraints([]constraint{
 		{min: 50, max: 100, val: 60},
 		{min: 51, max: 60, val: 65},     // Stream too high
 		{min: 49.5, max: 50.5, val: 45}, // Mash too low
