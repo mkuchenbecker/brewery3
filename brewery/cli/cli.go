@@ -100,7 +100,7 @@ func Run(client model.BreweryClient, args []string) error {
 		}
 		if c.IsSet("power") {
 			power := c.Uint64("power")
-			if power > 100 || power < 0 {
+			if power > 100 {
 				err = fmt.Errorf("power level invalid, must be an integer from 0-100: %d", power)
 				utils.Print(err.Error())
 				return err

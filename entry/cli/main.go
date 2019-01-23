@@ -16,10 +16,10 @@ import (
 func main() {
 	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", 8100),
 		grpc.WithInsecure())
-	defer conn.Close()
 	if err != nil {
 		panic(err)
 	}
+	defer utils.DeferErrReturn(conn.Close, &err)
 	client := model.NewBreweryClient(conn)
 	err = cli.Run(client, os.Args)
 	if err != nil {

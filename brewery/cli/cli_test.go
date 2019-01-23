@@ -75,7 +75,7 @@ func TestCLIPower(t *testing.T) {
 
 	req := getPowerRequst(55)
 	brewery.EXPECT().Control(context.Background(),
-		&req).Return(&model.ControlResponse{}, nil).Times(1)
+		req).Return(&model.ControlResponse{}, nil).Times(1)
 
 	args := os.Args[0:1]
 	args = append(args, "-power=55")
@@ -101,7 +101,7 @@ func TestCLIMash(t *testing.T) {
 
 	req := getMashRequest(65)
 	brewery.EXPECT().Control(context.Background(),
-		&req).Return(&model.ControlResponse{}, nil).Times(1)
+		req).Return(&model.ControlResponse{}, nil).Times(1)
 
 	args := os.Args[0:1]
 	args = append(args, "-mash=65")
@@ -127,7 +127,7 @@ func TestCLIBoil(t *testing.T) {
 
 	req := getBoilRequest()
 	brewery.EXPECT().Control(context.Background(),
-		&req).Return(&model.ControlResponse{}, nil).Times(1)
+		req).Return(&model.ControlResponse{}, nil).Times(1)
 
 	args := os.Args[0:1]
 	args = append(args, "-boil")
