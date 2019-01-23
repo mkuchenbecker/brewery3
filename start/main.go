@@ -1,4 +1,4 @@
-package brewery
+package main
 
 //nolint
 
