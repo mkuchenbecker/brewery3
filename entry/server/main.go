@@ -121,6 +121,7 @@ func main() {
 	go startThermometer(mashPort, mashAddr)
 	go startThermometer(hermsPort, hermsAddr)
 	go startThermometer(boilPort, boilAddr)
+	go startHeater(elementPort, elementPin)
 
 	utils.Print("waiting for discovery")
 	time.Sleep(time.Second)
@@ -133,7 +134,7 @@ func main() {
 	boil, boilConn := makeTemperatureClient(boilPort, boilAddr)
 	defer boilConn.Close()
 
-	element, elementConn := makeSwitchClient(8110, elementPin)
+	element, elementConn := makeSwitchClient(elementPort, elementPin)
 	defer elementConn.Close()
 
 	brewery := servers.Brewery{

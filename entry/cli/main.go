@@ -10,8 +10,6 @@ import (
 )
 
 func main() {
-
-	fmt.Printf("%+v\n\n", os.Args)
 	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", 8100),
 		grpc.WithInsecure())
 	defer conn.Close()
