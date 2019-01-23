@@ -76,17 +76,18 @@ func startHeater(port int, pin uint8) {
 }
 
 const (
-	mashAddr   = "28-0315712c08ff"
-	hermsAddr  = "28-0315715039ff"
-	boilAddr   = "28-031571188aff"
-	elementPin = 11
+	mashAddr  = "28-0315712c08ff"
+	mashPort  = 8110
+	hermsAddr = "28-0315715039ff"
+	hermsPort = 8111
+	boilAddr  = "28-031571188aff"
+	boilPort  = 8112
+
+	elementPin  = 11
+	elementPort = 8120
 )
 
 func makeTemperatureClient(port int, address string) (model.ThermometerClient, *grpc.ClientConn) {
-	utils.Print(fmt.Sprintf("Starting temperature server on port: %d", port))
-	go startThermometer(port, address)
-	utils.Print(fmt.Sprintf("Waiting for discovery on port: %d", port))
-	time.Sleep(2 * time.Second)
 	utils.Print(fmt.Sprintf("Connecting to client: %d", port))
 	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", port), grpc.WithInsecure())
 	if err != nil {
@@ -102,10 +103,6 @@ func makeTemperatureClient(port int, address string) (model.ThermometerClient, *
 }
 
 func makeSwitchClient(port int, pin uint8) (model.SwitchClient, *grpc.ClientConn) {
-	utils.Print(fmt.Sprintf("Starting switch server on port: %d", port))
-	go startHeater(port, pin)
-	utils.Print(fmt.Sprintf("Waiting for discovery on port: %d", port))
-	time.Sleep(5 * time.Second)
 	utils.Print(fmt.Sprintf("Connecting to client: %d", port))
 	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", port), grpc.WithInsecure())
 	if err != nil {
@@ -120,11 +117,20 @@ func makeSwitchClient(port int, pin uint8) (model.SwitchClient, *grpc.ClientConn
 }
 
 func main() {
-	mash, mashConn := makeTemperatureClient(8090, mashAddr)
+	utils.Print("starting backends")
+	go startThermometer(mashPort, mashAddr)
+	go startThermometer(hermsPort, hermsAddr)
+	go startThermometer(boilPort, boilAddr)
+
+	utils.Print("waiting for discovery")
+	time.Sleep(time.Second)
+	utils.Print("starting clients")
+
+	mash, mashConn := makeTemperatureClient(mashPort, mashAddr)
 	defer mashConn.Close()
-	herms, hermsConn := makeTemperatureClient(8091, hermsAddr)
+	herms, hermsConn := makeTemperatureClient(hermsPort, hermsAddr)
 	defer hermsConn.Close()
-	boil, boilConn := makeTemperatureClient(8092, boilAddr)
+	boil, boilConn := makeTemperatureClient(boilPort, boilAddr)
 	defer boilConn.Close()
 
 	element, elementConn := makeSwitchClient(8110, elementPin)
