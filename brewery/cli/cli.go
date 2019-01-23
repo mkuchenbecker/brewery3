@@ -29,10 +29,10 @@ func parseTemp(in string) (float64, error) {
 	return t, nil
 }
 
-func getMashRequest(temp float64) model.ControlRequest {
+func getMashRequest(temp float64) *model.ControlRequest {
 	utils.Print(fmt.Sprintf("Mashing @ %fC", temp))
 
-	return model.ControlRequest{Scheme: &model.ControlScheme{
+	return &model.ControlRequest{Scheme: &model.ControlScheme{
 		Scheme: &model.ControlScheme_Mash_{
 			Mash: &model.ControlScheme_Mash{
 				HermsMaxTemp: temp + 15,
@@ -47,8 +47,8 @@ func getMashRequest(temp float64) model.ControlRequest {
 	}
 }
 
-func getPowerRequst(power int64) model.ControlRequest {
-	return model.ControlRequest{Scheme: &model.ControlScheme{
+func getPowerRequst(power int64) *model.ControlRequest {
+	return &model.ControlRequest{Scheme: &model.ControlScheme{
 		Scheme: &model.ControlScheme_Power_{
 			Power: &model.ControlScheme_Power{
 				PowerLevel: float64(power),
@@ -58,7 +58,7 @@ func getPowerRequst(power int64) model.ControlRequest {
 	}
 }
 
-func getBoilRequest() model.ControlRequest {
+func getBoilRequest() *model.ControlRequest {
 	return getPowerRequst(75)
 }
 
@@ -84,7 +84,7 @@ func Run(client model.BreweryClient, args []string) error {
 	app.Name = "brew"
 	app.Usage = "brew the beer!"
 	app.Action = func(c *cli.Context) error {
-		var req model.ControlRequest
+		var req *model.ControlRequest
 		var err error
 		if c.IsSet("mash") {
 			var temp float64
@@ -107,10 +107,11 @@ func Run(client model.BreweryClient, args []string) error {
 			}
 			req = getPowerRequst(int64(power))
 		}
+		if req == nil {
+			return fmt.Errorf("no arguments specified")
+		}
 
-		utils.Print("4\n\n")
-
-		_, err = client.Control(context.Background(), &req)
+		_, err = client.Control(context.Background(), req)
 		return err
 	}
 	return app.Run(args)

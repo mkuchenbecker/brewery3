@@ -236,23 +236,6 @@ func TestBreweryRunMash(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestBreweryRunBoil(t *testing.T) {
-	t.Parallel()
-	mockCtrl := gomock.NewController(t)
-	defer mockCtrl.Finish()
-
-	brewery := NewMockBrewery(mockCtrl)
-
-	_, err := brewery.Control(context.Background(), &model.ControlRequest{Scheme: &model.ControlScheme{Scheme: &model.ControlScheme_Boil_{
-		Boil: &model.ControlScheme_Boil{}}}})
-	assert.NoError(t, err)
-
-	brewery.Element.(*mocks.MockSwitchClient).EXPECT().On(context.Background(),
-		&model.OnRequest{}).Return(&model.OnResponse{}, nil).Times(1)
-	err = brewery.run()
-	assert.NoError(t, err)
-}
-
 func TestBreweryRunPower(t *testing.T) {
 	t.Parallel()
 	mockCtrl := gomock.NewController(t)

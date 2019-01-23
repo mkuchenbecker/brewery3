@@ -1,8 +1,12 @@
+//+build !test
+
 package main
 
 import (
 	"fmt"
 	"os"
+
+	"github.com/mkuchenbecker/brewery3/brewery/utils"
 
 	"github.com/mkuchenbecker/brewery3/brewery/cli"
 	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
@@ -17,5 +21,9 @@ func main() {
 		panic(err)
 	}
 	client := model.NewBreweryClient(conn)
-	cli.Run(client, os.Args)
+	err = cli.Run(client, os.Args)
+	if err != nil {
+		utils.LogError(nil, err, "encountered an error")
+		os.Exit(1)
+	}
 }

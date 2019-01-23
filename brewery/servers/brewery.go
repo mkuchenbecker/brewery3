@@ -126,11 +126,11 @@ func (b *Brewery) run() error {
 	}
 	config := b.Scheme
 	switch sch := config.Scheme.(type) {
-	case *model.ControlScheme_Boil_:
-		return b.boil()
 	case *model.ControlScheme_Mash_:
+		utils.Print(fmt.Sprintf("Mashing: %+v", sch.Mash))
 		return b.mash()
 	case *model.ControlScheme_Power_:
+		utils.Print(fmt.Sprintf("Power level: %f", sch.Power.PowerLevel))
 		return b.powerLevel(int(sch.Power.PowerLevel)) // Toggle for one hour.
 	}
 	return nil
@@ -160,11 +160,6 @@ func (b *Brewery) elementOff() error {
 			return err
 		}
 	}
-	return err
-}
-
-func (b *Brewery) boil() error {
-	err := b.elementOn()
 	return err
 }
 
