@@ -47,3 +47,23 @@ func BackgroundErrReturn(f func() error) {
 		LogError(nil, err, "background function encountered error")
 	}
 }
+
+func RunLoop(ttl time.Duration, minLoopInterval time.Duration, fn func() error) (err error) {
+	start := time.Now()
+	for {
+		now := time.Now()
+		if now.Sub(start) > ttl {
+			return
+		}
+		Print("[RunLoop]")
+		err := fn()
+		if err != nil {
+			Print(fmt.Sprintf("[RunLoop] %s", err.Error()))
+		}
+		sleepTime := minLoopInterval - time.Since(now)
+		if sleepTime > time.Duration(0) {
+			time.Sleep(sleepTime)
+		}
+		err = nil
+	}
+}

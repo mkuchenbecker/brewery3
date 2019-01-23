@@ -16,100 +16,66 @@ type Brewery struct {
 	Scheme *model.ControlScheme
 	mux    sync.RWMutex
 
-	// TODO: Should be refactored to an async updating thermometer with logging.
 	MashSensor  model.ThermometerClient
 	BoilSensor  model.ThermometerClient
 	HermsSensor model.ThermometerClient
-	mashTemp    float64
-	boilTemp    float64
-	hermsTemp   float64
-	tempMux     sync.RWMutex
-	tempsRead   bool
-	// End TODO
 
 	Element model.SwitchClient
 }
 
 // Control implements the Brewery.Control method. Given a ControlScheme
 // The brewery will then attempt to follow the scheme.
-func (c *Brewery) Control(ctx context.Context,
+func (b *Brewery) Control(ctx context.Context,
 	req *model.ControlRequest) (res *model.ControlResponse, err error) {
 	utils.Print("Recieved control request")
-	c.replaceConfig(req.Scheme)
+	b.replaceConfig(req.Scheme)
 	return &model.ControlResponse{}, nil
 }
 
-func (c *Brewery) replaceConfig(scheme *model.ControlScheme) {
-	c.mux.Lock()
-	defer c.mux.Unlock()
-	c.Scheme = scheme
+func (b *Brewery) replaceConfig(scheme *model.ControlScheme) {
+	b.mux.Lock()
+	defer b.mux.Unlock()
+	b.Scheme = scheme
 }
 
-func (c *Brewery) updateTemperatures() error {
-	resBoil, err := c.BoilSensor.Get(context.Background(), &model.GetRequest{})
+func (b *Brewery) getTempConstraints() ([]constraint, error) {
+	resBoil, err := b.BoilSensor.Get(context.Background(), &model.GetRequest{})
 	if err != nil {
-		return err
+		return []constraint{}, err
 	}
-	resHerms, err := c.HermsSensor.Get(context.Background(), &model.GetRequest{})
+	resHerms, err := b.HermsSensor.Get(context.Background(), &model.GetRequest{})
 	if err != nil {
-		return err
+		return []constraint{}, err
 	}
-	resMash, err := c.MashSensor.Get(context.Background(), &model.GetRequest{})
+	resMash, err := b.MashSensor.Get(context.Background(), &model.GetRequest{})
 	if err != nil {
-		return err
+		return []constraint{}, err
 	}
 
 	utils.Print(fmt.Sprintf("Mash: %f | Boil %f | Herms %f",
 		resMash.Temperature, resBoil.Temperature, resHerms.Temperature))
 
-	c.tempMux.Lock()
-	defer c.tempMux.Unlock()
-	c.boilTemp = resBoil.Temperature
-	c.mashTemp = resMash.Temperature
-	c.hermsTemp = resHerms.Temperature
-	c.tempsRead = true
-	return nil
-}
-
-func (c *Brewery) getTempConstraints() ([]constraint, error) {
-
-	c.tempMux.RLock()
-	updateLive := !c.tempsRead
-	c.tempMux.RUnlock()
-
-	if updateLive {
-		err := c.updateTemperatures()
-		if err != nil {
-			return []constraint{}, err
-		}
-	} else {
-		go utils.BackgroundErrReturn(c.updateTemperatures)
-	}
-
-	c.tempMux.RLock()
-	defer c.tempMux.RUnlock()
-
 	return []constraint{
 		{
-			min: c.Scheme.GetMash().BoilMinTemp,
-			max: c.Scheme.GetMash().BoilMaxTemp,
-			val: c.boilTemp,
+			min: b.Scheme.GetMash().BoilMinTemp,
+			max: b.Scheme.GetMash().BoilMaxTemp,
+			val: resBoil.Temperature,
 		},
 		{
-			min: c.Scheme.GetMash().HermsMinTemp,
-			max: c.Scheme.GetMash().HermsMaxTemp,
-			val: c.hermsTemp,
+			min: b.Scheme.GetMash().HermsMinTemp,
+			max: b.Scheme.GetMash().HermsMaxTemp,
+			val: resHerms.Temperature,
 		},
 		{
-			min: c.Scheme.GetMash().MashMinTemp,
-			max: c.Scheme.GetMash().MashMaxTemp,
-			val: c.mashTemp,
+			min: b.Scheme.GetMash().MashMinTemp,
+			max: b.Scheme.GetMash().MashMaxTemp,
+			val: resMash.Temperature,
 		},
 	}, nil
 }
 
-func (c *Brewery) mashThermOn() (on bool, err error) {
-	constraints, err := c.getTempConstraints()
+func (b *Brewery) mashThermOn() (on bool, err error) {
+	constraints, err := b.getTempConstraints()
 	if err != nil {
 		return false, err
 	}
@@ -143,10 +109,53 @@ func checkTempConstraints(constriants []constraint) int {
 	return 0
 }
 
-func (c *Brewery) ElementOff() error {
+// StartRunLoop starts Brewery.Run in the background on a loop.
+func (b *Brewery) StartRunLoop() {
+	err := utils.RunLoop(5*time.Hour, 5*time.Second, b.run)
+	if err != nil {
+		utils.LogError(nil, err, "error running run")
+	}
+}
+
+func (b *Brewery) run() error {
+	b.mux.RLock()
+	defer b.mux.RUnlock()
+	if b.Scheme == nil {
+		utils.Print("[Brewery.Run] No scheme present")
+		return nil
+	}
+	config := b.Scheme
+	switch sch := config.Scheme.(type) {
+	case *model.ControlScheme_Boil_:
+		return b.boil()
+	case *model.ControlScheme_Mash_:
+		return b.mash()
+	case *model.ControlScheme_Power_:
+		return b.powerLevel(int(sch.Power.PowerLevel)) // Toggle for one hour.
+	}
+	return nil
+}
+
+func (b *Brewery) elementOn() (err error) {
+	_, err = b.Element.On(context.Background(), &model.OnRequest{})
+	if err != nil {
+		utils.LogError(nil, err, "encountered error turning coil on")
+	}
+	return err
+}
+
+func (b *Brewery) elementToggle(intervalMs int64) (err error) {
+	_, err = b.Element.ToggleOn(context.Background(), &model.ToggleOnRequest{IntervalMs: intervalMs})
+	if err != nil {
+		utils.LogError(nil, err, "encountered error toggling coil")
+	}
+	return err
+}
+
+func (b *Brewery) elementOff() error {
 	var err error
 	for i := 0; i < 3; i++ {
-		_, err = c.Element.Off(context.Background(), &model.OffRequest{})
+		_, err = b.Element.Off(context.Background(), &model.OffRequest{})
 		if err == nil {
 			return err
 		}
@@ -154,93 +163,52 @@ func (c *Brewery) ElementOff() error {
 	return err
 }
 
-func (b *Brewery) RunLoop() error {
-	ttl := 5
-	for {
-		utils.Print("[RunLoop]")
-		err := b.Run()
-		if err != nil {
-			utils.Print(fmt.Sprintf("[RunLoop] %s", err.Error()))
-			time.Sleep(time.Duration(ttl) * time.Second)
-		}
-		err = nil
-	}
-}
-
-func (b *Brewery) Run() error {
-	b.mux.RLock()
-	defer b.mux.RUnlock()
-	if b.Scheme == nil {
-		utils.Print("[Brewery.Run] No scheme present")
-		return fmt.Errorf("no scheme present")
-	}
-	config := b.Scheme
-	switch sch := config.Scheme.(type) {
-	case *model.ControlScheme_Boil_:
-		err := b.ElementOn()
-		return err
-	case *model.ControlScheme_Mash_:
-		on, err := b.mashThermOn()
-		if err != nil {
-			utils.Print(fmt.Sprintf("[Brewery.Run] MashThemOnErr: %s", err))
-			return err
-		}
-		if !on {
-			return b.ElementOff()
-		}
-		return b.ElementOn()
-	case *model.ControlScheme_Power_:
-		return b.ElementPowerLevel(int(sch.Power.PowerLevel)) // Toggle for one hour.
-	default:
-	}
-	return nil
-}
-
-func (b *Brewery) ElementOn() (err error) {
-	_, err = b.Element.On(context.Background(), &model.OnRequest{})
-	if err != nil {
-		print(fmt.Sprintf("encountered error turning coil on: %+v", err))
-	}
+func (b *Brewery) boil() error {
+	err := b.elementOn()
 	return err
 }
 
-func (b *Brewery) ElementPowerLevel(powerLevel int) error {
-	if powerLevel < 1 {
-		return b.ElementOff()
+func (b *Brewery) mash() error {
+	on, err := b.mashThermOn()
+	if err != nil {
+		utils.Print(fmt.Sprintf("[Brewery.Run] MashThemOnErr: %s", err))
+		return err
 	}
-	if powerLevel > 100 {
-		return b.ElementOff()
+	if !on {
+		return b.elementOff()
 	}
-	if powerLevel == 100 {
-		return b.ElementOn()
-	}
-	interval := 2
-	delay := time.Duration(powerLevel / 100 * interval)
-	return b.elementPowerLevelToggle(delay, 10*time.Second, time.Duration(interval)*time.Second)
+	return b.elementOn()
 }
 
-func (b *Brewery) elementPowerLevelToggle(delay time.Duration, ttl time.Duration, interval time.Duration) (err error) {
-	ticker := time.NewTicker(interval)
+func (b *Brewery) powerLevel(powerLevel int) error {
+	if powerLevel < 1 {
+		return b.elementOff()
+	}
+	if powerLevel > 100 {
+		return b.elementOff()
+	}
+	if powerLevel == 100 {
+		return b.elementOn()
+	}
+	interval := int64(2)
+	intervalMs := int64((1000*powerLevel)/100) * interval
+	return b.powerToggle(intervalMs, time.Duration(interval)*time.Second, 10*time.Second)
+}
+
+func (b *Brewery) powerToggle(intervalMs int64, loopInterval time.Duration, ttl time.Duration) (err error) {
+	ticker := time.NewTicker(loopInterval)
 	quit := make(chan bool)
 	resErr := make(chan error)
 
-	defer utils.DeferErrReturn(b.ElementOff, &err)
+	defer utils.DeferErrReturn(b.elementOff, &err)
 	go func() {
 		for {
 			select {
 			case <-ticker.C:
 				utils.Print(".")
-				err := b.ElementOn()
+				err := b.elementToggle(intervalMs)
 				if err != nil {
-					utils.Print(err.Error())
-					resErr <- err
-					return
-				}
-				timer := time.NewTimer(delay)
-				<-timer.C
-				err = b.ElementOff()
-				if err != nil {
-					utils.Print(err.Error())
+					utils.LogError(nil, err, "element toggle error")
 					resErr <- err
 					return
 				}

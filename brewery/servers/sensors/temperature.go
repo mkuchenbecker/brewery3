@@ -15,7 +15,7 @@ import (
 type ThermometerServer struct {
 	controller  gpio.Controller
 	address     gpio.TemperatureAddress
-	mux         sync.Mutex // Ensures multiple reads are not simultaneus.
+	mux         sync.Mutex // Ensures multiple reads are not simultaneous.
 	currentTemp float64
 	err         error
 }

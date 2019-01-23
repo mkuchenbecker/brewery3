@@ -12,7 +12,7 @@ tests: fmt lint
 	-covermode=count \
 	-coverprofile=coverage.out \
 	-tags test \
-	./...
+	./brewery/...
 
 .PHONY: fmt
 fmt:

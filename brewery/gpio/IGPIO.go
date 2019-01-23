@@ -21,13 +21,13 @@ type IGPIO interface {
 }
 
 // GPIOPin is the interface for interacting with a pin from github.com/stianeikeland/go-rpio.
-type GPIOPin interface {
+type GPIOPin interface { //nolint:golint
 	High()
 	Low()
 }
 
-// temperature is the interface for interacting with github.com/yryz/ds18b20
-type GPIOTemperature interface {
+// GPIOTemperature is the interface for interacting with github.com/yryz/ds18b20
+type GPIOTemperature interface { //nolint:golint
 	Sensors() ([]string, error)
 	Temperature(TemperatureAddress) (float64, error)
 }

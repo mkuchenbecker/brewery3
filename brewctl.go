@@ -16,7 +16,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-func MakeBreweryClient(port int) (model.BreweryClient, *grpc.ClientConn) {
+func makeBreweryClient(port int) (model.BreweryClient, *grpc.ClientConn) {
 	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", port), grpc.WithInsecure())
 	if err != nil {
 		panic(err)
@@ -45,7 +45,7 @@ func parseTemp(in string) (float64, error) {
 func main() {
 	app := cli.NewApp()
 
-	client, conn := MakeBreweryClient(8100)
+	client, conn := makeBreweryClient(8100)
 	defer conn.Close()
 
 	app.Flags = []cli.Flag{

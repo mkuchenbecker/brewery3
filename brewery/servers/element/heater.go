@@ -2,6 +2,7 @@ package element
 
 import (
 	"context"
+	"sync"
 	"time"
 
 	"github.com/mkuchenbecker/brewery3/brewery/utils"
@@ -15,6 +16,7 @@ type HeaterServer struct {
 	controller gpio.Controller
 	Pin        uint8
 	offError   error
+	toggleMux  sync.Mutex
 }
 
 // NewHeaterServer constructs a HeaterServer from the supplied parameters.
@@ -41,6 +43,8 @@ func (s *HeaterServer) Off(ctx context.Context, req *model.OffRequest) (*model.O
 // after a period of time.
 func (s *HeaterServer) ToggleOn(ctx context.Context, req *model.ToggleOnRequest) (*model.ToggleOnResponse, error) {
 	utils.Print("Heater On")
+	s.toggleMux.Lock()
+	defer s.toggleMux.Unlock()
 
 	go utils.BackgroundErrReturn(func() error {
 		timer := time.NewTimer(time.Duration(req.IntervalMs) * time.Millisecond)

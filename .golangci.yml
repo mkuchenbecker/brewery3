@@ -1,0 +1,29 @@
+linters:
+  disable-all: true
+  enable:
+    - deadcode
+    - errcheck
+    - goconst
+    - goimports
+    - golint
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - misspell
+    - nakedret
+    - staticcheck
+    - structcheck
+    - unconvert
+    - unused
+issues:
+  max-per-linter: 0
+  max-same-issues: 0
+run:
+  build-tags:
+    - integration
+  deadline: 5m
+  skip-dirs:
+    - start
+  skip-files:
+    - main.go'

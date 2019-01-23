@@ -3,6 +3,7 @@ package utils
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -60,4 +61,19 @@ func TestPrinter(t *testing.T) {
 	fp := FakePrinter{}
 	LogError(&fp, fmt.Errorf("error"), "encountered an error")
 	assert.Equal(t, "encountered an error : error", fp.lastPrint)
+}
+
+func TestRunLoop(t *testing.T) {
+	t.Parallel()
+
+	i := 0
+
+	f := func() error {
+		i++
+		return nil
+	}
+
+	err := RunLoop(100*time.Millisecond, 10*time.Millisecond, f)
+	assert.NoError(t, err)
+	assert.Equal(t, 10, i)
 }

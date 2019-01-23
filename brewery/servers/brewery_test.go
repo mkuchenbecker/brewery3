@@ -24,42 +24,41 @@ var MashConfig = &model.ControlScheme{Scheme: &model.ControlScheme_Mash_{
 		MashMaxTemp:  50.5,
 	}}}
 
-func TestElementPowerLevelToggle(t *testing.T) {
+func TestPowerToggle(t *testing.T) {
 	t.Parallel()
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
 	mockSwitch := mocks.NewMockSwitchClient(mockCtrl)
 
-	// Base test.
-	mockSwitch.EXPECT().On(context.Background(), gomock.Any()).Return(&model.OnResponse{}, nil).Times(1)
-	//Off always gets called at the end of the function in addition to each toggle.
-	mockSwitch.EXPECT().Off(context.Background(), gomock.Any()).Return(&model.OffResponse{}, nil).Times(2)
-	// Interval is 1 second, time on is 0.75s, quit after 1 second.
-	// Result is that the switch should turn on, .75s later turn off, and on the next iteration quit.
+	mockSwitch.EXPECT().ToggleOn(context.Background(),
+		&model.ToggleOnRequest{IntervalMs: 75}).Return(&model.ToggleOnResponse{}, nil).Times(1)
+	mockSwitch.EXPECT().Off(context.Background(),
+		gomock.Any()).Return(&model.OffResponse{}, nil).Times(1) // Cleanup action for toggle.
 
 	brewery := Brewery{Element: mockSwitch}
-	err := brewery.elementPowerLevelToggle(
-		time.Duration(750)*time.Millisecond,
-		time.Duration(1)*time.Second,
-		time.Duration(1)*time.Second)
+	err := brewery.powerToggle(
+		75, // milliseconds
+		time.Duration(100)*time.Millisecond,
+		time.Duration(100)*time.Millisecond)
 	assert.NoError(t, err)
 }
+
 func TestElementPowerLevelToggleMultipleLoops(t *testing.T) {
 	t.Parallel()
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
 	mockSwitch := mocks.NewMockSwitchClient(mockCtrl)
-	// Tests we always turn off after every
-	mockSwitch.EXPECT().On(context.Background(), gomock.Any()).Return(&model.OnResponse{}, nil).Times(10)
-	mockSwitch.EXPECT().Off(context.Background(), gomock.Any()).Return(&model.OffResponse{}, nil).Times(11)
-	// Interval is 1 second, time on is 0.75s, quit after 1.25 second.
-	// Two iterations should occur.
+	mockSwitch.EXPECT().ToggleOn(context.Background(),
+		&model.ToggleOnRequest{IntervalMs: 5}).Return(&model.ToggleOnResponse{}, nil).Times(10)
+	mockSwitch.EXPECT().Off(context.Background(),
+		gomock.Any()).Return(&model.OffResponse{}, nil).Times(1)
+
 	brewery := Brewery{Element: mockSwitch}
-	err := brewery.elementPowerLevelToggle(
-		time.Duration(50)*time.Millisecond,
-		time.Duration(1000)*time.Millisecond,
+	err := brewery.powerToggle(
+		5,
+		time.Duration(10)*time.Millisecond,
 		time.Duration(100)*time.Millisecond)
 	assert.NoError(t, err)
 }
@@ -73,7 +72,7 @@ func TestElementOnError(t *testing.T) {
 	mockSwitch.EXPECT().On(context.Background(),
 		gomock.Any()).Return(&model.OnResponse{}, fmt.Errorf("unable to turn coil on")).Times(1)
 	brewery := Brewery{Element: mockSwitch}
-	err := brewery.ElementOn()
+	err := brewery.elementOn()
 	assert.Error(t, err)
 
 }
@@ -84,21 +83,25 @@ func TestElementPowerLevelToggleError(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockSwitch := mocks.NewMockSwitchClient(mockCtrl)
-	mockSwitch.EXPECT().On(context.Background(),
-		gomock.Any()).Return(&model.OnResponse{}, fmt.Errorf("unable to turn coil on")).Times(1)
+
+	mockSwitch.EXPECT().ToggleOn(context.Background(),
+		&model.ToggleOnRequest{IntervalMs: 9}).Return(&model.ToggleOnResponse{},
+		fmt.Errorf("unable to turn coil on")).Times(1)
+
 	mockSwitch.EXPECT().Off(context.Background(),
 		gomock.Any()).Return(&model.OffResponse{}, nil).Times(1)
 	brewery := Brewery{Element: mockSwitch}
-	err := brewery.elementPowerLevelToggle(9*time.Millisecond, 100*time.Millisecond, 10*time.Millisecond)
+	err := brewery.powerToggle(9, 10*time.Millisecond, 10*time.Millisecond)
 	assert.Error(t, err)
 
-	mockSwitch.EXPECT().On(context.Background(),
-		gomock.Any()).Return(&model.OnResponse{}, nil).Times(1)
+	mockSwitch.EXPECT().ToggleOn(context.Background(),
+		&model.ToggleOnRequest{IntervalMs: 5}).Return(&model.ToggleOnResponse{},
+		nil).Times(1)
 	// Happens in multiples of 3 due to retries.
 	mockSwitch.EXPECT().Off(context.Background(),
-		gomock.Any()).Return(&model.OffResponse{}, fmt.Errorf("unable to turn coil off")).Times(6)
+		gomock.Any()).Return(&model.OffResponse{}, fmt.Errorf("unable to turn coil off")).Times(3)
 
-	err = brewery.elementPowerLevelToggle(9*time.Millisecond, 100*time.Millisecond, 10*time.Millisecond)
+	err = brewery.powerToggle(5, 10*time.Millisecond, 10*time.Millisecond)
 	assert.Error(t, err)
 }
 
@@ -111,7 +114,7 @@ func TestElementPowerLevel0(t *testing.T) {
 
 	mockSwitch.EXPECT().Off(context.Background(), gomock.Any()).Return(&model.OffResponse{}, nil).Times(1)
 	brewery := Brewery{Element: mockSwitch}
-	err := brewery.ElementPowerLevel(0)
+	err := brewery.powerLevel(0)
 	assert.NoError(t, err)
 }
 
@@ -124,7 +127,7 @@ func TestElementPowerLevel101(t *testing.T) {
 
 	mockSwitch.EXPECT().Off(context.Background(), gomock.Any()).Return(&model.OffResponse{}, nil).Times(1)
 	brewery := Brewery{Element: mockSwitch}
-	err := brewery.ElementPowerLevel(101)
+	err := brewery.powerLevel(101)
 	assert.NoError(t, err)
 }
 
@@ -137,7 +140,7 @@ func TestElementPowerLevel100(t *testing.T) {
 
 	mockSwitch.EXPECT().On(context.Background(), gomock.Any()).Return(&model.OnResponse{}, nil).Times(1)
 	brewery := Brewery{Element: mockSwitch}
-	err := brewery.ElementPowerLevel(100)
+	err := brewery.powerLevel(100)
 	assert.NoError(t, err)
 }
 
@@ -149,7 +152,6 @@ func NewMockBrewery(mockCtrl *gomock.Controller) *Brewery {
 		Element:     mocks.NewMockSwitchClient(mockCtrl),
 	}
 }
-
 func TestBreweryGetConstraints(t *testing.T) {
 	t.Parallel()
 	mockCtrl := gomock.NewController(t)
@@ -197,39 +199,6 @@ func TestBreweryMashThermOn(t *testing.T) {
 	assert.False(t, on)
 }
 
-func TestGetConstraintsBackground(t *testing.T) {
-	t.Parallel()
-	mockCtrl := gomock.NewController(t)
-	defer mockCtrl.Finish()
-
-	brewery := NewMockBrewery(mockCtrl)
-	_, err := brewery.Control(context.Background(), &model.ControlRequest{Scheme: MashConfig})
-	assert.NoError(t, err)
-	//Since the tempsread is true the RPCs should still occur but the current temperatures are used.
-	brewery.boilTemp = 10
-	brewery.mashTemp = 10
-	brewery.hermsTemp = 10
-	brewery.tempsRead = true
-
-	brewery.BoilSensor.(*mocks.MockThermometerClient).EXPECT().Get(context.Background(),
-		&model.GetRequest{}).Return(&model.GetResponse{Temperature: float64(60)}, nil).Times(1)
-
-	brewery.HermsSensor.(*mocks.MockThermometerClient).EXPECT().Get(context.Background(),
-		&model.GetRequest{}).Return(&model.GetResponse{Temperature: float64(55)}, nil).Times(1)
-
-	brewery.MashSensor.(*mocks.MockThermometerClient).EXPECT().Get(context.Background(),
-		&model.GetRequest{}).Return(&model.GetResponse{Temperature: float64(50.25)}, nil).Times(1)
-
-	constraints, err := brewery.getTempConstraints()
-	assert.NoError(t, err)
-
-	time.Sleep(100 * time.Millisecond) // Pause so the background RPCs can finish.
-	// The expected values are all 10 because the temperatures are read in the background.
-	assert.Equal(t, []constraint{{min: 50, max: 100, val: 10},
-		{min: 51, max: 60, val: 10},
-		{min: 49.5, max: 50.5, val: 10}}, constraints)
-}
-
 func TestBreweryRunMash(t *testing.T) {
 	t.Parallel()
 	mockCtrl := gomock.NewController(t)
@@ -251,10 +220,9 @@ func TestBreweryRunMash(t *testing.T) {
 	brewery.Element.(*mocks.MockSwitchClient).EXPECT().Off(context.Background(),
 		&model.OffRequest{}).Return(&model.OffResponse{}, nil).Times(1)
 
-	err = brewery.Run()
+	err = brewery.run()
 	assert.NoError(t, err)
 
-	brewery.tempsRead = false // Reset so we send GRPCs to get new temperatures.
 	brewery.BoilSensor.(*mocks.MockThermometerClient).EXPECT().Get(context.Background(),
 		&model.GetRequest{}).Return(&model.GetResponse{Temperature: float64(60)}, nil).Times(1)
 	brewery.HermsSensor.(*mocks.MockThermometerClient).EXPECT().Get(context.Background(),
@@ -264,7 +232,7 @@ func TestBreweryRunMash(t *testing.T) {
 	brewery.Element.(*mocks.MockSwitchClient).EXPECT().On(context.Background(),
 		&model.OnRequest{}).Return(&model.OnResponse{}, nil).Times(1)
 
-	err = brewery.Run()
+	err = brewery.run()
 	assert.NoError(t, err)
 }
 
@@ -281,11 +249,11 @@ func TestBreweryRunBoil(t *testing.T) {
 
 	brewery.Element.(*mocks.MockSwitchClient).EXPECT().On(context.Background(),
 		&model.OnRequest{}).Return(&model.OnResponse{}, nil).Times(1)
-	err = brewery.Run()
+	err = brewery.run()
 	assert.NoError(t, err)
 }
 
-func TestBreweryPower(t *testing.T) {
+func TestBreweryRunPower(t *testing.T) {
 	t.Parallel()
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
@@ -298,9 +266,19 @@ func TestBreweryPower(t *testing.T) {
 	brewery.Element.(*mocks.MockSwitchClient).EXPECT().On(context.Background(),
 		&model.OnRequest{}).Return(&model.OnResponse{}, nil).Times(1)
 
-	err = brewery.Run()
+	err = brewery.run()
 	assert.NoError(t, err)
 }
+
+func TestBreweryRunNoScheme(t *testing.T) {
+	t.Parallel()
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+	brewery := NewMockBrewery(mockCtrl)
+	err := brewery.run()
+	assert.Nil(t, err)
+}
+
 func TestBreweryGetConstraintsError(t *testing.T) {
 	t.Parallel()
 	mockCtrl := gomock.NewController(t)
