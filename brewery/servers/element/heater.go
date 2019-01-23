@@ -46,7 +46,7 @@ func (s *HeaterServer) ToggleOn(ctx context.Context, req *model.ToggleOnRequest)
 	s.toggleMux.Lock()
 	defer s.toggleMux.Unlock()
 
-	go utils.BackgroundErrReturn(func() error {
+	go utils.BackgroundErrReturn(nil, func() error {
 		timer := time.NewTimer(time.Duration(req.IntervalMs) * time.Millisecond)
 		<-timer.C
 		defer utils.Print("Heater Off")

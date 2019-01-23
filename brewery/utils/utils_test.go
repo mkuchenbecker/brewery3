@@ -77,3 +77,22 @@ func TestRunLoop(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, 10, i)
 }
+
+func TestRunLoopError(t *testing.T) {
+	t.Parallel()
+	i := 0
+	f := func() error {
+		i++
+		return fmt.Errorf("error")
+	}
+	err := RunLoop(100*time.Millisecond, 10*time.Millisecond, f)
+	assert.NoError(t, err)
+	assert.Equal(t, 10, i)
+}
+
+func TestBackgroundErrReturn(t *testing.T) {
+	t.Parallel()
+	fp := FakePrinter{}
+	BackgroundErrReturn(&fp, func() error { return fmt.Errorf("error") })
+	assert.Equal(t, "background function encountered error : error", fp.lastPrint)
+}

@@ -41,10 +41,10 @@ func LogError(p Printer, err error, msg string) {
 	printer.Print(fmt.Sprintf("%s : %s", msg, err.Error()))
 }
 
-func BackgroundErrReturn(f func() error) {
+func BackgroundErrReturn(p Printer, f func() error) {
 	err := f()
 	if err != nil {
-		LogError(nil, err, "background function encountered error")
+		LogError(p, err, "background function encountered error")
 	}
 }
 
