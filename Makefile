@@ -14,6 +14,11 @@ tests: fmt lint
 	-tags test \
 	./brewery/...
 
+.PHONY: build
+build:
+	go build -o cli.bin entry/cli/main.go
+	go build -o server.bin entry/server/main.go
+
 .PHONY: fmt
 fmt:
 	@echo "fmt:"
@@ -34,7 +39,8 @@ protomockgen:
 	@echo "generating mocks from protos:"
 	mockgen github.com/mkuchenbecker/brewery3/brewery/model/gomodel \
 	SwitchClient,\
-	ThermometerClient \
+	ThermometerClient,\
+	BreweryClient \
 	> brewery/model/gomock/gomock_models.go
 
 .PHONY: structmockgen
