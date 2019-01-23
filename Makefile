@@ -34,7 +34,8 @@ protomockgen:
 	@echo "generating mocks from protos:"
 	mockgen github.com/mkuchenbecker/brewery3/brewery/model/gomodel \
 	SwitchClient,\
-	ThermometerClient \
+	ThermometerClient,\
+	BreweryClient \
 	> brewery/model/gomock/gomock_models.go
 
 .PHONY: structmockgen
