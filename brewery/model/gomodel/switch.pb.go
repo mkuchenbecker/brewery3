@@ -33,7 +33,7 @@ func (m *OnRequest) Reset()         { *m = OnRequest{} }
 func (m *OnRequest) String() string { return proto.CompactTextString(m) }
 func (*OnRequest) ProtoMessage()    {}
 func (*OnRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_switch_bab2843b89870f7c, []int{0}
+	return fileDescriptor_switch_b3102f5f37bd44d0, []int{0}
 }
 func (m *OnRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_OnRequest.Unmarshal(m, b)
@@ -63,7 +63,7 @@ func (m *OnResponse) Reset()         { *m = OnResponse{} }
 func (m *OnResponse) String() string { return proto.CompactTextString(m) }
 func (*OnResponse) ProtoMessage()    {}
 func (*OnResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_switch_bab2843b89870f7c, []int{1}
+	return fileDescriptor_switch_b3102f5f37bd44d0, []int{1}
 }
 func (m *OnResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_OnResponse.Unmarshal(m, b)
@@ -93,7 +93,7 @@ func (m *OffRequest) Reset()         { *m = OffRequest{} }
 func (m *OffRequest) String() string { return proto.CompactTextString(m) }
 func (*OffRequest) ProtoMessage()    {}
 func (*OffRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_switch_bab2843b89870f7c, []int{2}
+	return fileDescriptor_switch_b3102f5f37bd44d0, []int{2}
 }
 func (m *OffRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_OffRequest.Unmarshal(m, b)
@@ -123,7 +123,7 @@ func (m *OffResponse) Reset()         { *m = OffResponse{} }
 func (m *OffResponse) String() string { return proto.CompactTextString(m) }
 func (*OffResponse) ProtoMessage()    {}
 func (*OffResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_switch_bab2843b89870f7c, []int{3}
+	return fileDescriptor_switch_b3102f5f37bd44d0, []int{3}
 }
 func (m *OffResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_OffResponse.Unmarshal(m, b)
@@ -154,7 +154,7 @@ func (m *ToggleOnRequest) Reset()         { *m = ToggleOnRequest{} }
 func (m *ToggleOnRequest) String() string { return proto.CompactTextString(m) }
 func (*ToggleOnRequest) ProtoMessage()    {}
 func (*ToggleOnRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_switch_bab2843b89870f7c, []int{4}
+	return fileDescriptor_switch_b3102f5f37bd44d0, []int{4}
 }
 func (m *ToggleOnRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ToggleOnRequest.Unmarshal(m, b)
@@ -191,7 +191,7 @@ func (m *ToggleOnResponse) Reset()         { *m = ToggleOnResponse{} }
 func (m *ToggleOnResponse) String() string { return proto.CompactTextString(m) }
 func (*ToggleOnResponse) ProtoMessage()    {}
 func (*ToggleOnResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_switch_bab2843b89870f7c, []int{5}
+	return fileDescriptor_switch_b3102f5f37bd44d0, []int{5}
 }
 func (m *ToggleOnResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ToggleOnResponse.Unmarshal(m, b)
@@ -358,9 +358,9 @@ var _Switch_serviceDesc = grpc.ServiceDesc{
 	Metadata: "switch.proto",
 }
 
-func init() { proto.RegisterFile("switch.proto", fileDescriptor_switch_bab2843b89870f7c) }
+func init() { proto.RegisterFile("switch.proto", fileDescriptor_switch_b3102f5f37bd44d0) }
 
-var fileDescriptor_switch_bab2843b89870f7c = []byte{
+var fileDescriptor_switch_b3102f5f37bd44d0 = []byte{
 	// 208 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x29, 0x2e, 0xcf, 0x2c,
 	0x49, 0xce, 0xd0, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x4d, 0x2a, 0x4a, 0x2d, 0x4f, 0x2d,

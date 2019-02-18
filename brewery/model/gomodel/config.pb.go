@@ -34,7 +34,7 @@ func (m *Location) Reset()         { *m = Location{} }
 func (m *Location) String() string { return proto.CompactTextString(m) }
 func (*Location) ProtoMessage()    {}
 func (*Location) Descriptor() ([]byte, []int) {
-	return fileDescriptor_config_578cd88f68d9c2a0, []int{0}
+	return fileDescriptor_config_8b29666762360299, []int{0}
 }
 func (m *Location) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Location.Unmarshal(m, b)
@@ -74,7 +74,7 @@ func (m *TemperatureSensor) Reset()         { *m = TemperatureSensor{} }
 func (m *TemperatureSensor) String() string { return proto.CompactTextString(m) }
 func (*TemperatureSensor) ProtoMessage()    {}
 func (*TemperatureSensor) Descriptor() ([]byte, []int) {
-	return fileDescriptor_config_578cd88f68d9c2a0, []int{1}
+	return fileDescriptor_config_8b29666762360299, []int{1}
 }
 func (m *TemperatureSensor) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_TemperatureSensor.Unmarshal(m, b)
@@ -127,7 +127,7 @@ func (m *SSR) Reset()         { *m = SSR{} }
 func (m *SSR) String() string { return proto.CompactTextString(m) }
 func (*SSR) ProtoMessage()    {}
 func (*SSR) Descriptor() ([]byte, []int) {
-	return fileDescriptor_config_578cd88f68d9c2a0, []int{2}
+	return fileDescriptor_config_8b29666762360299, []int{2}
 }
 func (m *SSR) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_SSR.Unmarshal(m, b)
@@ -176,7 +176,7 @@ func (m *BreweryConfig) Reset()         { *m = BreweryConfig{} }
 func (m *BreweryConfig) String() string { return proto.CompactTextString(m) }
 func (*BreweryConfig) ProtoMessage()    {}
 func (*BreweryConfig) Descriptor() ([]byte, []int) {
-	return fileDescriptor_config_578cd88f68d9c2a0, []int{3}
+	return fileDescriptor_config_8b29666762360299, []int{3}
 }
 func (m *BreweryConfig) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_BreweryConfig.Unmarshal(m, b)
@@ -246,7 +246,7 @@ func (m *ControlScheme) Reset()         { *m = ControlScheme{} }
 func (m *ControlScheme) String() string { return proto.CompactTextString(m) }
 func (*ControlScheme) ProtoMessage()    {}
 func (*ControlScheme) Descriptor() ([]byte, []int) {
-	return fileDescriptor_config_578cd88f68d9c2a0, []int{4}
+	return fileDescriptor_config_8b29666762360299, []int{4}
 }
 func (m *ControlScheme) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ControlScheme.Unmarshal(m, b)
@@ -419,7 +419,7 @@ func (m *ControlScheme_Boil) Reset()         { *m = ControlScheme_Boil{} }
 func (m *ControlScheme_Boil) String() string { return proto.CompactTextString(m) }
 func (*ControlScheme_Boil) ProtoMessage()    {}
 func (*ControlScheme_Boil) Descriptor() ([]byte, []int) {
-	return fileDescriptor_config_578cd88f68d9c2a0, []int{4, 0}
+	return fileDescriptor_config_8b29666762360299, []int{4, 0}
 }
 func (m *ControlScheme_Boil) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ControlScheme_Boil.Unmarshal(m, b)
@@ -455,7 +455,7 @@ func (m *ControlScheme_Mash) Reset()         { *m = ControlScheme_Mash{} }
 func (m *ControlScheme_Mash) String() string { return proto.CompactTextString(m) }
 func (*ControlScheme_Mash) ProtoMessage()    {}
 func (*ControlScheme_Mash) Descriptor() ([]byte, []int) {
-	return fileDescriptor_config_578cd88f68d9c2a0, []int{4, 1}
+	return fileDescriptor_config_8b29666762360299, []int{4, 1}
 }
 func (m *ControlScheme_Mash) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ControlScheme_Mash.Unmarshal(m, b)
@@ -528,7 +528,7 @@ func (m *ControlScheme_Power) Reset()         { *m = ControlScheme_Power{} }
 func (m *ControlScheme_Power) String() string { return proto.CompactTextString(m) }
 func (*ControlScheme_Power) ProtoMessage()    {}
 func (*ControlScheme_Power) Descriptor() ([]byte, []int) {
-	return fileDescriptor_config_578cd88f68d9c2a0, []int{4, 2}
+	return fileDescriptor_config_8b29666762360299, []int{4, 2}
 }
 func (m *ControlScheme_Power) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ControlScheme_Power.Unmarshal(m, b)
@@ -566,7 +566,7 @@ func (m *ControlRequest) Reset()         { *m = ControlRequest{} }
 func (m *ControlRequest) String() string { return proto.CompactTextString(m) }
 func (*ControlRequest) ProtoMessage()    {}
 func (*ControlRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_config_578cd88f68d9c2a0, []int{5}
+	return fileDescriptor_config_8b29666762360299, []int{5}
 }
 func (m *ControlRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ControlRequest.Unmarshal(m, b)
@@ -603,7 +603,7 @@ func (m *ControlResponse) Reset()         { *m = ControlResponse{} }
 func (m *ControlResponse) String() string { return proto.CompactTextString(m) }
 func (*ControlResponse) ProtoMessage()    {}
 func (*ControlResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_config_578cd88f68d9c2a0, []int{6}
+	return fileDescriptor_config_8b29666762360299, []int{6}
 }
 func (m *ControlResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ControlResponse.Unmarshal(m, b)
@@ -708,9 +708,9 @@ var _Brewery_serviceDesc = grpc.ServiceDesc{
 	Metadata: "config.proto",
 }
 
-func init() { proto.RegisterFile("config.proto", fileDescriptor_config_578cd88f68d9c2a0) }
+func init() { proto.RegisterFile("config.proto", fileDescriptor_config_8b29666762360299) }
 
-var fileDescriptor_config_578cd88f68d9c2a0 = []byte{
+var fileDescriptor_config_8b29666762360299 = []byte{
 	// 500 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x94, 0xc1, 0x6e, 0xd3, 0x40,
 	0x10, 0x86, 0xe3, 0xc4, 0x76, 0xc3, 0xa4, 0x2e, 0xea, 0x1e, 0xc0, 0x8a, 0xa0, 0x04, 0x8b, 0x43,
