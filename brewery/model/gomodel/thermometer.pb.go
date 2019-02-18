@@ -33,7 +33,7 @@ func (m *GetRequest) Reset()         { *m = GetRequest{} }
 func (m *GetRequest) String() string { return proto.CompactTextString(m) }
 func (*GetRequest) ProtoMessage()    {}
 func (*GetRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_thermometer_f0daa006d596a49b, []int{0}
+	return fileDescriptor_thermometer_aa8a0a417735a3bd, []int{0}
 }
 func (m *GetRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_GetRequest.Unmarshal(m, b)
@@ -64,7 +64,7 @@ func (m *GetResponse) Reset()         { *m = GetResponse{} }
 func (m *GetResponse) String() string { return proto.CompactTextString(m) }
 func (*GetResponse) ProtoMessage()    {}
 func (*GetResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_thermometer_f0daa006d596a49b, []int{1}
+	return fileDescriptor_thermometer_aa8a0a417735a3bd, []int{1}
 }
 func (m *GetResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_GetResponse.Unmarshal(m, b)
@@ -168,9 +168,9 @@ var _Thermometer_serviceDesc = grpc.ServiceDesc{
 	Metadata: "thermometer.proto",
 }
 
-func init() { proto.RegisterFile("thermometer.proto", fileDescriptor_thermometer_f0daa006d596a49b) }
+func init() { proto.RegisterFile("thermometer.proto", fileDescriptor_thermometer_aa8a0a417735a3bd) }
 
-var fileDescriptor_thermometer_f0daa006d596a49b = []byte{
+var fileDescriptor_thermometer_aa8a0a417735a3bd = []byte{
 	// 144 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2c, 0xc9, 0x48, 0x2d,
 	0xca, 0xcd, 0xcf, 0x4d, 0x2d, 0x49, 0x2d, 0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x4d,
