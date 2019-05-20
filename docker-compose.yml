@@ -1,0 +1,16 @@
+.
+├── docker-compose.yml
+├── etc
+│   ├── kapacitor
+│   │   └── kapacitor.conf
+│   └── telegraf
+│       └── telegraf.conf
+├── home
+│   └── kapacitor
+│       ├── cpu_alert_batch.tick
+│       └── cpu_alert_stream.tick
+├── README.md
+└── var
+    └── log
+        └── kapacitor
+            └── README.md

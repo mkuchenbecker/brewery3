@@ -120,30 +120,30 @@ func makeSwitchClient(port int, pin uint8) (model.SwitchClient, *grpc.ClientConn
 
 func main() {
 	utils.Print("starting backends")
-	go startThermometer(mashPort, mashAddr)
-	go startThermometer(hermsPort, hermsAddr)
-	go startThermometer(boilPort, boilAddr)
-	go startHeater(elementPort, elementPin)
+	// go startThermometer(mashPort, mashAddr)
+	// go startThermometer(hermsPort, hermsAddr)
+	// go startThermometer(boilPort, boilAddr)
+	// go startHeater(elementPort, elementPin)
 
 	utils.Print("waiting for discovery")
 	time.Sleep(time.Second)
 	utils.Print("starting clients")
 
-	mash, mashConn := makeTemperatureClient(mashPort, mashAddr)
-	defer mashConn.Close()
-	herms, hermsConn := makeTemperatureClient(hermsPort, hermsAddr)
-	defer hermsConn.Close()
-	boil, boilConn := makeTemperatureClient(boilPort, boilAddr)
-	defer boilConn.Close()
+	// mash, mashConn := makeTemperatureClient(mashPort, mashAddr)
+	// defer mashConn.Close()
+	// herms, hermsConn := makeTemperatureClient(hermsPort, hermsAddr)
+	// defer hermsConn.Close()
+	// boil, boilConn := makeTemperatureClient(boilPort, boilAddr)
+	// defer boilConn.Close()
 
-	element, elementConn := makeSwitchClient(elementPort, elementPin)
-	defer elementConn.Close()
+	// element, elementConn := makeSwitchClient(elementPort, elementPin)
+	// defer elementConn.Close()
 
-	brewery := servers.Brewery{
-		MashSensor:  mash,
-		HermsSensor: herms,
-		BoilSensor:  boil,
-		Element:     element,
-	}
-	startBrewery(8100, &brewery)
+	// brewery := servers.Brewery{
+	// 	MashSensor:  mash,
+	// 	HermsSensor: herms,
+	// 	BoilSensor:  boil,
+	// 	Element:     element,
+	// }
+	// startBrewery(8100, &brewery)
 }
