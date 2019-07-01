@@ -5,7 +5,7 @@ env:
   - GO111MODULE=on
 
 install:
-  - go get github.com/golang/dep/cmd/dep
+  - go get github.com/golang/dep/tree/master/cmd/dep
   - go get github.com/kyoh86/richgo
   - go get github.com/golangci/golangci-lint/cmd/golangci-lint
   - go get github.com/mattn/goveralls
