@@ -1,17 +1,19 @@
 language: go
 
+go:
+  - 1.11.5
+
 env:
   - GO111MODULE=on
-  - GOFLAGS='-mod vendor'
 
 before_install:
   - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
   - dep ensure
 
-before_script:
-  - go install github.com/golangci/golangci-lint/cmd/golangci-lint
-  - go install github.com/kyoh86/richgo
-  - go install github.com/mattn/goveralls
+# before_script:
+#   - go install github.com/golangci/golangci-lint/cmd/golangci-lint
+#   - go install github.com/kyoh86/richgo
+#   - go install github.com/mattn/goveralls
 
 # install:
 #   - dep ensure -v
