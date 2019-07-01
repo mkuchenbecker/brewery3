@@ -14,6 +14,18 @@ tests: fmt lint
 	-tags test \
 	./brewery/...
 
+.PHONY: test-ci
+test-ci: fmt lint
+	@echo "tests:"
+	${GOPATH}/bin/go test \
+	-timeout 10s \
+	-cover \
+	-v \
+	-covermode=count \
+	-coverprofile=coverage.out \
+	-tags test \
+	./brewery/...
+
 .PHONY: build
 build:
 	go build -o cli.bin entry/cli/main.go
