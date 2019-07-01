@@ -26,6 +26,10 @@ test-ci:
 	-tags test \
 	./brewery/...
 
+.PHONY: lint-ci
+lint-ci:
+	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh
+
 .PHONY: build
 build:
 	go build -o cli.bin entry/cli/main.go

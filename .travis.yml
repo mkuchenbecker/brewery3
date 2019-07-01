@@ -14,11 +14,8 @@ before_install:
 install:
   - dep ensure
 
-before_script:
-  - go get github.com/go-critic/go-critic
-  - go get github.com/golangci/golangci-lint/cmd/golangci-lint
-
 script:
   - make test-ci
+  - make lint-ci
   - ${GOPATH}/bin/goveralls -coverprofile=coverage.out -service=travis-ci
   - make lint
