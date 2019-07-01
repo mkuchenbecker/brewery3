@@ -1,15 +1,27 @@
 language: go
 
-# Force-enable Go modules. This will be unnecessary when Go 1.12 lands.
 env:
   - GO111MODULE=on
+  - GOFLAGS='-mod vendor'
 
-install:
-  - dep ensure -v
-  - go get -u github.com/golang/dep/cmd/dep
-  - go get github.com/kyoh86/richgo
-  - go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
-  - go get github.com/mattn/goveralls
+go:
+- 1.x
+- "1.10"
+- 1.11.x
+- master
+
+install: true
+
+before_script:
+  - go install github.com/golangci/golangci-lint/cmd/golangci-lint
+  - go install github.com/kyoh86/richgo
+  - go install github.com/mattn/goveralls
+
+# install:
+#   - dep ensure -v
+#   - go get -u github.com/golang/dep/cmd/dep
+#   - go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
+#   - go get github.com/mattn/goveralls
 
 script:
   - make tests
