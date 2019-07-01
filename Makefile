@@ -15,7 +15,7 @@ tests: fmt lint
 	./brewery/...
 
 .PHONY: test-ci
-test-ci: fmt lint
+test-ci: fmt
 	@echo "tests:"
 	${GOPATH}/bin/go test \
 	-timeout 10s \
