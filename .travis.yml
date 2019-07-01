@@ -3,22 +3,17 @@ dist: xenial
 
 language: go
 
-# Force-enable Go modules. Also force go to use the code in vendor/
-# These will both be unnecessary when Go 1.13 lands.
 env:
   - GO111MODULE=on
 
-# You don't need to test on very old versions of the Go compiler. It's the user's
-# responsibility to keep their compiler up to date.
 go:
   - 1.11.x
 
-# Skip the install step. Don't `go get` dependencies. Only build with the code
-# in vendor/
-install: true
+before_install:
+  - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 
-# script always runs to completion (set +e). If we have linter issues AND a
-# failing test, we want to see both. Configure golangci-lint with a
-# .golangci.yml file at the top level of your repo.
+install:
+  - dep ensure
+
 script:
-  - go test -v -race -mod=vendor ./...  # Run all the tests with the race detector enabled
+  - go test -v -race -mod=vendor ./...
