@@ -8,7 +8,7 @@ env:
 
 before_install:
   - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-  - go get github.com/mattn/goveralls
+  - go get -u github.com/mattn/goveralls
 
 # before_script:
 #   - go install github.com/golangci/golangci-lint/cmd/golangci-lint
