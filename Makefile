@@ -17,7 +17,7 @@ tests: fmt lint
 .PHONY: test-ci
 test-ci:
 	@echo "tests:"
-	${GOPATH}/bin/go test \
+	go test \
 	-timeout 10s \
 	-cover \
 	-v \
@@ -26,7 +26,7 @@ test-ci:
 	-tags test \
 	./brewery/...
 
-.PHONY: lint-ci
+.PHONY: install-golang-ci
 lint-ci:
 	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh
 

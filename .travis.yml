@@ -16,6 +16,6 @@ install:
 
 script:
   - make test-ci
-  - make lint-ci
+  - make install-golang-ci
   - ${GOPATH}/bin/goveralls -coverprofile=coverage.out -service=travis-ci
-  - make lint
+  - golangci-lint run
