@@ -10,10 +10,12 @@ env:
 before_install:
   - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
   - go get github.com/mattn/goveralls
-  - go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
 
 install:
   - dep ensure
+
+before_script:
+  - go get github.com/golangci/golangci-lint/cmd/golangci-lint
 
 script:
   - make test-ci
