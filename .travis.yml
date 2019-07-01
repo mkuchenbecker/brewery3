@@ -8,14 +8,14 @@ env:
 
 before_install:
   - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-  - dep ensure
 
 # before_script:
 #   - go install github.com/golangci/golangci-lint/cmd/golangci-lint
 #   - go install github.com/kyoh86/richgo
 #   - go install github.com/mattn/goveralls
 
-# install:
+install:
+  - dep ensure
 #   - dep ensure -v
 #   - go get -u github.com/golang/dep/cmd/dep
 #   - go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
