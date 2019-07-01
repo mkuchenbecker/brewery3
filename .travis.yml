@@ -4,13 +4,6 @@ language: go
 env:
   - GO111MODULE=on
 
-install:
-  - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-  - go get github.com/kyoh86/richgo
-  - go get github.com/golangci/golangci-lint/cmd/golangci-lint
-  - go get github.com/mattn/goveralls
-  - dep ensure -v
-
 script:
   - make tests
   - ${GOPATH}/bin/goveralls -coverprofile=coverage.out -service=travis-ci
