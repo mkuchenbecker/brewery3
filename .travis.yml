@@ -3,11 +3,8 @@ dist: xenial
 
 language: go
 
-env:
-  - GO111MODULE=on
-
 go:
-  - 1.11.x
+  - 1.10.x
 
 before_install:
   - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
@@ -16,4 +13,5 @@ install:
   - dep ensure
 
 script:
+  - go build ./...
   - go test ./...
