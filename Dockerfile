@@ -19,4 +19,4 @@ RUN go install -v ./brewery/servers/brewery
 
 CMD brewery
 
-EXPOSE 8080
+EXPOSE 9000
