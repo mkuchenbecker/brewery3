@@ -56,14 +56,6 @@ github.com/mkuchenbecker/brewery3/brewery/cli/cli.go:101.23,103.19 2 2
 github.com/mkuchenbecker/brewery3/brewery/cli/cli.go:108.4,108.38 1 1
 github.com/mkuchenbecker/brewery3/brewery/cli/cli.go:103.19,107.5 3 1
 github.com/mkuchenbecker/brewery3/brewery/cli/cli.go:110.17,112.4 1 0
-github.com/mkuchenbecker/brewery3/brewery/servers/element/heater.go:24.69,26.2 1 5
-github.com/mkuchenbecker/brewery3/brewery/servers/element/heater.go:29.97,33.2 3 2
-github.com/mkuchenbecker/brewery3/brewery/servers/element/heater.go:36.100,40.2 3 2
-github.com/mkuchenbecker/brewery3/brewery/servers/element/heater.go:44.115,49.49 4 1
-github.com/mkuchenbecker/brewery3/brewery/servers/element/heater.go:56.2,57.16 2 1
-github.com/mkuchenbecker/brewery3/brewery/servers/element/heater.go:61.2,61.39 1 1
-github.com/mkuchenbecker/brewery3/brewery/servers/element/heater.go:49.49,55.3 5 1
-github.com/mkuchenbecker/brewery3/brewery/servers/element/heater.go:57.16,59.3 1 0
 github.com/mkuchenbecker/brewery3/brewery/servers/sensors/temperature.go:24.116,29.2 4 1
 github.com/mkuchenbecker/brewery3/brewery/servers/sensors/temperature.go:31.70,32.6 1 1
 github.com/mkuchenbecker/brewery3/brewery/servers/sensors/temperature.go:32.6,34.17 2 1
@@ -131,3 +123,11 @@ github.com/mkuchenbecker/brewery3/brewery/servers/brewery.go:202.20,205.19 3 13
 github.com/mkuchenbecker/brewery3/brewery/servers/brewery.go:210.16,213.11 3 3
 github.com/mkuchenbecker/brewery3/brewery/servers/brewery.go:205.19,209.6 3 1
 github.com/mkuchenbecker/brewery3/brewery/servers/brewery.go:218.12,222.3 3 4
+github.com/mkuchenbecker/brewery3/brewery/servers/element/heater.go:24.69,26.2 1 5
+github.com/mkuchenbecker/brewery3/brewery/servers/element/heater.go:29.97,33.2 3 2
+github.com/mkuchenbecker/brewery3/brewery/servers/element/heater.go:36.100,40.2 3 2
+github.com/mkuchenbecker/brewery3/brewery/servers/element/heater.go:44.115,49.49 4 1
+github.com/mkuchenbecker/brewery3/brewery/servers/element/heater.go:56.2,57.16 2 1
+github.com/mkuchenbecker/brewery3/brewery/servers/element/heater.go:61.2,61.39 1 1
+github.com/mkuchenbecker/brewery3/brewery/servers/element/heater.go:49.49,55.3 5 1
+github.com/mkuchenbecker/brewery3/brewery/servers/element/heater.go:57.16,59.3 1 0

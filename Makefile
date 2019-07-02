@@ -14,6 +14,15 @@ tests: fmt lint
 	-tags test \
 	./brewery/...
 
+.PHONY: test-ci
+test-ci:
+	@echo "tests:"
+	go test -tags test ./...
+
+.PHONY: install-golang-ci
+lint-ci:
+	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh
+
 .PHONY: build
 build:
 	go build -o cli.bin entry/cli/main.go
