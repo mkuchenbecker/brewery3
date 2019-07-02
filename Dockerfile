@@ -3,7 +3,8 @@ FROM golang
 ARG app_env
 ENV APP_ENV $app_env
 
-COPY ./ /go/src/github.com/mkuchenbecker/brewery3
+
+COPY . /go/src/github.com/mkuchenbecker/brewery3
 WORKDIR /go/src/github.com/mkuchenbecker/brewery3
 
 RUN go get -u github.com/golang/dep/cmd/dep \
@@ -11,10 +12,11 @@ RUN go get -u github.com/golang/dep/cmd/dep \
   && go get -u github.com/golangci/golangci-lint/cmd/golangci-lint \
   && go get github.com/mattn/goveralls
 
-RUN dep ensure --vendor-only
+# RUN dep ensure --vendor-only
+RUN go get -d -v ./...
 
-RUN go build ./entry/server
+RUN go install -v ./brewery/servers/brewery
 
-CMD server
+CMD brewery
 
 EXPOSE 8080

@@ -1,5 +1,0 @@
-package brewery
-
-func main() {
-
-}
