@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+eval $(minikube docker-env)
+
+docker build -t local/brewery -f Dockerfile.brewery .
+kubectl create -f brewery.yml

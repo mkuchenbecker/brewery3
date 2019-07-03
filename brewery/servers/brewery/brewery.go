@@ -1,4 +1,4 @@
-package servers
+package brewery
 
 import (
 	"context"

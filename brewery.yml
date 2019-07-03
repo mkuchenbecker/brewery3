@@ -1,0 +1,34 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: brewery-deployment
+  labels:
+    app: brewery
+spec:
+  selector:
+    matchLabels:
+      app: brewery
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: brewery
+    spec:
+      containers:
+      - name: brewery
+        image: local/brewery
+        imagePullPolicy: Never
+        ports:
+        - name: brewery-service
+          containerPort: 9000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: brewery-service
+spec:
+  selector:
+    app: brewery
+  ports:
+  - port: 9000
+    targetPort: brewery-service

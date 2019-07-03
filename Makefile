@@ -59,3 +59,11 @@ structmockgen:
 
 .PHONY: generate
 generate: proto protomockgen structmockgen
+
+.PHONY: launch
+launch:
+	./scripts/launch.local
+
+.PHONY: stop
+stop:
+	./scripts/stop.local

@@ -1,23 +1,23 @@
 //+build !test
 
-package servers
+package main
 
 //nolint
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net"
 	"time"
 
 	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
+	"github.com/mkuchenbecker/brewery3/brewery/servers/brewery"
 	"github.com/mkuchenbecker/brewery3/brewery/utils"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
-func startBrewery(port int, brewery *Brewery) {
+func startBrewery(port int, brewery *brewery.Brewery) {
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
@@ -51,11 +51,11 @@ func makeTemperatureClient(port int, address string) (model.ThermometerClient, *
 		panic(err)
 	}
 	client := model.NewThermometerClient(conn)
-	res, err := client.Get(context.Background(), &model.GetRequest{})
-	if err != nil {
-		panic(err)
-	}
-	utils.Print(fmt.Sprintf("temp: %f", res.Temperature))
+	// res, err := client.Get(context.Background(), &model.GetRequest{})
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// utils.Print(fmt.Sprintf("temp: %f", res.Temperature))
 	return client, conn
 }
 
@@ -66,10 +66,10 @@ func makeSwitchClient(port int, pin uint8) (model.SwitchClient, *grpc.ClientConn
 		panic(err)
 	}
 	client := model.NewSwitchClient(conn)
-	_, err = client.Off(context.Background(), &model.OffRequest{})
-	if err != nil {
-		panic(err)
-	}
+	// _, err = client.Off(context.Background(), &model.OffRequest{})
+	// if err != nil {
+	// 	panic(err)
+	// }
 	return client, conn
 }
 
@@ -88,11 +88,11 @@ func main() { // nolint: deadcode
 	element, elementConn := makeSwitchClient(elementPort, elementPin)
 	defer elementConn.Close()
 
-	brewery := Brewery{
+	brewery := brewery.Brewery{
 		MashSensor:  mash,
 		HermsSensor: herms,
 		BoilSensor:  boil,
 		Element:     element,
 	}
-	startBrewery(8100, &brewery)
+	startBrewery(9000, &brewery)
 }
