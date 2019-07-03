@@ -16,4 +16,4 @@ RUN go install -v ./brewery/servers/main/brewery
 
 CMD ["brewery"]
 
-EXPOSE 9000
+EXPOSE 9000:9009
