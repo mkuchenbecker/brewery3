@@ -34,14 +34,6 @@ func startBrewery(port int, brewery *brewery.Brewery) {
 	}
 }
 
-const (
-	mashPort    = 9110
-	hermsPort   = 9111
-	boilPort    = 9112
-	elementPort = 9100
-	breweryPort = 9000
-)
-
 type Settings struct {
 	MashThermPort0  int `envconfig:"MASH_THERM_PORT_0" default:"9110"`
 	HermsThermPort0 int `envconfig:"HERMS_THERM_PORT_0" default:"9111"`
@@ -69,6 +61,7 @@ func makeSwitchClient(port int) (model.SwitchClient, *grpc.ClientConn) {
 		panic(err)
 	}
 	client := model.NewSwitchClient(conn)
+	return client, conn
 }
 
 func getSettings(prefix string) *Settings {
