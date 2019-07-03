@@ -28,6 +28,17 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "500m"
+        env:
+          - name: MASH_THERM_PORT_0
+            value: "9110"
+          - name: HERMS_THERM_PORT_0
+            value: "9111"
+          - name: BOIL_THERM_PORT_0
+            value: "9112"
+          - name: ELEMENT_PORT_0
+            value: "9100"
+          - name: BREWERY_PORT_0
+            value: "9000"
       - name: element
         image: local/element
         imagePullPolicy: Never
@@ -37,10 +48,64 @@ spec:
         resources:
           requests:
             memory: "64Mi"
-            cpu: "250m"
+            cpu: "125m"
           limits:
             memory: "128Mi"
-            cpu: "500m"
+            cpu: "250m"
+      - name: therm-mash
+        image: local/thermometer
+        imagePullPolicy: Never
+        ports:
+        - name: therm-mash-srv
+          containerPort: 9110
+        env:
+          - name: THERM_PORT
+            value: "9110"
+          - name: THERM_ADDR
+            value: "28-0315712c08ff"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "125m"
+          limits:
+            memory: "128Mi"
+            cpu: "250m"
+      - name: therm-herms
+        image: local/thermometer
+        imagePullPolicy: Never
+        ports:
+        - name: therm-herms-srv
+          containerPort: 9111
+        env:
+          - name: THERM_PORT
+            value: "9111"
+          - name: THERM_ADDR
+            value: "28-0315715039ff"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "125Mi"
+            cpu: "250m"
+      - name: therm-boil
+        image: local/thermometer
+        imagePullPolicy: Never
+        ports:
+        - name: therm-boil-srv
+          containerPort: 9112
+        env:
+          - name: THERM_PORT
+            value: "9112"
+          - name: THERM_ADDR
+            value: "28-031571188aff"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "125m"
+          limits:
+            memory: "128Mi"
+            cpu: "250m"
 ---
 apiVersion: v1
 kind: Service

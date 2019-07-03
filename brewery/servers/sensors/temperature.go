@@ -22,7 +22,7 @@ type ThermometerServer struct {
 
 // NewThermometerServer creates a new Thermometer Server.
 func NewThermometerServer(controller gpio.Controller, address gpio.TemperatureAddress) (*ThermometerServer, error) {
-	s := ThermometerServer{controller: controller, address: address}
+	s := ThermometerServer{controller: controller, address: address, currentTemp: 0, err: nil}
 	err := s.update()
 	go s.backgroundUpdate(utils.UpdateInterval)
 	return &s, err
@@ -42,7 +42,12 @@ func (s *ThermometerServer) backgroundUpdate(interval time.Duration) {
 func (s *ThermometerServer) update() (err error) {
 	s.mux.Lock()
 	defer s.mux.Unlock()
-	s.currentTemp, s.err = s.controller.ReadTemperature(s.address)
+	var temp float64
+	temp, s.err = s.controller.ReadTemperature(s.address)
+	if err != nil {
+		return err
+	}
+	s.currentTemp = temp
 	return s.err
 }
 

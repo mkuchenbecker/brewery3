@@ -2,6 +2,6 @@
 
 eval $(minikube docker-env)
 
-docker build -t local/brewery -f Dockerfile.brewery .
-docker build -t local/element -f Dockerfile.element .
+./scripts/docker.build
+
 kubectl create -f brewery.yml

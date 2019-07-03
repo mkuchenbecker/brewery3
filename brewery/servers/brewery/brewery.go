@@ -43,10 +43,12 @@ func (b *Brewery) getTempConstraints() ([]constraint, error) {
 	if err != nil {
 		return []constraint{}, err
 	}
+
 	resHerms, err := b.HermsSensor.Get(context.Background(), &model.GetRequest{})
 	if err != nil {
 		return []constraint{}, err
 	}
+
 	resMash, err := b.MashSensor.Get(context.Background(), &model.GetRequest{})
 	if err != nil {
 		return []constraint{}, err
