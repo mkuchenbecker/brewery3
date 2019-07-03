@@ -67,3 +67,7 @@ launch:
 .PHONY: stop
 stop:
 	./scripts/stop.local
+
+.PHONY: up
+up:
+	./scripts/update.local

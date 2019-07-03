@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+kubectl set image deployment/brewery-deployment brewery=local/brewery:latest
+kubectl set image deployment/brewery-deployment element=local/element:latest

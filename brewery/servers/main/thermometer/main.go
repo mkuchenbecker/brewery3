@@ -1,6 +1,6 @@
 //+build !test
 
-package sensors
+package main
 
 // import (
 // 	"fmt"

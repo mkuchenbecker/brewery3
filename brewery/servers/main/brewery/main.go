@@ -41,7 +41,7 @@ const (
 	boilPort  = 8112
 
 	elementPin  = 11
-	elementPort = 8120
+	elementPort = 9100
 )
 
 func makeTemperatureClient(port int, address string) (model.ThermometerClient, *grpc.ClientConn) {
