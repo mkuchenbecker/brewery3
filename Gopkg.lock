@@ -38,6 +38,14 @@
   version = "v1.3.1"
 
 [[projects]]
+  digest = "1:0536e7642a38c1683743ce8f1f6d83d9b3fc591a6cd911762f539283faec4132"
+  name = "github.com/kelseyhightower/envconfig"
+  packages = ["."]
+  pruneopts = ""
+  revision = "0b417c4ec4a8a82eecc22a1459a504aa55163d61"
+  version = "v1.4.0"
+
+[[projects]]
   digest = "1:b7002fe9fa577580f52f32011893f596f540d3cbb0f1e8b88af617163408495f"
   name = "github.com/kyoh86/richgo"
   packages = [
@@ -245,6 +253,7 @@
     "github.com/golang/mock/gomock",
     "github.com/golang/protobuf/proto",
     "github.com/golang/protobuf/protoc-gen-go",
+    "github.com/kelseyhightower/envconfig",
     "github.com/kyoh86/richgo",
     "github.com/stianeikeland/go-rpio",
     "github.com/stretchr/testify/assert",

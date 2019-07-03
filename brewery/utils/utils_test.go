@@ -79,6 +79,7 @@ func TestRunLoop(t *testing.T) {
 }
 
 func TestRunLoopError(t *testing.T) {
+	// TODO: Maybe flaky.
 	t.Parallel()
 	i := 0
 	f := func() error {

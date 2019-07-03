@@ -17,16 +17,11 @@ tests: fmt lint
 .PHONY: test-ci
 test-ci:
 	@echo "tests:"
-	go test -tags test ./...
+	go test -v -covermode=count -coverprofile=coverage.out ./...
 
 .PHONY: install-golang-ci
 lint-ci:
 	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh
-
-.PHONY: build
-build:
-	go build -o cli.bin entry/cli/main.go
-	go build -o server.bin entry/server/main.go
 
 .PHONY: fmt
 fmt:
@@ -59,3 +54,30 @@ structmockgen:
 
 .PHONY: generate
 generate: proto protomockgen structmockgen
+
+
+.PHONY: lite-launch
+lite-launch:
+	kubectl create -f brewery.yml
+
+.PHONY: launch
+launch: build
+	eval $(minikube docker-env)
+	kubectl create -f brewery.yml
+
+.PHONY: stop
+stop:
+	./scripts/stop.local
+
+.PHONY: up
+up: build
+	kubectl set image deployment/brewery-deployment brewery=local/brewery:latest
+	kubectl set image deployment/brewery-deployment element=local/element:latest
+	kubectl set image deployment/brewery-deployment element=local/thermometer:latest
+
+
+.PHONY: build
+build:
+	docker build -t local/brewery -f Dockerfile.brewery . \
+	&& docker build -t local/element -f Dockerfile.element . \
+	&& docker build -t local/thermometer -f Dockerfile.thermometer .

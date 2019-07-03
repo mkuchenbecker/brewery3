@@ -7,9 +7,5 @@
 required = [
     "github.com/golang/protobuf/protoc-gen-go",
     "github.com/kyoh86/richgo",
-    "github.com/t-yuki/gocover-cobertura"
+    "github.com/t-yuki/gocover-cobertura",
 ]
-
-[[constraint]]
-  name = "github.com/stretchr/testify"
-  version = "1.2.2"
