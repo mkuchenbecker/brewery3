@@ -17,7 +17,14 @@ tests: fmt lint
 .PHONY: test-ci
 test-ci:
 	@echo "tests:"
-	go test -tags test ./...
+	go test \
+	-timeout 10s \
+	-cover \
+	-v \
+	-covermode=count \
+	-coverprofile=coverage.out \
+	-tags test \
+	./...
 
 .PHONY: install-golang-ci
 lint-ci:
