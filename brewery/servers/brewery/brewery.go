@@ -27,7 +27,7 @@ type Brewery struct {
 // The brewery will then attempt to follow the scheme.
 func (b *Brewery) Control(ctx context.Context,
 	req *model.ControlRequest) (res *model.ControlResponse, err error) {
-	utils.Print("Recieved control request")
+	utils.Print("Received control request")
 	b.replaceConfig(req.Scheme)
 	return &model.ControlResponse{}, nil
 }
@@ -102,9 +102,9 @@ func (c *constraint) check() int {
 }
 
 // Returns -1 if some val is too low, 0 if all are met, and 1 if val is too high.
-func checkTempConstraints(constriants []constraint) int {
-	for _, constriant := range constriants {
-		if val := constriant.check(); val != 0 {
+func checkTempConstraints(constraints []constraint) int {
+	for _, constraint := range constraints {
+		if val := constraint.check(); val != 0 {
 			return val
 		}
 	}
