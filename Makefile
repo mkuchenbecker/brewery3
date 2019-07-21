@@ -1,3 +1,12 @@
+.PHONY: bootstrap
+bootstrap:
+	go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
+	go get -u github.com/kyoh86/richgo
+	go get -v github.com/ramya-rao-a/go-outline
+	go get -v github.com/mdempsky/gocode
+	go get -v github.com/uudashr/gopkgs/cmd/gopkgs
+	go get -v golang.org/x/tools/cmd/goimports
+
 .PHONY: lint
 lint: fmt
 	golangci-lint run
