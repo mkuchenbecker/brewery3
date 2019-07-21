@@ -2,6 +2,7 @@
 bootstrap:
 	go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
 	go get -u github.com/kyoh86/richgo
+	go get -v github.com/ramya-rao-a/go-outline
 
 .PHONY: lint
 lint: fmt
