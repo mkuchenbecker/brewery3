@@ -7,9 +7,11 @@ package main
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net"
-	"time"
+
+	"gopkg.in/yaml.v2"
 
 	"github.com/kelseyhightower/envconfig"
 	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
@@ -19,7 +21,7 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-func startBrewery(port int, brewery *brewery.Brewery) {
+func startBrewery(port int32, brewery *brewery.Brewery) {
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
@@ -35,18 +37,12 @@ func startBrewery(port int, brewery *brewery.Brewery) {
 }
 
 type Settings struct {
-	MashThermPort0  int `envconfig:"MASH_THERM_PORT_0" default:"9110"`
-	HermsThermPort0 int `envconfig:"HERMS_THERM_PORT_0" default:"9111"`
-	BoilThermPort0  int `envconfig:"BOIL_THERM_PORT_0" default:"9112"`
-
-	ElementPort0 int `envconfig:"ELEMENT_PORT_0" default:"9100"`
-
-	BreweryPort0 int `envconfig:"BREWERY_PORT_0" default:"9000"`
+	Config string `envconfig:"CONFIG_FILENAME" default:"config.yaml"`
 }
 
-func makeTemperatureClient(port int) (model.ThermometerClient, *grpc.ClientConn) {
+func makeTemperatureClient(address string, port int32) (model.ThermometerClient, *grpc.ClientConn) {
 	utils.Print(fmt.Sprintf("Connecting to client: %d", port))
-	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", port), grpc.WithInsecure())
+	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", address, port), grpc.WithInsecure())
 	if err != nil {
 		panic(err)
 	}
@@ -54,9 +50,9 @@ func makeTemperatureClient(port int) (model.ThermometerClient, *grpc.ClientConn)
 	return client, conn
 }
 
-func makeSwitchClient(port int) (model.SwitchClient, *grpc.ClientConn) {
+func makeSwitchClient(address string, port int32) (model.SwitchClient, *grpc.ClientConn) {
 	utils.Print(fmt.Sprintf("Connecting to client: %d", port))
-	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", port), grpc.WithInsecure())
+	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", address, port), grpc.WithInsecure())
 	if err != nil {
 		panic(err)
 	}
@@ -74,26 +70,37 @@ func getSettings(prefix string) *Settings {
 }
 
 func main() { // nolint: deadcode
-	utils.Print("waiting for discovery")
-	time.Sleep(time.Second)
-	utils.Print("starting clients")
 
 	settings := getSettings("")
-
-	mash, mashConn := makeTemperatureClient(settings.MashThermPort0)
-	defer mashConn.Close()
-	herms, hermsConn := makeTemperatureClient(settings.HermsThermPort0)
-	defer hermsConn.Close()
-	boil, boilConn := makeTemperatureClient(settings.BoilThermPort0)
-	defer boilConn.Close()
-	element, elementConn := makeSwitchClient(settings.ElementPort0)
-	defer elementConn.Close()
-
-	brewery := brewery.Brewery{
-		MashSensor:  mash,
-		HermsSensor: herms,
-		BoilSensor:  boil,
-		Element:     element,
+	data, err := ioutil.ReadFile(settings.Config)
+	if err != nil {
+		panic(err)
 	}
-	startBrewery(settings.BreweryPort0, &brewery)
+	brewSettings := model.BrewerySettings{}
+	yaml.Unmarshal(data, &brewSettings)
+
+	mainBrewrey := brewery.Brewery{
+		Temperatures: make(map[brewery.SensorName]model.ThermometerClient),
+	}
+	for _, therm := range brewSettings.Thermometers {
+		thermomerter, connection := makeTemperatureClient(therm.Addr, therm.Port)
+		defer func() {
+			err := connection.Close()
+			if err != nil {
+				utils.LogError(&utils.DefualtPrinter{}, err, "")
+			}
+		}()
+		mainBrewrey.Temperatures[brewery.SensorName(therm.Name)] = thermomerter
+	}
+
+	heater, connection := makeSwitchClient(brewSettings.Heater.Addr, brewSettings.Heater.Port)
+	defer func() {
+		err := connection.Close()
+		if err != nil {
+			utils.LogError(&utils.DefualtPrinter{}, err, "")
+		}
+	}()
+	mainBrewrey.Element = heater
+
+	startBrewery(brewSettings.Config.Port, &mainBrewrey)
 }

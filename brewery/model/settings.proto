@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package brewery.model;
+
+message ServerConfig {
+    string name = 1;
+    string addr = 2;
+    int32 port = 3;
+}
+
+message BrewerySettings {
+    ServerConfig config = 1;
+    repeated ServerConfig thermometers = 2;
+    ServerConfig heater = 3;
+}
+
+message GPIOTherm {
+    string addr = 1;
+}
+
+message ThemometerSettings {
+    int32 port = 1;
+    repeated GPIOTherm thermometers = 2;
+    int32 pin = 3;
+}
+
+message HeaterSettings {
+    int32 port = 1;
+    int32 pin = 2;
+}

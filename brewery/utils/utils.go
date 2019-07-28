@@ -33,6 +33,10 @@ func Print(s string) {
 	fmt.Printf("%s - %s\n", time.Now().Format(time.StampMilli), s)
 }
 
+func Printf(format string, i ...interface{}) {
+	Print(fmt.Sprintf(format, i...))
+}
+
 func LogError(p Printer, err error, msg string) {
 	var printer Printer = &DefualtPrinter{}
 	if p != nil {

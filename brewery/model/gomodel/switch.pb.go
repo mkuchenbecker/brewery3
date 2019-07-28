@@ -3,13 +3,14 @@
 
 package brewery_model
 
-import proto "github.com/golang/protobuf/proto"
-import fmt "fmt"
-import math "math"
-
 import (
-	context "golang.org/x/net/context"
+	context "context"
+	fmt "fmt"
+	proto "github.com/golang/protobuf/proto"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
+	math "math"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -21,7 +22,7 @@ var _ = math.Inf
 // is compatible with the proto package it is being compiled against.
 // A compilation error at this line likely means your copy of the
 // proto package needs to be updated.
-const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 type OnRequest struct {
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -33,16 +34,17 @@ func (m *OnRequest) Reset()         { *m = OnRequest{} }
 func (m *OnRequest) String() string { return proto.CompactTextString(m) }
 func (*OnRequest) ProtoMessage()    {}
 func (*OnRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_switch_bab2843b89870f7c, []int{0}
+	return fileDescriptor_d5d7f34d8fcf87fc, []int{0}
 }
+
 func (m *OnRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_OnRequest.Unmarshal(m, b)
 }
 func (m *OnRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_OnRequest.Marshal(b, m, deterministic)
 }
-func (dst *OnRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_OnRequest.Merge(dst, src)
+func (m *OnRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_OnRequest.Merge(m, src)
 }
 func (m *OnRequest) XXX_Size() int {
 	return xxx_messageInfo_OnRequest.Size(m)
@@ -63,16 +65,17 @@ func (m *OnResponse) Reset()         { *m = OnResponse{} }
 func (m *OnResponse) String() string { return proto.CompactTextString(m) }
 func (*OnResponse) ProtoMessage()    {}
 func (*OnResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_switch_bab2843b89870f7c, []int{1}
+	return fileDescriptor_d5d7f34d8fcf87fc, []int{1}
 }
+
 func (m *OnResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_OnResponse.Unmarshal(m, b)
 }
 func (m *OnResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_OnResponse.Marshal(b, m, deterministic)
 }
-func (dst *OnResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_OnResponse.Merge(dst, src)
+func (m *OnResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_OnResponse.Merge(m, src)
 }
 func (m *OnResponse) XXX_Size() int {
 	return xxx_messageInfo_OnResponse.Size(m)
@@ -93,16 +96,17 @@ func (m *OffRequest) Reset()         { *m = OffRequest{} }
 func (m *OffRequest) String() string { return proto.CompactTextString(m) }
 func (*OffRequest) ProtoMessage()    {}
 func (*OffRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_switch_bab2843b89870f7c, []int{2}
+	return fileDescriptor_d5d7f34d8fcf87fc, []int{2}
 }
+
 func (m *OffRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_OffRequest.Unmarshal(m, b)
 }
 func (m *OffRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_OffRequest.Marshal(b, m, deterministic)
 }
-func (dst *OffRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_OffRequest.Merge(dst, src)
+func (m *OffRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_OffRequest.Merge(m, src)
 }
 func (m *OffRequest) XXX_Size() int {
 	return xxx_messageInfo_OffRequest.Size(m)
@@ -123,16 +127,17 @@ func (m *OffResponse) Reset()         { *m = OffResponse{} }
 func (m *OffResponse) String() string { return proto.CompactTextString(m) }
 func (*OffResponse) ProtoMessage()    {}
 func (*OffResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_switch_bab2843b89870f7c, []int{3}
+	return fileDescriptor_d5d7f34d8fcf87fc, []int{3}
 }
+
 func (m *OffResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_OffResponse.Unmarshal(m, b)
 }
 func (m *OffResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_OffResponse.Marshal(b, m, deterministic)
 }
-func (dst *OffResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_OffResponse.Merge(dst, src)
+func (m *OffResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_OffResponse.Merge(m, src)
 }
 func (m *OffResponse) XXX_Size() int {
 	return xxx_messageInfo_OffResponse.Size(m)
@@ -154,16 +159,17 @@ func (m *ToggleOnRequest) Reset()         { *m = ToggleOnRequest{} }
 func (m *ToggleOnRequest) String() string { return proto.CompactTextString(m) }
 func (*ToggleOnRequest) ProtoMessage()    {}
 func (*ToggleOnRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_switch_bab2843b89870f7c, []int{4}
+	return fileDescriptor_d5d7f34d8fcf87fc, []int{4}
 }
+
 func (m *ToggleOnRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ToggleOnRequest.Unmarshal(m, b)
 }
 func (m *ToggleOnRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_ToggleOnRequest.Marshal(b, m, deterministic)
 }
-func (dst *ToggleOnRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ToggleOnRequest.Merge(dst, src)
+func (m *ToggleOnRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ToggleOnRequest.Merge(m, src)
 }
 func (m *ToggleOnRequest) XXX_Size() int {
 	return xxx_messageInfo_ToggleOnRequest.Size(m)
@@ -191,16 +197,17 @@ func (m *ToggleOnResponse) Reset()         { *m = ToggleOnResponse{} }
 func (m *ToggleOnResponse) String() string { return proto.CompactTextString(m) }
 func (*ToggleOnResponse) ProtoMessage()    {}
 func (*ToggleOnResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_switch_bab2843b89870f7c, []int{5}
+	return fileDescriptor_d5d7f34d8fcf87fc, []int{5}
 }
+
 func (m *ToggleOnResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ToggleOnResponse.Unmarshal(m, b)
 }
 func (m *ToggleOnResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_ToggleOnResponse.Marshal(b, m, deterministic)
 }
-func (dst *ToggleOnResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ToggleOnResponse.Merge(dst, src)
+func (m *ToggleOnResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ToggleOnResponse.Merge(m, src)
 }
 func (m *ToggleOnResponse) XXX_Size() int {
 	return xxx_messageInfo_ToggleOnResponse.Size(m)
@@ -218,6 +225,25 @@ func init() {
 	proto.RegisterType((*OffResponse)(nil), "brewery.model.OffResponse")
 	proto.RegisterType((*ToggleOnRequest)(nil), "brewery.model.ToggleOnRequest")
 	proto.RegisterType((*ToggleOnResponse)(nil), "brewery.model.ToggleOnResponse")
+}
+
+func init() { proto.RegisterFile("switch.proto", fileDescriptor_d5d7f34d8fcf87fc) }
+
+var fileDescriptor_d5d7f34d8fcf87fc = []byte{
+	// 208 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x29, 0x2e, 0xcf, 0x2c,
+	0x49, 0xce, 0xd0, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x4d, 0x2a, 0x4a, 0x2d, 0x4f, 0x2d,
+	0xaa, 0xd4, 0xcb, 0xcd, 0x4f, 0x49, 0xcd, 0x51, 0xe2, 0xe6, 0xe2, 0xf4, 0xcf, 0x0b, 0x4a, 0x2d,
+	0x2c, 0x4d, 0x2d, 0x2e, 0x51, 0xe2, 0xe1, 0xe2, 0x02, 0x71, 0x8a, 0x0b, 0xf2, 0xf3, 0x8a, 0x53,
+	0xc1, 0xbc, 0xb4, 0x34, 0x98, 0x1c, 0x2f, 0x17, 0x37, 0x98, 0x07, 0x95, 0x34, 0xe2, 0xe2, 0x0f,
+	0xc9, 0x4f, 0x4f, 0xcf, 0x49, 0x85, 0xeb, 0x16, 0x92, 0xe7, 0xe2, 0xce, 0xcc, 0x2b, 0x49, 0x2d,
+	0x2a, 0x4b, 0xcc, 0x89, 0xcf, 0x2d, 0x96, 0x60, 0x54, 0x60, 0xd4, 0x60, 0x0e, 0xe2, 0x82, 0x09,
+	0xf9, 0x16, 0x2b, 0x09, 0x71, 0x09, 0x20, 0xf4, 0x40, 0xcc, 0x31, 0xba, 0xc2, 0xc8, 0xc5, 0x16,
+	0x0c, 0x76, 0x9f, 0x90, 0x35, 0x17, 0x93, 0x7f, 0x9e, 0x90, 0x84, 0x1e, 0x8a, 0x03, 0xf5, 0xe0,
+	0xe6, 0x4b, 0x49, 0x62, 0x91, 0x81, 0xba, 0x86, 0x41, 0xc8, 0x8e, 0x8b, 0xd9, 0x3f, 0x2d, 0x4d,
+	0x08, 0x43, 0x0d, 0xdc, 0x03, 0x52, 0x52, 0xd8, 0xa4, 0xe0, 0xfa, 0x7d, 0xb9, 0x38, 0x60, 0x6e,
+	0x13, 0x92, 0x43, 0x53, 0x89, 0xe6, 0x51, 0x29, 0x79, 0x9c, 0xf2, 0x30, 0xe3, 0x92, 0xd8, 0xc0,
+	0x81, 0x6d, 0x0c, 0x08, 0x00, 0x00, 0xff, 0xff, 0x7a, 0xfa, 0x84, 0x96, 0x7c, 0x01, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -277,6 +303,20 @@ type SwitchServer interface {
 	On(context.Context, *OnRequest) (*OnResponse, error)
 	Off(context.Context, *OffRequest) (*OffResponse, error)
 	ToggleOn(context.Context, *ToggleOnRequest) (*ToggleOnResponse, error)
+}
+
+// UnimplementedSwitchServer can be embedded to have forward compatible implementations.
+type UnimplementedSwitchServer struct {
+}
+
+func (*UnimplementedSwitchServer) On(ctx context.Context, req *OnRequest) (*OnResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method On not implemented")
+}
+func (*UnimplementedSwitchServer) Off(ctx context.Context, req *OffRequest) (*OffResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Off not implemented")
+}
+func (*UnimplementedSwitchServer) ToggleOn(ctx context.Context, req *ToggleOnRequest) (*ToggleOnResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ToggleOn not implemented")
 }
 
 func RegisterSwitchServer(s *grpc.Server, srv SwitchServer) {
@@ -356,23 +396,4 @@ var _Switch_serviceDesc = grpc.ServiceDesc{
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "switch.proto",
-}
-
-func init() { proto.RegisterFile("switch.proto", fileDescriptor_switch_bab2843b89870f7c) }
-
-var fileDescriptor_switch_bab2843b89870f7c = []byte{
-	// 208 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x29, 0x2e, 0xcf, 0x2c,
-	0x49, 0xce, 0xd0, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x4d, 0x2a, 0x4a, 0x2d, 0x4f, 0x2d,
-	0xaa, 0xd4, 0xcb, 0xcd, 0x4f, 0x49, 0xcd, 0x51, 0xe2, 0xe6, 0xe2, 0xf4, 0xcf, 0x0b, 0x4a, 0x2d,
-	0x2c, 0x4d, 0x2d, 0x2e, 0x51, 0xe2, 0xe1, 0xe2, 0x02, 0x71, 0x8a, 0x0b, 0xf2, 0xf3, 0x8a, 0x53,
-	0xc1, 0xbc, 0xb4, 0x34, 0x98, 0x1c, 0x2f, 0x17, 0x37, 0x98, 0x07, 0x95, 0x34, 0xe2, 0xe2, 0x0f,
-	0xc9, 0x4f, 0x4f, 0xcf, 0x49, 0x85, 0xeb, 0x16, 0x92, 0xe7, 0xe2, 0xce, 0xcc, 0x2b, 0x49, 0x2d,
-	0x2a, 0x4b, 0xcc, 0x89, 0xcf, 0x2d, 0x96, 0x60, 0x54, 0x60, 0xd4, 0x60, 0x0e, 0xe2, 0x82, 0x09,
-	0xf9, 0x16, 0x2b, 0x09, 0x71, 0x09, 0x20, 0xf4, 0x40, 0xcc, 0x31, 0xba, 0xc2, 0xc8, 0xc5, 0x16,
-	0x0c, 0x76, 0x9f, 0x90, 0x35, 0x17, 0x93, 0x7f, 0x9e, 0x90, 0x84, 0x1e, 0x8a, 0x03, 0xf5, 0xe0,
-	0xe6, 0x4b, 0x49, 0x62, 0x91, 0x81, 0xba, 0x86, 0x41, 0xc8, 0x8e, 0x8b, 0xd9, 0x3f, 0x2d, 0x4d,
-	0x08, 0x43, 0x0d, 0xdc, 0x03, 0x52, 0x52, 0xd8, 0xa4, 0xe0, 0xfa, 0x7d, 0xb9, 0x38, 0x60, 0x6e,
-	0x13, 0x92, 0x43, 0x53, 0x89, 0xe6, 0x51, 0x29, 0x79, 0x9c, 0xf2, 0x30, 0xe3, 0x92, 0xd8, 0xc0,
-	0x81, 0x6d, 0x0c, 0x08, 0x00, 0x00, 0xff, 0xff, 0x7a, 0xfa, 0x84, 0x96, 0x7c, 0x01, 0x00, 0x00,
 }
