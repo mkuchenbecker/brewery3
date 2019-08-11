@@ -33,12 +33,24 @@ func Print(s string) {
 	fmt.Printf("%s - %s\n", time.Now().Format(time.StampMilli), s)
 }
 
+func Printf(format string, i ...interface{}) {
+	Print(fmt.Sprintf(format, i...))
+}
+
 func LogError(p Printer, err error, msg string) {
 	var printer Printer = &DefualtPrinter{}
 	if p != nil {
 		printer = p
 	}
 	printer.Print(fmt.Sprintf("%s : %s", msg, err.Error()))
+}
+
+func LogIfError(p Printer, err error, msg string) bool {
+	if err == nil {
+		return false
+	}
+	LogError(p, err, msg)
+	return true
 }
 
 func BackgroundErrReturn(p Printer, f func() error) {

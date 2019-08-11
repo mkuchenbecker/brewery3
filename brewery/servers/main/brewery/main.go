@@ -11,6 +11,8 @@ import (
 	"net"
 	"time"
 
+	"github.com/mkuchenbecker/brewery3/brewery/logger"
+
 	"github.com/kelseyhightower/envconfig"
 	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
 	"github.com/mkuchenbecker/brewery3/brewery/servers/brewery"
@@ -94,6 +96,7 @@ func main() { // nolint: deadcode
 		HermsSensor: herms,
 		BoilSensor:  boil,
 		Element:     element,
+		Logger:      logger.NewFake(),
 	}
 	startBrewery(settings.BreweryPort0, &brewery)
 }
