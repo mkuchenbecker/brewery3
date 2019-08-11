@@ -3,10 +3,13 @@
 
 package brewery_model
 
+import proto "github.com/golang/protobuf/proto"
+import fmt "fmt"
+import math "math"
+
 import (
-	fmt "fmt"
-	proto "github.com/golang/protobuf/proto"
-	math "math"
+	context "golang.org/x/net/context"
+	grpc "google.golang.org/grpc"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -18,7 +21,7 @@ var _ = math.Inf
 // is compatible with the proto package it is being compiled against.
 // A compilation error at this line likely means your copy of the
 // proto package needs to be updated.
-const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 type Location struct {
 	Port                 string   `protobuf:"bytes,1,opt,name=port,proto3" json:"port,omitempty"`
@@ -31,17 +34,16 @@ func (m *Location) Reset()         { *m = Location{} }
 func (m *Location) String() string { return proto.CompactTextString(m) }
 func (*Location) ProtoMessage()    {}
 func (*Location) Descriptor() ([]byte, []int) {
-	return fileDescriptor_3eaf2c85e69e9ea4, []int{0}
+	return fileDescriptor_config_578cd88f68d9c2a0, []int{0}
 }
-
 func (m *Location) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Location.Unmarshal(m, b)
 }
 func (m *Location) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_Location.Marshal(b, m, deterministic)
 }
-func (m *Location) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Location.Merge(m, src)
+func (dst *Location) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Location.Merge(dst, src)
 }
 func (m *Location) XXX_Size() int {
 	return xxx_messageInfo_Location.Size(m)
@@ -72,17 +74,16 @@ func (m *TemperatureSensor) Reset()         { *m = TemperatureSensor{} }
 func (m *TemperatureSensor) String() string { return proto.CompactTextString(m) }
 func (*TemperatureSensor) ProtoMessage()    {}
 func (*TemperatureSensor) Descriptor() ([]byte, []int) {
-	return fileDescriptor_3eaf2c85e69e9ea4, []int{1}
+	return fileDescriptor_config_578cd88f68d9c2a0, []int{1}
 }
-
 func (m *TemperatureSensor) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_TemperatureSensor.Unmarshal(m, b)
 }
 func (m *TemperatureSensor) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_TemperatureSensor.Marshal(b, m, deterministic)
 }
-func (m *TemperatureSensor) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_TemperatureSensor.Merge(m, src)
+func (dst *TemperatureSensor) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TemperatureSensor.Merge(dst, src)
 }
 func (m *TemperatureSensor) XXX_Size() int {
 	return xxx_messageInfo_TemperatureSensor.Size(m)
@@ -126,17 +127,16 @@ func (m *SSR) Reset()         { *m = SSR{} }
 func (m *SSR) String() string { return proto.CompactTextString(m) }
 func (*SSR) ProtoMessage()    {}
 func (*SSR) Descriptor() ([]byte, []int) {
-	return fileDescriptor_3eaf2c85e69e9ea4, []int{2}
+	return fileDescriptor_config_578cd88f68d9c2a0, []int{2}
 }
-
 func (m *SSR) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_SSR.Unmarshal(m, b)
 }
 func (m *SSR) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_SSR.Marshal(b, m, deterministic)
 }
-func (m *SSR) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_SSR.Merge(m, src)
+func (dst *SSR) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SSR.Merge(dst, src)
 }
 func (m *SSR) XXX_Size() int {
 	return xxx_messageInfo_SSR.Size(m)
@@ -176,17 +176,16 @@ func (m *BreweryConfig) Reset()         { *m = BreweryConfig{} }
 func (m *BreweryConfig) String() string { return proto.CompactTextString(m) }
 func (*BreweryConfig) ProtoMessage()    {}
 func (*BreweryConfig) Descriptor() ([]byte, []int) {
-	return fileDescriptor_3eaf2c85e69e9ea4, []int{3}
+	return fileDescriptor_config_578cd88f68d9c2a0, []int{3}
 }
-
 func (m *BreweryConfig) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_BreweryConfig.Unmarshal(m, b)
 }
 func (m *BreweryConfig) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_BreweryConfig.Marshal(b, m, deterministic)
 }
-func (m *BreweryConfig) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_BreweryConfig.Merge(m, src)
+func (dst *BreweryConfig) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_BreweryConfig.Merge(dst, src)
 }
 func (m *BreweryConfig) XXX_Size() int {
 	return xxx_messageInfo_BreweryConfig.Size(m)
@@ -232,33 +231,517 @@ func (m *BreweryConfig) GetScheme() *ControlScheme {
 	return nil
 }
 
+type ControlScheme struct {
+	// Types that are valid to be assigned to Scheme:
+	//	*ControlScheme_Boil_
+	//	*ControlScheme_Mash_
+	//	*ControlScheme_Power_
+	Scheme               isControlScheme_Scheme `protobuf_oneof:"scheme"`
+	XXX_NoUnkeyedLiteral struct{}               `json:"-"`
+	XXX_unrecognized     []byte                 `json:"-"`
+	XXX_sizecache        int32                  `json:"-"`
+}
+
+func (m *ControlScheme) Reset()         { *m = ControlScheme{} }
+func (m *ControlScheme) String() string { return proto.CompactTextString(m) }
+func (*ControlScheme) ProtoMessage()    {}
+func (*ControlScheme) Descriptor() ([]byte, []int) {
+	return fileDescriptor_config_578cd88f68d9c2a0, []int{4}
+}
+func (m *ControlScheme) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ControlScheme.Unmarshal(m, b)
+}
+func (m *ControlScheme) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ControlScheme.Marshal(b, m, deterministic)
+}
+func (dst *ControlScheme) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ControlScheme.Merge(dst, src)
+}
+func (m *ControlScheme) XXX_Size() int {
+	return xxx_messageInfo_ControlScheme.Size(m)
+}
+func (m *ControlScheme) XXX_DiscardUnknown() {
+	xxx_messageInfo_ControlScheme.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ControlScheme proto.InternalMessageInfo
+
+type isControlScheme_Scheme interface {
+	isControlScheme_Scheme()
+}
+
+type ControlScheme_Boil_ struct {
+	Boil *ControlScheme_Boil `protobuf:"bytes,1,opt,name=boil,proto3,oneof"`
+}
+
+type ControlScheme_Mash_ struct {
+	Mash *ControlScheme_Mash `protobuf:"bytes,2,opt,name=mash,proto3,oneof"`
+}
+
+type ControlScheme_Power_ struct {
+	Power *ControlScheme_Power `protobuf:"bytes,3,opt,name=power,proto3,oneof"`
+}
+
+func (*ControlScheme_Boil_) isControlScheme_Scheme() {}
+
+func (*ControlScheme_Mash_) isControlScheme_Scheme() {}
+
+func (*ControlScheme_Power_) isControlScheme_Scheme() {}
+
+func (m *ControlScheme) GetScheme() isControlScheme_Scheme {
+	if m != nil {
+		return m.Scheme
+	}
+	return nil
+}
+
+func (m *ControlScheme) GetBoil() *ControlScheme_Boil {
+	if x, ok := m.GetScheme().(*ControlScheme_Boil_); ok {
+		return x.Boil
+	}
+	return nil
+}
+
+func (m *ControlScheme) GetMash() *ControlScheme_Mash {
+	if x, ok := m.GetScheme().(*ControlScheme_Mash_); ok {
+		return x.Mash
+	}
+	return nil
+}
+
+func (m *ControlScheme) GetPower() *ControlScheme_Power {
+	if x, ok := m.GetScheme().(*ControlScheme_Power_); ok {
+		return x.Power
+	}
+	return nil
+}
+
+// XXX_OneofFuncs is for the internal use of the proto package.
+func (*ControlScheme) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) error, func(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error), func(msg proto.Message) (n int), []interface{}) {
+	return _ControlScheme_OneofMarshaler, _ControlScheme_OneofUnmarshaler, _ControlScheme_OneofSizer, []interface{}{
+		(*ControlScheme_Boil_)(nil),
+		(*ControlScheme_Mash_)(nil),
+		(*ControlScheme_Power_)(nil),
+	}
+}
+
+func _ControlScheme_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
+	m := msg.(*ControlScheme)
+	// scheme
+	switch x := m.Scheme.(type) {
+	case *ControlScheme_Boil_:
+		b.EncodeVarint(1<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.Boil); err != nil {
+			return err
+		}
+	case *ControlScheme_Mash_:
+		b.EncodeVarint(2<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.Mash); err != nil {
+			return err
+		}
+	case *ControlScheme_Power_:
+		b.EncodeVarint(3<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.Power); err != nil {
+			return err
+		}
+	case nil:
+	default:
+		return fmt.Errorf("ControlScheme.Scheme has unexpected type %T", x)
+	}
+	return nil
+}
+
+func _ControlScheme_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error) {
+	m := msg.(*ControlScheme)
+	switch tag {
+	case 1: // scheme.boil
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(ControlScheme_Boil)
+		err := b.DecodeMessage(msg)
+		m.Scheme = &ControlScheme_Boil_{msg}
+		return true, err
+	case 2: // scheme.mash
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(ControlScheme_Mash)
+		err := b.DecodeMessage(msg)
+		m.Scheme = &ControlScheme_Mash_{msg}
+		return true, err
+	case 3: // scheme.power
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(ControlScheme_Power)
+		err := b.DecodeMessage(msg)
+		m.Scheme = &ControlScheme_Power_{msg}
+		return true, err
+	default:
+		return false, nil
+	}
+}
+
+func _ControlScheme_OneofSizer(msg proto.Message) (n int) {
+	m := msg.(*ControlScheme)
+	// scheme
+	switch x := m.Scheme.(type) {
+	case *ControlScheme_Boil_:
+		s := proto.Size(x.Boil)
+		n += 1 // tag and wire
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *ControlScheme_Mash_:
+		s := proto.Size(x.Mash)
+		n += 1 // tag and wire
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *ControlScheme_Power_:
+		s := proto.Size(x.Power)
+		n += 1 // tag and wire
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case nil:
+	default:
+		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
+	}
+	return n
+}
+
+type ControlScheme_Boil struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ControlScheme_Boil) Reset()         { *m = ControlScheme_Boil{} }
+func (m *ControlScheme_Boil) String() string { return proto.CompactTextString(m) }
+func (*ControlScheme_Boil) ProtoMessage()    {}
+func (*ControlScheme_Boil) Descriptor() ([]byte, []int) {
+	return fileDescriptor_config_578cd88f68d9c2a0, []int{4, 0}
+}
+func (m *ControlScheme_Boil) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ControlScheme_Boil.Unmarshal(m, b)
+}
+func (m *ControlScheme_Boil) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ControlScheme_Boil.Marshal(b, m, deterministic)
+}
+func (dst *ControlScheme_Boil) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ControlScheme_Boil.Merge(dst, src)
+}
+func (m *ControlScheme_Boil) XXX_Size() int {
+	return xxx_messageInfo_ControlScheme_Boil.Size(m)
+}
+func (m *ControlScheme_Boil) XXX_DiscardUnknown() {
+	xxx_messageInfo_ControlScheme_Boil.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ControlScheme_Boil proto.InternalMessageInfo
+
+type ControlScheme_Mash struct {
+	MashMinTemp          float64  `protobuf:"fixed64,1,opt,name=mash_min_temp,json=mashMinTemp,proto3" json:"mash_min_temp,omitempty"`
+	MashMaxTemp          float64  `protobuf:"fixed64,2,opt,name=mash_max_temp,json=mashMaxTemp,proto3" json:"mash_max_temp,omitempty"`
+	HermsMinTemp         float64  `protobuf:"fixed64,3,opt,name=herms_min_temp,json=hermsMinTemp,proto3" json:"herms_min_temp,omitempty"`
+	HermsMaxTemp         float64  `protobuf:"fixed64,4,opt,name=herms_max_temp,json=hermsMaxTemp,proto3" json:"herms_max_temp,omitempty"`
+	BoilMinTemp          float64  `protobuf:"fixed64,5,opt,name=boil_min_temp,json=boilMinTemp,proto3" json:"boil_min_temp,omitempty"`
+	BoilMaxTemp          float64  `protobuf:"fixed64,6,opt,name=boil_max_temp,json=boilMaxTemp,proto3" json:"boil_max_temp,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ControlScheme_Mash) Reset()         { *m = ControlScheme_Mash{} }
+func (m *ControlScheme_Mash) String() string { return proto.CompactTextString(m) }
+func (*ControlScheme_Mash) ProtoMessage()    {}
+func (*ControlScheme_Mash) Descriptor() ([]byte, []int) {
+	return fileDescriptor_config_578cd88f68d9c2a0, []int{4, 1}
+}
+func (m *ControlScheme_Mash) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ControlScheme_Mash.Unmarshal(m, b)
+}
+func (m *ControlScheme_Mash) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ControlScheme_Mash.Marshal(b, m, deterministic)
+}
+func (dst *ControlScheme_Mash) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ControlScheme_Mash.Merge(dst, src)
+}
+func (m *ControlScheme_Mash) XXX_Size() int {
+	return xxx_messageInfo_ControlScheme_Mash.Size(m)
+}
+func (m *ControlScheme_Mash) XXX_DiscardUnknown() {
+	xxx_messageInfo_ControlScheme_Mash.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ControlScheme_Mash proto.InternalMessageInfo
+
+func (m *ControlScheme_Mash) GetMashMinTemp() float64 {
+	if m != nil {
+		return m.MashMinTemp
+	}
+	return 0
+}
+
+func (m *ControlScheme_Mash) GetMashMaxTemp() float64 {
+	if m != nil {
+		return m.MashMaxTemp
+	}
+	return 0
+}
+
+func (m *ControlScheme_Mash) GetHermsMinTemp() float64 {
+	if m != nil {
+		return m.HermsMinTemp
+	}
+	return 0
+}
+
+func (m *ControlScheme_Mash) GetHermsMaxTemp() float64 {
+	if m != nil {
+		return m.HermsMaxTemp
+	}
+	return 0
+}
+
+func (m *ControlScheme_Mash) GetBoilMinTemp() float64 {
+	if m != nil {
+		return m.BoilMinTemp
+	}
+	return 0
+}
+
+func (m *ControlScheme_Mash) GetBoilMaxTemp() float64 {
+	if m != nil {
+		return m.BoilMaxTemp
+	}
+	return 0
+}
+
+type ControlScheme_Power struct {
+	PowerLevel           float64  `protobuf:"fixed64,1,opt,name=power_level,json=powerLevel,proto3" json:"power_level,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ControlScheme_Power) Reset()         { *m = ControlScheme_Power{} }
+func (m *ControlScheme_Power) String() string { return proto.CompactTextString(m) }
+func (*ControlScheme_Power) ProtoMessage()    {}
+func (*ControlScheme_Power) Descriptor() ([]byte, []int) {
+	return fileDescriptor_config_578cd88f68d9c2a0, []int{4, 2}
+}
+func (m *ControlScheme_Power) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ControlScheme_Power.Unmarshal(m, b)
+}
+func (m *ControlScheme_Power) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ControlScheme_Power.Marshal(b, m, deterministic)
+}
+func (dst *ControlScheme_Power) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ControlScheme_Power.Merge(dst, src)
+}
+func (m *ControlScheme_Power) XXX_Size() int {
+	return xxx_messageInfo_ControlScheme_Power.Size(m)
+}
+func (m *ControlScheme_Power) XXX_DiscardUnknown() {
+	xxx_messageInfo_ControlScheme_Power.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ControlScheme_Power proto.InternalMessageInfo
+
+func (m *ControlScheme_Power) GetPowerLevel() float64 {
+	if m != nil {
+		return m.PowerLevel
+	}
+	return 0
+}
+
+type ControlRequest struct {
+	Scheme               *ControlScheme `protobuf:"bytes,1,opt,name=scheme,proto3" json:"scheme,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
+	XXX_unrecognized     []byte         `json:"-"`
+	XXX_sizecache        int32          `json:"-"`
+}
+
+func (m *ControlRequest) Reset()         { *m = ControlRequest{} }
+func (m *ControlRequest) String() string { return proto.CompactTextString(m) }
+func (*ControlRequest) ProtoMessage()    {}
+func (*ControlRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_config_578cd88f68d9c2a0, []int{5}
+}
+func (m *ControlRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ControlRequest.Unmarshal(m, b)
+}
+func (m *ControlRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ControlRequest.Marshal(b, m, deterministic)
+}
+func (dst *ControlRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ControlRequest.Merge(dst, src)
+}
+func (m *ControlRequest) XXX_Size() int {
+	return xxx_messageInfo_ControlRequest.Size(m)
+}
+func (m *ControlRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ControlRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ControlRequest proto.InternalMessageInfo
+
+func (m *ControlRequest) GetScheme() *ControlScheme {
+	if m != nil {
+		return m.Scheme
+	}
+	return nil
+}
+
+type ControlResponse struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ControlResponse) Reset()         { *m = ControlResponse{} }
+func (m *ControlResponse) String() string { return proto.CompactTextString(m) }
+func (*ControlResponse) ProtoMessage()    {}
+func (*ControlResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_config_578cd88f68d9c2a0, []int{6}
+}
+func (m *ControlResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ControlResponse.Unmarshal(m, b)
+}
+func (m *ControlResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ControlResponse.Marshal(b, m, deterministic)
+}
+func (dst *ControlResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ControlResponse.Merge(dst, src)
+}
+func (m *ControlResponse) XXX_Size() int {
+	return xxx_messageInfo_ControlResponse.Size(m)
+}
+func (m *ControlResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ControlResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ControlResponse proto.InternalMessageInfo
+
 func init() {
 	proto.RegisterType((*Location)(nil), "brewery.model.Location")
 	proto.RegisterType((*TemperatureSensor)(nil), "brewery.model.TemperatureSensor")
 	proto.RegisterType((*SSR)(nil), "brewery.model.SSR")
 	proto.RegisterType((*BreweryConfig)(nil), "brewery.model.BreweryConfig")
+	proto.RegisterType((*ControlScheme)(nil), "brewery.model.ControlScheme")
+	proto.RegisterType((*ControlScheme_Boil)(nil), "brewery.model.ControlScheme.Boil")
+	proto.RegisterType((*ControlScheme_Mash)(nil), "brewery.model.ControlScheme.Mash")
+	proto.RegisterType((*ControlScheme_Power)(nil), "brewery.model.ControlScheme.Power")
+	proto.RegisterType((*ControlRequest)(nil), "brewery.model.ControlRequest")
+	proto.RegisterType((*ControlResponse)(nil), "brewery.model.ControlResponse")
 }
 
-func init() { proto.RegisterFile("config.proto", fileDescriptor_3eaf2c85e69e9ea4) }
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConn
 
-var fileDescriptor_3eaf2c85e69e9ea4 = []byte{
-	// 282 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x92, 0xbf, 0x4a, 0xc4, 0x40,
-	0x10, 0xc6, 0xc9, 0xfd, 0xe3, 0x9c, 0xf3, 0x0a, 0xb7, 0xd0, 0x20, 0x22, 0x21, 0xd5, 0x55, 0x29,
-	0xcc, 0xe1, 0x03, 0x78, 0x8d, 0x85, 0x58, 0xec, 0xda, 0xcb, 0x26, 0x8e, 0x26, 0x90, 0xcd, 0x84,
-	0xc9, 0x8a, 0xf8, 0x32, 0x3e, 0xab, 0xec, 0x66, 0x3d, 0xbc, 0xd8, 0x9c, 0xdd, 0x0c, 0xf9, 0xfd,
-	0xbe, 0x8f, 0x09, 0x0b, 0xa7, 0x25, 0xb5, 0xaf, 0xf5, 0x5b, 0xd6, 0x31, 0x59, 0x12, 0xeb, 0x82,
-	0xf1, 0x03, 0xf9, 0x33, 0x33, 0xf4, 0x82, 0xcd, 0xe5, 0x7e, 0xf5, 0x5f, 0xd3, 0x6b, 0x58, 0x3e,
-	0x50, 0xa9, 0x6d, 0x4d, 0xad, 0x10, 0x30, 0xeb, 0x88, 0x6d, 0x1c, 0x25, 0xd1, 0xe6, 0x44, 0xfa,
-	0x39, 0xb5, 0x70, 0xf6, 0x84, 0xa6, 0x43, 0xd6, 0xf6, 0x9d, 0x51, 0x61, 0xdb, 0x13, 0x8b, 0x73,
-	0x58, 0xf4, 0xc8, 0xb5, 0x6e, 0x02, 0x1a, 0x36, 0x91, 0xc3, 0xb2, 0x09, 0x61, 0xf1, 0x24, 0x89,
-	0x36, 0xab, 0x9b, 0x8b, 0xec, 0xa0, 0x3d, 0xfb, 0xe9, 0x92, 0x7b, 0xd0, 0xb5, 0xb6, 0xda, 0x60,
-	0x3c, 0x1d, 0x5a, 0xdd, 0x9c, 0x3e, 0xc2, 0x54, 0x29, 0x79, 0x90, 0x17, 0xfd, 0x37, 0x6f, 0xf2,
-	0x2b, 0xef, 0x6b, 0x02, 0xeb, 0xbb, 0x41, 0xdc, 0xf9, 0x7f, 0x23, 0xb6, 0x30, 0x33, 0xba, 0xaf,
-	0x42, 0x6c, 0x32, 0x8a, 0xfd, 0x73, 0xb2, 0xf4, 0xb4, 0xb3, 0x0a, 0xaa, 0x9b, 0x70, 0xdc, 0x11,
-	0x96, 0xa3, 0xc5, 0x2d, 0xcc, 0x2b, 0x64, 0xd3, 0xfb, 0x13, 0x8f, 0xd1, 0x06, 0x5c, 0xe4, 0xb0,
-	0x72, 0xfe, 0x73, 0x85, 0xda, 0x22, 0xc7, 0x33, 0x6f, 0x8b, 0x91, 0xad, 0x94, 0x94, 0xe0, 0xb0,
-	0x7b, 0x4f, 0x89, 0x2d, 0x2c, 0xfa, 0xb2, 0x42, 0x83, 0xf1, 0xdc, 0xf3, 0x57, 0x23, 0x7e, 0x47,
-	0xad, 0x65, 0x6a, 0x94, 0x67, 0x64, 0x60, 0x8b, 0x85, 0x7f, 0x0d, 0xf9, 0x77, 0x00, 0x00, 0x00,
-	0xff, 0xff, 0xb9, 0x09, 0xaf, 0xb7, 0x3b, 0x02, 0x00, 0x00,
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+const _ = grpc.SupportPackageIsVersion4
+
+// BreweryClient is the client API for Brewery service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type BreweryClient interface {
+	Control(ctx context.Context, in *ControlRequest, opts ...grpc.CallOption) (*ControlResponse, error)
+}
+
+type breweryClient struct {
+	cc *grpc.ClientConn
+}
+
+func NewBreweryClient(cc *grpc.ClientConn) BreweryClient {
+	return &breweryClient{cc}
+}
+
+func (c *breweryClient) Control(ctx context.Context, in *ControlRequest, opts ...grpc.CallOption) (*ControlResponse, error) {
+	out := new(ControlResponse)
+	err := c.cc.Invoke(ctx, "/brewery.model.Brewery/Control", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// BreweryServer is the server API for Brewery service.
+type BreweryServer interface {
+	Control(context.Context, *ControlRequest) (*ControlResponse, error)
+}
+
+func RegisterBreweryServer(s *grpc.Server, srv BreweryServer) {
+	s.RegisterService(&_Brewery_serviceDesc, srv)
+}
+
+func _Brewery_Control_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ControlRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BreweryServer).Control(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/brewery.model.Brewery/Control",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BreweryServer).Control(ctx, req.(*ControlRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _Brewery_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "brewery.model.Brewery",
+	HandlerType: (*BreweryServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Control",
+			Handler:    _Brewery_Control_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "config.proto",
+}
+
+func init() { proto.RegisterFile("config.proto", fileDescriptor_config_578cd88f68d9c2a0) }
+
+var fileDescriptor_config_578cd88f68d9c2a0 = []byte{
+	// 500 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x94, 0xc1, 0x6e, 0xd3, 0x40,
+	0x10, 0x86, 0xe3, 0xc4, 0x76, 0xc3, 0xa4, 0x2e, 0xea, 0x1e, 0xc0, 0x8a, 0xa0, 0x04, 0x8b, 0x43,
+	0x4e, 0x3e, 0x34, 0x15, 0x95, 0x38, 0xa6, 0x12, 0xaa, 0x50, 0x8b, 0xd0, 0x1a, 0xce, 0x91, 0x13,
+	0x06, 0x6c, 0xc9, 0xf6, 0x9a, 0xf5, 0x96, 0x96, 0x97, 0xe1, 0xd1, 0x38, 0xf0, 0x24, 0x68, 0x67,
+	0xd7, 0x89, 0x13, 0xa0, 0x4a, 0x6f, 0xee, 0xec, 0xf7, 0x7f, 0xe3, 0x19, 0x6f, 0x03, 0x87, 0x2b,
+	0x51, 0x7d, 0xc9, 0xbf, 0xc6, 0xb5, 0x14, 0x4a, 0xb0, 0x60, 0x29, 0xf1, 0x16, 0xe5, 0x8f, 0xb8,
+	0x14, 0x9f, 0xb1, 0x88, 0x4e, 0x60, 0x78, 0x25, 0x56, 0xa9, 0xca, 0x45, 0xc5, 0x18, 0xb8, 0xb5,
+	0x90, 0x2a, 0x74, 0x26, 0xce, 0xf4, 0x11, 0xa7, 0xe7, 0x48, 0xc1, 0xf1, 0x47, 0x2c, 0x6b, 0x94,
+	0xa9, 0xba, 0x91, 0x98, 0x60, 0xd5, 0x08, 0xc9, 0x9e, 0x80, 0xdf, 0xa0, 0xcc, 0xd3, 0xc2, 0xa2,
+	0xf6, 0x2f, 0x36, 0x83, 0x61, 0x61, 0x65, 0x61, 0x7f, 0xe2, 0x4c, 0x47, 0xa7, 0x4f, 0xe3, 0xad,
+	0x76, 0x71, 0xdb, 0x8b, 0xaf, 0x41, 0xdd, 0xb5, 0x4a, 0x4b, 0x0c, 0x07, 0xa6, 0xab, 0x7e, 0x8e,
+	0xde, 0xc3, 0x20, 0x49, 0xf8, 0x96, 0xcf, 0x79, 0xa8, 0xaf, 0xdf, 0xf1, 0xfd, 0xec, 0x43, 0x30,
+	0x37, 0xc1, 0x0b, 0x5a, 0x06, 0x3b, 0x03, 0xb7, 0x4c, 0x9b, 0xcc, 0x6a, 0x27, 0x3b, 0xda, 0xbf,
+	0x46, 0xe6, 0x44, 0xeb, 0xd4, 0x52, 0xe4, 0x85, 0x1d, 0x6e, 0x8f, 0x94, 0xa6, 0xd9, 0x6b, 0xf0,
+	0x32, 0x94, 0x65, 0x43, 0x23, 0xee, 0x13, 0x33, 0x38, 0x9b, 0xc1, 0x48, 0xe7, 0x17, 0x19, 0xa6,
+	0x0a, 0x65, 0xe8, 0x52, 0x9a, 0xed, 0xa4, 0x93, 0x84, 0x73, 0xd0, 0xd8, 0x25, 0x51, 0xec, 0x0c,
+	0xfc, 0x66, 0x95, 0x61, 0x89, 0xa1, 0x47, 0xfc, 0xb3, 0x1d, 0xfe, 0x42, 0x54, 0x4a, 0x8a, 0x22,
+	0x21, 0x86, 0x5b, 0x36, 0xfa, 0x35, 0x80, 0x60, 0xeb, 0x84, 0x9d, 0xdb, 0x51, 0xcd, 0x82, 0x5e,
+	0xde, 0x67, 0x89, 0xe7, 0xba, 0x7d, 0xcf, 0x4e, 0x7b, 0x6e, 0x37, 0xdb, 0xdf, 0x23, 0x78, 0x9d,
+	0x36, 0x99, 0x0e, 0xd2, 0x72, 0xdf, 0x80, 0x57, 0x8b, 0x5b, 0x94, 0x76, 0x4d, 0xd1, 0xbd, 0xc9,
+	0x0f, 0x9a, 0xbc, 0xec, 0x71, 0x13, 0x19, 0xfb, 0xe0, 0xea, 0x97, 0x18, 0xff, 0x76, 0xc0, 0xd5,
+	0x52, 0x16, 0x41, 0xa0, 0xa5, 0x8b, 0x32, 0xaf, 0x16, 0x0a, 0xcb, 0x9a, 0xe6, 0x70, 0xf8, 0x48,
+	0x17, 0xaf, 0xf3, 0x4a, 0xef, 0x7c, 0xc3, 0xa4, 0x77, 0x86, 0xe9, 0x77, 0x98, 0xf4, 0x8e, 0x98,
+	0x57, 0x70, 0x44, 0x1f, 0x63, 0x23, 0x1a, 0x10, 0x74, 0x48, 0xd5, 0xd6, 0xb4, 0xa1, 0x5a, 0x95,
+	0xdb, 0xa5, 0xac, 0x2b, 0x82, 0x80, 0xbe, 0xe7, 0x5a, 0xe5, 0x99, 0x7e, 0xba, 0xd8, 0x79, 0x27,
+	0xc3, 0xb4, 0x22, 0xbf, 0xc3, 0x18, 0xcf, 0x78, 0x0a, 0x1e, 0x8d, 0xcf, 0x5e, 0xc0, 0x88, 0xc6,
+	0x5f, 0x14, 0xf8, 0x1d, 0x0b, 0x3b, 0x22, 0x50, 0xe9, 0x4a, 0x57, 0xe6, 0xc3, 0xf6, 0x32, 0x44,
+	0x6f, 0xe1, 0xc8, 0x2e, 0x90, 0xe3, 0xb7, 0x1b, 0x6c, 0x54, 0xe7, 0xa2, 0x38, 0x0f, 0xb8, 0x28,
+	0xc7, 0xf0, 0x78, 0xed, 0x69, 0x6a, 0x51, 0x35, 0x78, 0xfa, 0x09, 0x0e, 0xec, 0xff, 0x16, 0x7b,
+	0x07, 0x07, 0xf6, 0x94, 0x3d, 0xff, 0xb7, 0xce, 0x76, 0x1f, 0x9f, 0xfc, 0xef, 0xd8, 0x48, 0xa3,
+	0xde, 0xd2, 0xa7, 0xdf, 0xab, 0xd9, 0x9f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x9a, 0xfc, 0x09, 0x04,
+	0xbf, 0x04, 0x00, 0x00,
 }

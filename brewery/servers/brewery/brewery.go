@@ -6,13 +6,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/mkuchenbecker/brewery3/brewery/logger"
-	"github.com/mkuchenbecker/brewery3/brewery/utils"
-
 	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
+	"github.com/mkuchenbecker/brewery3/brewery/utils"
 )
-
-type SensorName string
 
 // Brewery is the central controller for various heating elements, sensors, and switches.
 // It coordinates all actions of the brewery.
@@ -20,8 +16,9 @@ type Brewery struct {
 	Scheme *model.ControlScheme
 	mux    sync.RWMutex
 
-	Temperatures map[SensorName]model.ThermometerClient
-	Log          logger.Logger
+	MashSensor  model.ThermometerClient
+	BoilSensor  model.ThermometerClient
+	HermsSensor model.ThermometerClient
 
 	Element model.SwitchClient
 }
@@ -41,36 +38,77 @@ func (b *Brewery) replaceConfig(scheme *model.ControlScheme) {
 	b.Scheme = scheme
 }
 
-func (b *Brewery) getTemperaturePointSink(ctx context.Context) (*utils.TemperaturePointSink, error) {
-
-	tps := utils.NewTemperaturePointSink()
-
-	for sensorName, sensor := range b.Temperatures {
-		response, err := sensor.Get(ctx, &model.GetRequest{})
-		if err != nil {
-			return nil, err
-		}
-		tps.Temps[string(sensorName)] = response.Temperature
+func (b *Brewery) getTempConstraints() ([]constraint, error) {
+	resBoil, err := b.BoilSensor.Get(context.Background(), &model.GetRequest{})
+	if err != nil {
+		return []constraint{}, err
 	}
 
-	b.Log.InsertTemperature(ctx, tps.ToInterface())
+	resHerms, err := b.HermsSensor.Get(context.Background(), &model.GetRequest{})
+	if err != nil {
+		return []constraint{}, err
+	}
 
-	return tps, nil
+	resMash, err := b.MashSensor.Get(context.Background(), &model.GetRequest{})
+	if err != nil {
+		return []constraint{}, err
+	}
+
+	utils.Print(fmt.Sprintf("Mash: %f | Boil %f | Herms %f",
+		resMash.Temperature, resBoil.Temperature, resHerms.Temperature))
+
+	return []constraint{
+		{
+			min: b.Scheme.GetMash().BoilMinTemp,
+			max: b.Scheme.GetMash().BoilMaxTemp,
+			val: resBoil.Temperature,
+		},
+		{
+			min: b.Scheme.GetMash().HermsMinTemp,
+			max: b.Scheme.GetMash().HermsMaxTemp,
+			val: resHerms.Temperature,
+		},
+		{
+			min: b.Scheme.GetMash().MashMinTemp,
+			max: b.Scheme.GetMash().MashMaxTemp,
+			val: resMash.Temperature,
+		},
+	}, nil
 }
 
-func (b *Brewery) mashThermOn(ctx context.Context, ctrl *model.ControlScheme_Mash) (on bool, err error) {
-	tps, err := b.getTemperaturePointSink(ctx)
+func (b *Brewery) mashThermOn() (on bool, err error) {
+	constraints, err := b.getTempConstraints()
+	if err != nil {
+		return false, err
+	}
+	val := checkTempConstraints(constraints)
+	return val < 0, nil
+}
 
-	for _, constraint := range ctrl.Constraints {
-		val, err := tps.Check(constraint.Key, constraint.Min, constraint.Max)
-		if err != nil {
-			return false, err
-		}
-		if val < 0 {
-			return true, nil
+type constraint struct {
+	min float64
+	max float64
+	val float64
+}
+
+func (c *constraint) check() int {
+	if c.val < c.min {
+		return -1
+	}
+	if c.val >= c.max {
+		return 1
+	}
+	return 0
+}
+
+// Returns -1 if some val is too low, 0 if all are met, and 1 if val is too high.
+func checkTempConstraints(constraints []constraint) int {
+	for _, constraint := range constraints {
+		if val := constraint.check(); val != 0 {
+			return val
 		}
 	}
-	return false, nil
+	return 0
 }
 
 // StartRunLoop starts Brewery.Run in the background on a loop.
@@ -92,7 +130,7 @@ func (b *Brewery) run() error {
 	switch sch := config.Scheme.(type) {
 	case *model.ControlScheme_Mash_:
 		utils.Print(fmt.Sprintf("Mashing: %+v", sch.Mash))
-		return b.mash(context.Background(), sch.Mash)
+		return b.mash()
 	case *model.ControlScheme_Power_:
 		utils.Print(fmt.Sprintf("Power level: %f", sch.Power.PowerLevel))
 		return b.powerLevel(int(sch.Power.PowerLevel)) // Toggle for one hour.
@@ -127,8 +165,8 @@ func (b *Brewery) elementOff() error {
 	return err
 }
 
-func (b *Brewery) mash(ctx context.Context, ctrl *model.ControlScheme_Mash) error {
-	on, err := b.mashThermOn(ctx, ctrl)
+func (b *Brewery) mash() error {
+	on, err := b.mashThermOn()
 	if err != nil {
 		utils.Print(fmt.Sprintf("[Brewery.Run] MashThemOnErr: %s", err))
 		return err

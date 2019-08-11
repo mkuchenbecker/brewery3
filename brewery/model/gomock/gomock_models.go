@@ -37,7 +37,6 @@ func (m *MockSwitchClient) EXPECT() *MockSwitchClientMockRecorder {
 
 // Off mocks base method
 func (m *MockSwitchClient) Off(arg0 context.Context, arg1 *gomodel.OffRequest, arg2 ...grpc.CallOption) (*gomodel.OffResponse, error) {
-	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
@@ -50,14 +49,12 @@ func (m *MockSwitchClient) Off(arg0 context.Context, arg1 *gomodel.OffRequest, a
 
 // Off indicates an expected call of Off
 func (mr *MockSwitchClientMockRecorder) Off(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Off", reflect.TypeOf((*MockSwitchClient)(nil).Off), varargs...)
 }
 
 // On mocks base method
 func (m *MockSwitchClient) On(arg0 context.Context, arg1 *gomodel.OnRequest, arg2 ...grpc.CallOption) (*gomodel.OnResponse, error) {
-	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
@@ -70,14 +67,12 @@ func (m *MockSwitchClient) On(arg0 context.Context, arg1 *gomodel.OnRequest, arg
 
 // On indicates an expected call of On
 func (mr *MockSwitchClientMockRecorder) On(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "On", reflect.TypeOf((*MockSwitchClient)(nil).On), varargs...)
 }
 
 // ToggleOn mocks base method
 func (m *MockSwitchClient) ToggleOn(arg0 context.Context, arg1 *gomodel.ToggleOnRequest, arg2 ...grpc.CallOption) (*gomodel.ToggleOnResponse, error) {
-	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
@@ -90,7 +85,6 @@ func (m *MockSwitchClient) ToggleOn(arg0 context.Context, arg1 *gomodel.ToggleOn
 
 // ToggleOn indicates an expected call of ToggleOn
 func (mr *MockSwitchClientMockRecorder) ToggleOn(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ToggleOn", reflect.TypeOf((*MockSwitchClient)(nil).ToggleOn), varargs...)
 }
@@ -120,7 +114,6 @@ func (m *MockThermometerClient) EXPECT() *MockThermometerClientMockRecorder {
 
 // Get mocks base method
 func (m *MockThermometerClient) Get(arg0 context.Context, arg1 *gomodel.GetRequest, arg2 ...grpc.CallOption) (*gomodel.GetResponse, error) {
-	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
@@ -133,7 +126,6 @@ func (m *MockThermometerClient) Get(arg0 context.Context, arg1 *gomodel.GetReque
 
 // Get indicates an expected call of Get
 func (mr *MockThermometerClientMockRecorder) Get(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockThermometerClient)(nil).Get), varargs...)
 }
@@ -163,7 +155,6 @@ func (m *MockBreweryClient) EXPECT() *MockBreweryClientMockRecorder {
 
 // Control mocks base method
 func (m *MockBreweryClient) Control(arg0 context.Context, arg1 *gomodel.ControlRequest, arg2 ...grpc.CallOption) (*gomodel.ControlResponse, error) {
-	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
@@ -176,7 +167,6 @@ func (m *MockBreweryClient) Control(arg0 context.Context, arg1 *gomodel.ControlR
 
 // Control indicates an expected call of Control
 func (mr *MockBreweryClientMockRecorder) Control(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Control", reflect.TypeOf((*MockBreweryClient)(nil).Control), varargs...)
 }

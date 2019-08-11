@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package brewery.model;
 
-import "brewery.proto";
-
 message Location {
     string port = 1;
 };
@@ -28,3 +26,40 @@ message BreweryConfig {
 
     ControlScheme scheme = 5;
 };
+
+message ControlScheme {
+    message Boil {
+    }
+
+    message Mash {
+        double mash_min_temp = 1;
+        double mash_max_temp = 2;
+        double herms_min_temp = 3;
+        double herms_max_temp = 4;
+        double boil_min_temp = 5;
+        double boil_max_temp = 6;
+    }
+
+    message Power {
+        double power_level = 1; //0-100
+    }
+
+    oneof scheme {
+        Boil boil = 1;
+        Mash mash = 2;
+        Power power = 3;
+    }
+}
+
+message ControlRequest {
+    ControlScheme scheme = 1;
+}
+
+message ControlResponse{
+}
+
+service Brewery {
+    rpc Control(ControlRequest) returns (ControlResponse) {}
+}
+
+
