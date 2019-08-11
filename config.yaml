@@ -1,0 +1,18 @@
+config:
+  addr: localhost
+  name: brewery0
+  port: 9000
+heater:
+  addr: localhost
+  name: main
+  port: 9100
+thermometers:
+- addr: localhost
+  name: mash
+  port: 9110
+- addr: localhost
+  name: boil
+  port: 9112
+- addr: localhost
+  name: herms
+  port: 9111

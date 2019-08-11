@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package brewery.model;
+
+
+message Constraint {
+    string key = 1;
+    double min = 2;
+    double max = 3;
+}
+
+message ControlScheme {
+    message Boil {
+    }
+
+    message Mash {
+        repeated Constraint constraints = 1;
+    }
+
+    message Power {
+        double power_level = 1; //0-100
+    }
+
+    oneof scheme {
+        Boil boil = 1;
+        Mash mash = 2;
+        Power power = 3;
+    }
+}
+
+message ControlRequest {
+    ControlScheme scheme = 1;
+}
+
+message ControlResponse{
+}
+
+service Brewery {
+    rpc Control(ControlRequest) returns (ControlResponse) {}
+}
+
+

@@ -6,6 +6,7 @@ bootstrap:
 	go get -v github.com/mdempsky/gocode
 	go get -v github.com/uudashr/gopkgs/cmd/gopkgs
 	go get -v golang.org/x/tools/cmd/goimports
+	go get -v github.com/rogpeppe/godef
 
 .PHONY: lint
 lint: fmt
@@ -44,6 +45,8 @@ proto:
 	brewery/model/config.proto \
 	brewery/model/switch.proto \
 	brewery/model/thermometer.proto \
+	brewery/model/brewery.proto \
+	brewery/model/settings.proto \
 	--proto_path=. \
 	--go_out=plugins=grpc:brewery/model/gomodel
 

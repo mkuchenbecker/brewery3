@@ -8,6 +8,12 @@
   version = "v1.1.1"
 
 [[projects]]
+  name = "github.com/ghodss/yaml"
+  packages = ["."]
+  revision = "0ca9ea5df5451ffdf184b4428c902747c2c11cd7"
+  version = "v1.0.0"
+
+[[projects]]
   name = "github.com/golang/mock"
   packages = ["gomock"]
   revision = "9fa652df1129bef0e734c9cf9bf6dbae9ef3b9fa"
@@ -18,6 +24,12 @@
   packages = ["proto","protoc-gen-go","protoc-gen-go/descriptor","protoc-gen-go/generator","protoc-gen-go/generator/internal/remap","protoc-gen-go/grpc","protoc-gen-go/plugin","ptypes","ptypes/any","ptypes/duration","ptypes/timestamp"]
   revision = "b5d812f8a3706043e23a9cd5babf2e5423744d30"
   version = "v1.3.1"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/influxdata/influxdb1-client"
+  packages = ["models","pkg/escape","v2"]
+  revision = "8ff2fc3824fcb533795f9a2f233275f0bb18d6c5"
 
 [[projects]]
   name = "github.com/kelseyhightower/envconfig"
@@ -42,12 +54,6 @@
   packages = ["."]
   revision = "1311e847b0cb909da63b5fecfb5370aa66236465"
   version = "v0.0.8"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/mkuchenbecker/brewery3"
-  packages = ["brewery/gpio","brewery/gpio/handler","brewery/gpio/integration","brewery/gpio/mocks","brewery/model/gomock","brewery/model/gomodel","brewery/servers/brewery","brewery/servers/element","brewery/servers/sensors","brewery/utils"]
-  revision = "46656c1718caa92ae792dd2b7dd65dce7e0c6cbb"
 
 [[projects]]
   branch = "master"
@@ -136,6 +142,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "8f267fc0c0cfe193eb96429d7a0a7ba1d6b1febadebcf5cabdebdf1dac99879a"
+  inputs-digest = "68d4193528c1728ce38e282fff91358e004c4b97121eb5500aa5dba2299225bc"
   solver-name = "gps-cdcl"
   solver-version = 1
