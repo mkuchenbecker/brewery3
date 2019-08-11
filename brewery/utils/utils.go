@@ -79,3 +79,27 @@ func RunLoop(ttl time.Duration, minLoopInterval time.Duration, fn func() error) 
 		err = nil
 	}
 }
+
+type TemperaturePointSink struct {
+	Temps map[string]float64
+}
+
+func NewTemperaturePointSink() *TemperaturePointSink {
+	return &TemperaturePointSink{
+		Temps: make(map[string]float64),
+	}
+}
+
+func (tps *TemperaturePointSink) ToInterface() map[string]interface{} {
+	res := make(map[string]interface{})
+	for k, v := range tps.Temps {
+		res[k] = interface{}(v)
+	}
+	return res
+}
+
+func (tps *TemperaturePointSink) Log() {
+	for k, temp := range tps.Temps {
+		Printf("Temp [%s]%f", k, temp)
+	}
+}

@@ -97,3 +97,17 @@ func TestBackgroundErrReturn(t *testing.T) {
 	BackgroundErrReturn(&fp, func() error { return fmt.Errorf("error") })
 	assert.Equal(t, "background function encountered error : error", fp.lastPrint)
 }
+
+func TestTempteraturePointSink(t *testing.T) {
+	tps := NewTemperaturePointSink()
+	tps.Temps["mash"] = 100
+	tps.Temps["herms"] = 90
+	assert.Equal(t, map[string](interface{}){"mash": float64(100), "herms": float64(90)}, tps.ToInterface())
+
+	tps.Log()
+}
+
+func TestLogIfError(t *testing.T) {
+	assert.False(t, LogIfError(&DefualtPrinter{}, nil, ""))
+	assert.True(t, LogIfError(&DefualtPrinter{}, fmt.Errorf("error"), ""))
+}
