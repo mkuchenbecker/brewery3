@@ -6,6 +6,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/mkuchenbecker/brewery3/brewery/logger"
+
 	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
 	"github.com/mkuchenbecker/brewery3/brewery/utils"
 )
@@ -19,6 +21,8 @@ type Brewery struct {
 	MashSensor  model.ThermometerClient
 	BoilSensor  model.ThermometerClient
 	HermsSensor model.ThermometerClient
+
+	Logger logger.Logger
 
 	Element model.SwitchClient
 }
@@ -38,77 +42,49 @@ func (b *Brewery) replaceConfig(scheme *model.ControlScheme) {
 	b.Scheme = scheme
 }
 
-func (b *Brewery) getTempConstraints() ([]constraint, error) {
-	resBoil, err := b.BoilSensor.Get(context.Background(), &model.GetRequest{})
-	if err != nil {
-		return []constraint{}, err
-	}
-
-	resHerms, err := b.HermsSensor.Get(context.Background(), &model.GetRequest{})
-	if err != nil {
-		return []constraint{}, err
-	}
-
-	resMash, err := b.MashSensor.Get(context.Background(), &model.GetRequest{})
-	if err != nil {
-		return []constraint{}, err
-	}
-
-	utils.Print(fmt.Sprintf("Mash: %f | Boil %f | Herms %f",
-		resMash.Temperature, resBoil.Temperature, resHerms.Temperature))
-
-	return []constraint{
-		{
-			min: b.Scheme.GetMash().BoilMinTemp,
-			max: b.Scheme.GetMash().BoilMaxTemp,
-			val: resBoil.Temperature,
-		},
-		{
-			min: b.Scheme.GetMash().HermsMinTemp,
-			max: b.Scheme.GetMash().HermsMaxTemp,
-			val: resHerms.Temperature,
-		},
-		{
-			min: b.Scheme.GetMash().MashMinTemp,
-			max: b.Scheme.GetMash().MashMaxTemp,
-			val: resMash.Temperature,
-		},
-	}, nil
-}
-
-func (b *Brewery) mashThermOn() (on bool, err error) {
-	constraints, err := b.getTempConstraints()
+func (b *Brewery) mashThermOn(ctx context.Context) (bool, error) {
+	tps := utils.NewTemperaturePointSink()
+	resBoil, err := b.BoilSensor.Get(ctx, &model.GetRequest{})
 	if err != nil {
 		return false, err
 	}
-	val := checkTempConstraints(constraints)
-	return val < 0, nil
-}
+	tps.Temps["boil"] = resBoil.Temperature
 
-type constraint struct {
-	min float64
-	max float64
-	val float64
-}
+	resHerms, err := b.HermsSensor.Get(ctx, &model.GetRequest{})
+	if err != nil {
+		return false, err
+	}
+	tps.Temps["herms"] = resHerms.Temperature
 
-func (c *constraint) check() int {
-	if c.val < c.min {
-		return -1
+	resMash, err := b.MashSensor.Get(ctx, &model.GetRequest{})
+	if err != nil {
+		return false, err
 	}
-	if c.val >= c.max {
-		return 1
-	}
-	return 0
-}
+	tps.Temps["mash"] = resMash.Temperature
 
-// Returns -1 if some val is too low, 0 if all are met, and 1 if val is too high.
-func checkTempConstraints(constraints []constraint) int {
-	for _, constraint := range constraints {
-		if val := constraint.check(); val != 0 {
-			return val
-		}
+	go func() {
+		utils.LogIfError(&utils.DefualtPrinter{}, b.Logger.InsertTemperature(ctx, tps), "logging temp")
+	}()
+
+	scheme := b.Scheme.GetMash()
+	// If the mash is greater than target, always turn off.
+	if resMash.Temperature > scheme.MashMaxTemp {
+		return false, nil
 	}
-	return 0
+	// If the boil is less than target, turn on.
+	if resBoil.Temperature < scheme.BoilMinTemp {
+		return true, nil
+	}
+	// If the herms is less than target, turn on
+	if resHerms.Temperature < scheme.HermsMinTemp {
+		return true, nil
+	}
+	// If the mash is less than target, turn on iff herms isn't too high.
+	if resMash.Temperature < scheme.MashMinTemp {
+		return resHerms.Temperature < scheme.HermsMaxTemp, nil
+	}
+	return false, nil
+
 }
 
 // StartRunLoop starts Brewery.Run in the background on a loop.
@@ -138,8 +114,8 @@ func (b *Brewery) run() error {
 	return nil
 }
 
-func (b *Brewery) elementOn() (err error) {
-	_, err = b.Element.On(context.Background(), &model.OnRequest{})
+func (b *Brewery) elementOn(ctx context.Context) (err error) {
+	_, err = b.Element.On(ctx, &model.OnRequest{})
 	if err != nil {
 		utils.LogError(nil, err, "encountered error turning coil on")
 	}
@@ -154,10 +130,10 @@ func (b *Brewery) elementToggle(intervalMs int64) (err error) {
 	return err
 }
 
-func (b *Brewery) elementOff() error {
+func (b *Brewery) elementOff(ctx context.Context) error {
 	var err error
 	for i := 0; i < 3; i++ {
-		_, err = b.Element.Off(context.Background(), &model.OffRequest{})
+		_, err = b.Element.Off(ctx, &model.OffRequest{})
 		if err == nil {
 			return err
 		}
@@ -166,26 +142,28 @@ func (b *Brewery) elementOff() error {
 }
 
 func (b *Brewery) mash() error {
-	on, err := b.mashThermOn()
+	ctx := context.Background()
+	on, err := b.mashThermOn(ctx)
 	if err != nil {
 		utils.Print(fmt.Sprintf("[Brewery.Run] MashThemOnErr: %s", err))
 		return err
 	}
 	if !on {
-		return b.elementOff()
+		return b.elementOff(ctx)
 	}
-	return b.elementOn()
+	return b.elementOn(ctx)
 }
 
 func (b *Brewery) powerLevel(powerLevel int) error {
+	ctx := context.Background()
 	if powerLevel < 1 {
-		return b.elementOff()
+		return b.elementOff(ctx)
 	}
 	if powerLevel > 100 {
-		return b.elementOff()
+		return b.elementOff(ctx)
 	}
 	if powerLevel == 100 {
-		return b.elementOn()
+		return b.elementOn(ctx)
 	}
 	interval := int64(2)
 	intervalMs := int64((1000*powerLevel)/100) * interval
@@ -197,7 +175,7 @@ func (b *Brewery) powerToggle(intervalMs int64, loopInterval time.Duration, ttl 
 	quit := make(chan bool)
 	resErr := make(chan error)
 
-	defer utils.DeferErrReturn(b.elementOff, &err)
+	defer utils.DeferErrReturn(func() error { return b.elementOff(context.Background()) }, &err)
 	go func() {
 		for {
 			select {

@@ -33,12 +33,24 @@ func Print(s string) {
 	fmt.Printf("%s - %s\n", time.Now().Format(time.StampMilli), s)
 }
 
+func Printf(format string, i ...interface{}) {
+	Print(fmt.Sprintf(format, i...))
+}
+
 func LogError(p Printer, err error, msg string) {
 	var printer Printer = &DefualtPrinter{}
 	if p != nil {
 		printer = p
 	}
 	printer.Print(fmt.Sprintf("%s : %s", msg, err.Error()))
+}
+
+func LogIfError(p Printer, err error, msg string) bool {
+	if err == nil {
+		return false
+	}
+	LogError(p, err, msg)
+	return true
 }
 
 func BackgroundErrReturn(p Printer, f func() error) {
@@ -65,5 +77,29 @@ func RunLoop(ttl time.Duration, minLoopInterval time.Duration, fn func() error) 
 			time.Sleep(sleepTime)
 		}
 		err = nil
+	}
+}
+
+type TemperaturePointSink struct {
+	Temps map[string]float64
+}
+
+func NewTemperaturePointSink() *TemperaturePointSink {
+	return &TemperaturePointSink{
+		Temps: make(map[string]float64),
+	}
+}
+
+func (tps *TemperaturePointSink) ToInterface() map[string]interface{} {
+	res := make(map[string]interface{})
+	for k, v := range tps.Temps {
+		res[k] = interface{}(v)
+	}
+	return res
+}
+
+func (tps *TemperaturePointSink) Log() {
+	for k, temp := range tps.Temps {
+		Printf("Temp [%s]%f", k, temp)
 	}
 }
