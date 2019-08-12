@@ -74,6 +74,10 @@ launch: build
 	eval $(minikube docker-env)
 	kubectl create -f brewery.yml
 
+.PHONY: start
+start:
+	kubectl create -f brewery.yml
+
 .PHONY: stop
 stop:
 	./scripts/stop.local
