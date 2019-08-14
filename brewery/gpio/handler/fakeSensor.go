@@ -20,7 +20,7 @@ func newFakeSensor() *fakeSensor {
 }
 
 func (s *fakeSensor) Sensors() ([]string, error) {
-	panic("unimplemented")
+	return []string{}, fmt.Errorf("unimplemented")
 }
 
 func (s *fakeSensor) Temperature(sensor gpio.TemperatureAddress) (float64, error) {

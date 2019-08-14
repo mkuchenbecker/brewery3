@@ -95,3 +95,10 @@ func TestControllerPowerPinCloseError(t *testing.T) {
 	ctrl := NewController(nil, mockPins)
 	assert.Equal(t, err, ctrl.PowerPin(5, false))
 }
+
+func TestFakeSensorUnimplemented(t *testing.T) {
+
+	sensor := newFakeSensor()
+	_, err := sensor.Sensors()
+	assert.Equal(t, fmt.Errorf("unimplemented"), err)
+}
