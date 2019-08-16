@@ -29,14 +29,14 @@ spec:
             memory: "128Mi"
             cpu: "500m"
         env:
-          - name: MASH_THERM_PORT_0
-            value: "9110"
-          - name: HERMS_THERM_PORT_0
-            value: "9111"
-          - name: BOIL_THERM_PORT_0
-            value: "9112"
-          - name: ELEMENT_PORT_0
-            value: "9100"
+          - name: MASH_THERM_ADDRESS_0
+            value: "localhost:9110"
+          - name: HERMS_THERM_ADDRESS_0
+            value: "localhost:9111"
+          - name: BOIL_THERM_ADDRESS_0
+            value: "localhost:9112"
+          - name: ELEMENT_ADDRESS_0
+            value: "localhost:9100"
           - name: BREWERY_PORT_0
             value: "9000"
       - name: element

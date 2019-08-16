@@ -37,18 +37,18 @@ func startBrewery(port int, brewery *brewery.Brewery) {
 }
 
 type Settings struct {
-	MashThermPort0  int `envconfig:"MASH_THERM_PORT_0" default:"9110"`
-	HermsThermPort0 int `envconfig:"HERMS_THERM_PORT_0" default:"9111"`
-	BoilThermPort0  int `envconfig:"BOIL_THERM_PORT_0" default:"9112"`
+	MashThermAddress0  string `envconfig:"MASH_THERM_ADDRESS_0" default:"localhost:9110"`
+	HermsThermAddress0 string `envconfig:"HERMS_THERM_ADDRESS_0" default:"localhost:9111"`
+	BoilThermAddress0  string `envconfig:"BOIL_THERM_ADDRESS_0" default:"localhost:9112"`
 
-	ElementPort0 int `envconfig:"ELEMENT_PORT_0" default:"9100"`
+	ElementAddress0 string `envconfig:"ELEMENT_ADDRESS_0" default:"localhost:9100"`
 
 	BreweryPort0 int `envconfig:"BREWERY_PORT_0" default:"9000"`
 }
 
-func makeTemperatureClient(port int) (model.ThermometerClient, *grpc.ClientConn) {
-	utils.Print(fmt.Sprintf("Connecting to client: %d", port))
-	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", port), grpc.WithInsecure())
+func makeTemperatureClient(address string) (model.ThermometerClient, *grpc.ClientConn) {
+	utils.Print(fmt.Sprintf("Connecting to client: %s", address))
+	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
 		panic(err)
 	}
@@ -56,9 +56,9 @@ func makeTemperatureClient(port int) (model.ThermometerClient, *grpc.ClientConn)
 	return client, conn
 }
 
-func makeSwitchClient(port int) (model.SwitchClient, *grpc.ClientConn) {
-	utils.Print(fmt.Sprintf("Connecting to client: %d", port))
-	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", port), grpc.WithInsecure())
+func makeSwitchClient(address string) (model.SwitchClient, *grpc.ClientConn) {
+	utils.Print(fmt.Sprintf("Connecting to client: %s", address))
+	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
 		panic(err)
 	}
@@ -82,13 +82,13 @@ func main() { // nolint: deadcode
 
 	settings := getSettings("")
 
-	mash, mashConn := makeTemperatureClient(settings.MashThermPort0)
+	mash, mashConn := makeTemperatureClient(settings.MashThermAddress0)
 	defer mashConn.Close()
-	herms, hermsConn := makeTemperatureClient(settings.HermsThermPort0)
+	herms, hermsConn := makeTemperatureClient(settings.HermsThermAddress0)
 	defer hermsConn.Close()
-	boil, boilConn := makeTemperatureClient(settings.BoilThermPort0)
+	boil, boilConn := makeTemperatureClient(settings.BoilThermAddress0)
 	defer boilConn.Close()
-	element, elementConn := makeSwitchClient(settings.ElementPort0)
+	element, elementConn := makeSwitchClient(settings.ElementAddress0)
 	defer elementConn.Close()
 
 	brewery := brewery.Brewery{
@@ -98,5 +98,6 @@ func main() { // nolint: deadcode
 		Element:     element,
 		Logger:      logger.NewFake(),
 	}
+
 	startBrewery(settings.BreweryPort0, &brewery)
 }
