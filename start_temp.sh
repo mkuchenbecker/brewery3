@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Starting Temperature Sensors"
 sudo modprobe w1-gpio
 sudo modprobe w1-therm
