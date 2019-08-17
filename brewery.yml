@@ -118,3 +118,18 @@ spec:
   ports:
   - port: 9000
     nodePort: 30000
+---
+apiVersion: v1beta
+kind: Ingress
+metadata:
+  name: brewery
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /brewery
+        backend:
+          serviceName: brewery-service
+          servicePort: 9000
