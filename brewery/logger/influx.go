@@ -15,8 +15,8 @@ type Logger interface {
 	InsertTemperature(ctx context.Context, tps *utils.TemperaturePointSink) error
 }
 
-type defaultLogger struct {
-}
+// type defaultLogger struct {
+// }
 
 func NewDefault() Logger {
 	return &fakeLogger{}

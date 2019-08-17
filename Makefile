@@ -94,3 +94,15 @@ build:
 	docker build -t local/brewery -f Dockerfile.brewery . \
 	&& docker build -t local/element -f Dockerfile.element . \
 	&& docker build -t local/thermometer -f Dockerfile.thermometer .
+
+.PHONY: tag
+tag:
+	docker tag local/brewery mkuchenbecker/brewery3:brewery-latest
+	docker tag local/element mkuchenbecker/brewery3:element-latest
+	docker tag local/thermometer mkuchenbecker/brewery3:thermometer-latest
+
+.PHONY: publish
+publish:
+	docker push mkuchenbecker/brewery3:brewery-latest
+	docker push mkuchenbecker/brewery3:element-latest
+	docker push mkuchenbecker/brewery3:thermometer-latest
