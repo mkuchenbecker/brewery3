@@ -80,7 +80,8 @@ start:
 
 .PHONY: stop
 stop:
-	./scripts/stop.local
+	kubectl delete -n default deployment brewery-deployment
+	kubectl delete -n default service brewery-service
 
 
 .PHONY: client
