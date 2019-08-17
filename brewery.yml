@@ -17,7 +17,7 @@ spec:
       containers:
       - name: brewery
         image: mkuchenbecker/brewery3:brewery-latest
-        imagePullPolicy: Never
+        imagePullPolicy: Always
         ports:
         - name: brewery-service
           containerPort: 9000
