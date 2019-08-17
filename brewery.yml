@@ -119,7 +119,7 @@ spec:
   - port: 9000
     nodePort: 30000
 ---
-apiVersion: v1beta
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: brewery
