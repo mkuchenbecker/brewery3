@@ -114,7 +114,7 @@ metadata:
 spec:
   selector:
     app: brewery
-  type: LoadBalancer
+  type: NodePort
   ports:
   - port: 9000
     targetPort: brewery-service
