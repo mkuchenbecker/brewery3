@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/mkuchenbecker/brewery3/brewery/cli/cli"
 	"github.com/mkuchenbecker/brewery3/brewery/utils"
 
 	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
@@ -13,14 +14,14 @@ import (
 )
 
 func main() {
-	conn, err := grpc.Dial(fmt.Sprintf("192.168.99.100:31796"),
+	conn, err := grpc.Dial(fmt.Sprintf("10.110.51.222:9000"),
 		grpc.WithInsecure())
 	if err != nil {
 		panic(err)
 	}
 	defer utils.DeferErrReturn(conn.Close, &err)
 	client := model.NewBreweryClient(conn)
-	err = Run(client, os.Args)
+	err = cli.Run(client, os.Args)
 	if err != nil {
 		utils.LogError(nil, err, "encountered an error")
 		os.Exit(1)
