@@ -126,6 +126,6 @@ metadata:
   name: brewery-service
 subsets:
   - addresses:
-      - ip: 192.168.86.110
+      - ip: 192.168.86.100
     ports:
       - port: 9000
