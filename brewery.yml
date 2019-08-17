@@ -13,7 +13,6 @@ spec:
     metadata:
       labels:
         app: brewery
-    hostNetwork: true
     spec:
       containers:
       - name: brewery
@@ -115,6 +114,7 @@ metadata:
 spec:
   selector:
     app: brewery
+  type: NodePort
   ports:
   - port: 9000
-targetPort: brewery-service
+    nodePort: 30000
