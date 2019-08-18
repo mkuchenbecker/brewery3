@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	conn, err := grpc.Dial(fmt.Sprintf("192.168.86.32:32473"),
+	conn, err := grpc.Dial(fmt.Sprintf("brewpi:9000"),
 		grpc.WithInsecure())
 	if err != nil {
 		panic(err)
