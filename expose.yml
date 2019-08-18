@@ -7,3 +7,5 @@ spec:
     app: brewery
   type: ExternalName
   externalName: brewpi
+  ports:
+  - port: 9000
