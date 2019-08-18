@@ -4,5 +4,5 @@ metadata:
   name: brewery
 spec:
   backend:
-    serviceName: brewery
+    serviceName: brewery-service
     servicePort: 9000
