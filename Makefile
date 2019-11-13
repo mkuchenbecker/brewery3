@@ -80,20 +80,22 @@ start:
 
 .PHONY: stop
 stop:
-	./scripts/stop.local
+	kubectl delete -n default deployment brewery-deployment
+	kubectl delete -n default service brewery-service
 
-.PHONY: up
-up: build
-	kubectl set image deployment/brewery-deployment brewery=local/brewery:latest
-	kubectl set image deployment/brewery-deployment element=local/element:latest
-	kubectl set image deployment/brewery-deployment element=local/thermometer:latest
+
+.PHONY: client
+client:
+	docker build -t local/client -f Dockerfile.client .
+	docker tag local/client mkuchenbecker/brewery3:client-latest
+	docker push mkuchenbecker/brewery3:client-latest
 
 
 .PHONY: build
 build:
 	docker build -t local/brewery -f Dockerfile.brewery . \
 	&& docker build -t local/element -f Dockerfile.element . \
-	&& docker build -t local/thermometer -f Dockerfile.thermometer .
+	&& docker build -t local/thermometer -f Dockerfile.thermometer . \
 
 .PHONY: tag
 tag:
