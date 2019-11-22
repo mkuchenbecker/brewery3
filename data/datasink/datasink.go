@@ -2,19 +2,14 @@ package datasink
 
 import (
 	"context"
-	"time"
 
 	"github.com/mkuchenbecker/brewery3/data/gomodel/data"
 )
 
-//go:generate mockgen -destination=./mock/mock.go github.com/mkuchenbecker/brewery3/data/datasink Clock,DataSink,FirestoreClient
+//go:generate mockgen -destination=./mock/mock.go github.com/mkuchenbecker/brewery3/data/datasink DataSink,FirestoreClient
 
 type DataSink interface {
 	data.DataProcessorServer
-}
-
-type Clock interface {
-	Now() time.Time
 }
 
 type FirestoreClient interface {

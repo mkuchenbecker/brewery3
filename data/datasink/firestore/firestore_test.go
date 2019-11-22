@@ -26,7 +26,6 @@ func TestFirestoreSink(t *testing.T) {
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 
-		mockClock := mock.NewMockClock(mockCtrl)
 		ts := time.Now()
 
 		key := fmt.Sprintf("%s:%d", id, ts.UnixNano())
@@ -59,7 +58,7 @@ func TestFirestoreSink(t *testing.T) {
 		mockFirestoreClient := mock.NewMockFirestoreClient(mockCtrl)
 		mockFirestoreClient.EXPECT().Send(ctx, collection, key, rows).Return(nil).Times(1)
 
-		var store datasink.DataSink = &firestoreSink{collection: collection, clock: mockClock, client: mockFirestoreClient}
+		store := NewStore(collection, mockFirestoreClient)
 
 		req := &data.DataObject{Key: key, Fields: fields}
 		_, err := store.Send(ctx, req)
@@ -71,7 +70,6 @@ func TestFirestoreSink(t *testing.T) {
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 
-		mockClock := mock.NewMockClock(mockCtrl)
 		ts := time.Now()
 
 		key := fmt.Sprintf("%s:%d", id, ts.UnixNano())
@@ -104,7 +102,7 @@ func TestFirestoreSink(t *testing.T) {
 		mockFirestoreClient := mock.NewMockFirestoreClient(mockCtrl)
 		mockFirestoreClient.EXPECT().Get(ctx, collection, key).Return([]datasink.ColValueMap{rows}, nil).Times(1)
 
-		var store datasink.DataSink = &firestoreSink{collection: collection, clock: mockClock, client: mockFirestoreClient}
+		var store datasink.DataSink = NewStore(collection, mockFirestoreClient)
 
 		response, err := store.Get(ctx, &data.GetRequest{Key: key})
 		assert.NoError(t, err)
@@ -113,4 +111,5 @@ func TestFirestoreSink(t *testing.T) {
 		assert.Equal(t, 1, len(response.Data))
 		assert.Equal(t, expected, *response.Data[0])
 	})
+
 }
