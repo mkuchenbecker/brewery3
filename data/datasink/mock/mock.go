@@ -8,7 +8,7 @@ import (
 	context "context"
 	gomock "github.com/golang/mock/gomock"
 	datasink "github.com/mkuchenbecker/brewery3/data/datasink"
-	data "github.com/mkuchenbecker/brewery3/data/gomodel/data"
+	gomodel "github.com/mkuchenbecker/brewery3/data/gomodel"
 	reflect "reflect"
 )
 
@@ -36,10 +36,10 @@ func (m *MockDataSink) EXPECT() *MockDataSinkMockRecorder {
 }
 
 // Get mocks base method
-func (m *MockDataSink) Get(arg0 context.Context, arg1 *data.GetRequest) (*data.GetResponse, error) {
+func (m *MockDataSink) Get(arg0 context.Context, arg1 *gomodel.GetRequest) (*gomodel.GetResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Get", arg0, arg1)
-	ret0, _ := ret[0].(*data.GetResponse)
+	ret0, _ := ret[0].(*gomodel.GetResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -51,10 +51,10 @@ func (mr *MockDataSinkMockRecorder) Get(arg0, arg1 interface{}) *gomock.Call {
 }
 
 // Send mocks base method
-func (m *MockDataSink) Send(arg0 context.Context, arg1 *data.DataObject) (*data.SendResponse, error) {
+func (m *MockDataSink) Send(arg0 context.Context, arg1 *gomodel.DataObject) (*gomodel.SendResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Send", arg0, arg1)
-	ret0, _ := ret[0].(*data.SendResponse)
+	ret0, _ := ret[0].(*gomodel.SendResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

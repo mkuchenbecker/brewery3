@@ -10,7 +10,7 @@ import (
 	"cloud.google.com/go/firestore"
 	"github.com/kelseyhightower/envconfig"
 	firestoreSink "github.com/mkuchenbecker/brewery3/data/datasink/firestore"
-	"github.com/mkuchenbecker/brewery3/data/gomodel/data"
+	data "github.com/mkuchenbecker/brewery3/data/gomodel"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
