@@ -37,8 +37,8 @@ fmt:
 	@echo "fmt:"
 	scripts/fmt
 
-.PHONY: proto
-proto:
+.PHONY: breweryproto
+breweryproto:
 	@echo "compiling protos:"
 	protoc -I brewery/model \
 	brewery/model/config.proto \
@@ -46,6 +46,14 @@ proto:
 	brewery/model/thermometer.proto \
 	--proto_path=. \
 	--go_out=plugins=grpc:brewery/model/gomodel
+
+.PHONY: dataproto
+dataproto:
+	@echo "compiling protos:"
+	protoc -I brewery/model \
+	data/protos/data.proto \
+	--proto_path=. \
+	--go_out=plugins=grpc:data/gomodel
 
 .PHONY: protomockgen
 protomockgen:

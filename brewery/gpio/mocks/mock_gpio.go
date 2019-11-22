@@ -35,6 +35,7 @@ func (m *MockIGPIO) EXPECT() *MockIGPIOMockRecorder {
 
 // Close mocks base method
 func (m *MockIGPIO) Close() error {
+	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Close")
 	ret0, _ := ret[0].(error)
 	return ret0
@@ -42,11 +43,13 @@ func (m *MockIGPIO) Close() error {
 
 // Close indicates an expected call of Close
 func (mr *MockIGPIOMockRecorder) Close() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*MockIGPIO)(nil).Close))
 }
 
 // Open mocks base method
 func (m *MockIGPIO) Open() error {
+	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Open")
 	ret0, _ := ret[0].(error)
 	return ret0
@@ -54,11 +57,13 @@ func (m *MockIGPIO) Open() error {
 
 // Open indicates an expected call of Open
 func (mr *MockIGPIOMockRecorder) Open() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Open", reflect.TypeOf((*MockIGPIO)(nil).Open))
 }
 
 // Pin mocks base method
 func (m *MockIGPIO) Pin(arg0 byte) gpio.GPIOPin {
+	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Pin", arg0)
 	ret0, _ := ret[0].(gpio.GPIOPin)
 	return ret0
@@ -66,6 +71,7 @@ func (m *MockIGPIO) Pin(arg0 byte) gpio.GPIOPin {
 
 // Pin indicates an expected call of Pin
 func (mr *MockIGPIOMockRecorder) Pin(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Pin", reflect.TypeOf((*MockIGPIO)(nil).Pin), arg0)
 }
 
@@ -94,6 +100,7 @@ func (m *MockController) EXPECT() *MockControllerMockRecorder {
 
 // PowerPin mocks base method
 func (m *MockController) PowerPin(arg0 byte, arg1 bool) error {
+	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PowerPin", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
@@ -101,11 +108,13 @@ func (m *MockController) PowerPin(arg0 byte, arg1 bool) error {
 
 // PowerPin indicates an expected call of PowerPin
 func (mr *MockControllerMockRecorder) PowerPin(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PowerPin", reflect.TypeOf((*MockController)(nil).PowerPin), arg0, arg1)
 }
 
 // ReadTemperature mocks base method
 func (m *MockController) ReadTemperature(arg0 gpio.TemperatureAddress) (float64, error) {
+	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ReadTemperature", arg0)
 	ret0, _ := ret[0].(float64)
 	ret1, _ := ret[1].(error)
@@ -114,6 +123,7 @@ func (m *MockController) ReadTemperature(arg0 gpio.TemperatureAddress) (float64,
 
 // ReadTemperature indicates an expected call of ReadTemperature
 func (mr *MockControllerMockRecorder) ReadTemperature(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadTemperature", reflect.TypeOf((*MockController)(nil).ReadTemperature), arg0)
 }
 
@@ -142,20 +152,24 @@ func (m *MockGPIOPin) EXPECT() *MockGPIOPinMockRecorder {
 
 // High mocks base method
 func (m *MockGPIOPin) High() {
+	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "High")
 }
 
 // High indicates an expected call of High
 func (mr *MockGPIOPinMockRecorder) High() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "High", reflect.TypeOf((*MockGPIOPin)(nil).High))
 }
 
 // Low mocks base method
 func (m *MockGPIOPin) Low() {
+	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "Low")
 }
 
 // Low indicates an expected call of Low
 func (mr *MockGPIOPinMockRecorder) Low() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Low", reflect.TypeOf((*MockGPIOPin)(nil).Low))
 }
