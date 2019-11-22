@@ -2,7 +2,6 @@ package firestore
 
 import (
 	"context"
-	"time"
 
 	"github.com/mkuchenbecker/brewery3/data/datasink"
 	"github.com/mkuchenbecker/brewery3/data/gomodel/data"
@@ -86,10 +85,4 @@ func (s *firestoreSink) Get(ctx context.Context, in *data.GetRequest) (*data.Get
 	}
 
 	return response, nil
-}
-
-type Clock struct{}
-
-func (c *Clock) Now() time.Time {
-	return time.Now()
 }
