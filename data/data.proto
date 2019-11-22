@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package data;
+
+
+message Value {
+  oneof value {
+    double double = 2;
+    float float = 3;
+    int32 int32 = 4;
+    int64 int64 = 5;
+    string string = 6;
+    bool bool = 7;
+    uint32 uint32 = 8;
+    uint64 uint64 = 9;
+    bytes bytes = 10;
+  }
+}
+
+message DataObject {
+  string key = 1;
+  map<string, Value> fields = 2;
+}
+
+message GetResponse {
+  repeated DataObject data = 1;
+}
+
+message SendResponse {
+}
+
+message GetRequest {
+  string key = 1;
+}
+
+
+service DataProcessor {
+  rpc Send(DataObject) returns (SendResponse) {}
+  rpc Get(GetRequest) returns (GetResponse) {}
+}
