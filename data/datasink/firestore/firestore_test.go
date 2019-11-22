@@ -9,7 +9,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mkuchenbecker/brewery3/data/datasink"
 	mock "github.com/mkuchenbecker/brewery3/data/datasink/mock"
-	"github.com/mkuchenbecker/brewery3/data/gomodel/data"
+	data "github.com/mkuchenbecker/brewery3/data/gomodel"
 	"github.com/stretchr/testify/assert"
 )
 

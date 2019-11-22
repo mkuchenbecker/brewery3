@@ -1,4 +1,4 @@
-vendor/*
+*vendor*
 *.bin
 coverage.out
 *.code-workspace

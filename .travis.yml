@@ -8,7 +8,8 @@ install:
   - go get github.com/kyoh86/richgo
   - go get github.com/mattn/goveralls
   - go get github.com/golangci/golangci-lint/cmd/golangci-lint
-  - dep ensure -v
+  - (cd brewery && dep ensure -v)
+  - (cd data && dep ensure -v)
 
 script:
   - ${GOPATH}/bin/golangci-lint run ./...

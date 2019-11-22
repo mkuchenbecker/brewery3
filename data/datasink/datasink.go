@@ -3,7 +3,7 @@ package datasink
 import (
 	"context"
 
-	"github.com/mkuchenbecker/brewery3/data/gomodel/data"
+	data "github.com/mkuchenbecker/brewery3/data/gomodel"
 )
 
 //go:generate mockgen -destination=./mock/mock.go github.com/mkuchenbecker/brewery3/data/datasink DataSink,FirestoreClient

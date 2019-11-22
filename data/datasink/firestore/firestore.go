@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/mkuchenbecker/brewery3/data/datasink"
-	"github.com/mkuchenbecker/brewery3/data/gomodel/data"
+	data "github.com/mkuchenbecker/brewery3/data/gomodel"
 	"github.com/pkg/errors"
 )
 

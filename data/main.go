@@ -10,7 +10,7 @@ import (
 	"cloud.google.com/go/firestore"
 	"github.com/kelseyhightower/envconfig"
 	firestoreSink "github.com/mkuchenbecker/brewery3/data/datasink/firestore"
-	"github.com/mkuchenbecker/brewery3/data/gomodel/data"
+	data "github.com/mkuchenbecker/brewery3/data/gomodel"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -31,6 +31,7 @@ type Settings struct {
 }
 
 func main() {
+	fmt.Printf("Main Method Started\n")
 	settings := getSettings("")
 
 	ctx := context.Background()
@@ -53,6 +54,7 @@ func main() {
 	data.RegisterDataProcessorServer(serve, datasink)
 	// Register reflection service on gRPC server.
 	reflection.Register(serve)
+	fmt.Printf("Server Starting\n")
 	if err := serve.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

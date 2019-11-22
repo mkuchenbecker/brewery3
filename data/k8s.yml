@@ -1,14 +1,14 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: datastore
+  name: datastore-deployment
   labels:
     app: datastore
 spec:
   selector:
     matchLabels:
       app: datastore
-  replicas: 3
+  replicas: 1
   template:
     metadata:
       labels:
@@ -16,10 +16,10 @@ spec:
     spec:
       containers:
       - name: datastore
-        image: mkuchenbecker/brewery3/datastore:latest
+        image: mkuchenbecker/brewery3:datastore-latest
         imagePullPolicy: Always
         ports:
-        - name: datastore-service
+        - name: data-service
           containerPort: 9000
         resources:
           requests:
@@ -47,4 +47,3 @@ spec:
   type: NodePort
   ports:
   - port: 9000
-    nodePort: 30000
