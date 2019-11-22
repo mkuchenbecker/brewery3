@@ -16,8 +16,7 @@
 [[projects]]
   name = "github.com/cpuguy83/go-md2man"
   packages = ["md2man"]
-  revision = "7762f7e404f8416dfa1d9bb6a8c192aa9acb4d19"
-  version = "v1.0.10"
+  version = "v2.0.0"
 
 [[projects]]
   name = "github.com/davecgh/go-spew"
@@ -197,7 +196,7 @@
   branch = "master"
   name = "golang.org/x/tools"
   packages = ["cmd/goimports","go/analysis","go/analysis/passes/inspect","go/ast/astutil","go/ast/inspector","go/buildutil","go/gcexportdata","go/internal/gcimporter","go/internal/packagesdriver","go/packages","go/types/objectpath","go/types/typeutil","internal/fastwalk","internal/gopathwalk","internal/imports","internal/module","internal/semver","internal/span"]
-  revision = "35ba81b9fb229f4181c1b2cbc257602955e295c3"
+  revision = "f191eec95302b548b60c374bc3f511a264d046b7"
 
 [[projects]]
   name = "google.golang.org/api"

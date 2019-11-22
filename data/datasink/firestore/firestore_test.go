@@ -32,16 +32,16 @@ func TestFirestoreSink(t *testing.T) {
 		key := fmt.Sprintf("%s:%d", id, ts.UnixNano())
 
 		fields := map[string]*data.Value{
-			"id":     &data.Value{Value: &data.Value_String_{String_: id}},
-			"bool":   &data.Value{Value: &data.Value_Bool{Bool: true}},
-			"bytes":  &data.Value{Value: &data.Value_Bytes{Bytes: []byte("1")}},
-			"float":  &data.Value{Value: &data.Value_Float{Float: 1}},
-			"double": &data.Value{Value: &data.Value_Double{Double: 1}},
-			"int32":  &data.Value{Value: &data.Value_Int32{Int32: 1}},
-			"int64":  &data.Value{Value: &data.Value_Int64{Int64: 1}},
-			"uint32": &data.Value{Value: &data.Value_Uint32{Uint32: 1}},
-			"uint64": &data.Value{Value: &data.Value_Uint64{Uint64: 1}},
-			"string": &data.Value{Value: &data.Value_String_{String_: "1"}},
+			"id":     {Value: &data.Value_String_{String_: id}},
+			"bool":   {Value: &data.Value_Bool{Bool: true}},
+			"bytes":  {Value: &data.Value_Bytes{Bytes: []byte("1")}},
+			"float":  {Value: &data.Value_Float{Float: 1}},
+			"double": {Value: &data.Value_Double{Double: 1}},
+			"int32":  {Value: &data.Value_Int32{Int32: 1}},
+			"int64":  {Value: &data.Value_Int64{Int64: 1}},
+			"uint32": {Value: &data.Value_Uint32{Uint32: 1}},
+			"uint64": {Value: &data.Value_Uint64{Uint64: 1}},
+			"string": {Value: &data.Value_String_{String_: "1"}},
 		}
 		rows := map[string]interface{}{
 			"id":     id,
@@ -77,16 +77,16 @@ func TestFirestoreSink(t *testing.T) {
 		key := fmt.Sprintf("%s:%d", id, ts.UnixNano())
 
 		fields := map[string]*data.Value{
-			"id":     &data.Value{Value: &data.Value_String_{String_: id}},
-			"bool":   &data.Value{Value: &data.Value_Bool{Bool: true}},
-			"bytes":  &data.Value{Value: &data.Value_Bytes{Bytes: []byte("1")}},
-			"float":  &data.Value{Value: &data.Value_Float{Float: 1}},
-			"double": &data.Value{Value: &data.Value_Double{Double: 1}},
-			"int32":  &data.Value{Value: &data.Value_Int32{Int32: 1}},
-			"int64":  &data.Value{Value: &data.Value_Int64{Int64: 1}},
-			"uint32": &data.Value{Value: &data.Value_Uint32{Uint32: 1}},
-			"uint64": &data.Value{Value: &data.Value_Uint64{Uint64: 1}},
-			"string": &data.Value{Value: &data.Value_String_{String_: "1"}},
+			"id":     {Value: &data.Value_String_{String_: id}},
+			"bool":   {Value: &data.Value_Bool{Bool: true}},
+			"bytes":  {Value: &data.Value_Bytes{Bytes: []byte("1")}},
+			"float":  {Value: &data.Value_Float{Float: 1}},
+			"double": {Value: &data.Value_Double{Double: 1}},
+			"int32":  {Value: &data.Value_Int32{Int32: 1}},
+			"int64":  {Value: &data.Value_Int64{Int64: 1}},
+			"uint32": {Value: &data.Value_Uint32{Uint32: 1}},
+			"uint64": {Value: &data.Value_Uint64{Uint64: 1}},
+			"string": {Value: &data.Value_String_{String_: "1"}},
 		}
 		rows := map[string]interface{}{
 			"id":     id,
