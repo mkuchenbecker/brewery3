@@ -1,0 +1,50 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: datastore
+  labels:
+    app: datastore
+spec:
+  selector:
+    matchLabels:
+      app: datastore
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: datastore
+    spec:
+      containers:
+      - name: datastore
+        image: mkuchenbecker/brewery3/datastore:latest
+        imagePullPolicy: Always
+        ports:
+        - name: datastore-service
+          containerPort: 9000
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        env:
+          - name: FIRESTORE_COLLECTION
+            value: "global"
+          - name: PORT
+            value: "9000"
+          - name: GCP_PROJECT_ID
+            value: "sigma-future-259702"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: datastore-service
+spec:
+  selector:
+    app: datastore
+  type: NodePort
+  ports:
+  - port: 9000
+    nodePort: 30000

@@ -51,7 +51,7 @@ breweryproto:
 dataproto:
 	@echo "compiling protos:"
 	protoc -I brewery/model \
-	data/data.proto \
+	data/protos/data.proto \
 	--proto_path=. \
 	--go_out=plugins=grpc:data/gomodel
 
