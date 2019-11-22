@@ -53,6 +53,7 @@ func main() {
 	data.RegisterDataProcessorServer(serve, datasink)
 	// Register reflection service on gRPC server.
 	reflection.Register(serve)
+	fmt.Printf("Server Starting\n")
 	if err := serve.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
