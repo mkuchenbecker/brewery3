@@ -20,7 +20,11 @@ type firestoreClient struct {
 	client *firestore.Client
 }
 
-func (c *firestoreClient) Set(ctx context.Context, collection string, docName string, doc map[string]interface{}) error {
+func NewFirestoreClient(client *firestore.Client) FirestoreClient {
+	return &firestoreClient{client: client}
+}
+
+func (c *firestoreClient) Send(ctx context.Context, collection string, docName string, doc map[string]interface{}) error {
 	_, err := c.client.Collection(collection).Doc(docName).Set(ctx, doc)
 	return err
 }

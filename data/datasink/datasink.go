@@ -7,8 +7,6 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/mkuchenbecker/brewery3/data/gomodel/data"
-
-	"google.golang.org/grpc"
 )
 
 //go:generate mockgen -destination=./mock.go -package=datasink github.com/mkuchenbecker/brewery3/data/datasink Clock,DataSink,FirestoreClient
@@ -24,7 +22,7 @@ func (c *clock) Now() time.Time {
 }
 
 type DataSink interface {
-	data.DataProcessorClient
+	data.DataProcessorServer
 }
 
 func NewStore(collection string, client FirestoreClient) DataSink {
@@ -37,7 +35,7 @@ type firestoreSink struct {
 	client     FirestoreClient
 }
 
-func (s *firestoreSink) Send(ctx context.Context, in *data.DataObject, opts ...grpc.CallOption) (*data.SendResponse, error) {
+func (s *firestoreSink) Send(ctx context.Context, in *data.DataObject) (*data.SendResponse, error) {
 	row := make(map[string]interface{})
 	for key, val := range in.Fields {
 		switch t := val.Value.(type) {
@@ -67,7 +65,7 @@ func (s *firestoreSink) Send(ctx context.Context, in *data.DataObject, opts ...g
 	return &data.SendResponse{}, errors.Wrap(s.client.Send(ctx, s.collection, in.Key, row), "error saving to database")
 }
 
-func (s *firestoreSink) Get(ctx context.Context, in *data.GetRequest, opts ...grpc.CallOption) (*data.GetResponse, error) {
+func (s *firestoreSink) Get(ctx context.Context, in *data.GetRequest) (*data.GetResponse, error) {
 	response := &data.GetResponse{Data: []*data.DataObject{}}
 	lom, err := s.client.Get(ctx, s.collection, in.Key)
 	if err != nil {
