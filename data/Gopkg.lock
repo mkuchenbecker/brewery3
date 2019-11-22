@@ -125,7 +125,11 @@
   branch = "master"
   name = "golang.org/x/tools"
   packages = ["cmd/goimports","go/analysis","go/analysis/passes/inspect","go/ast/astutil","go/ast/inspector","go/buildutil","go/gcexportdata","go/internal/gcimporter","go/internal/packagesdriver","go/packages","go/types/objectpath","go/types/typeutil","internal/fastwalk","internal/gopathwalk","internal/imports","internal/module","internal/semver","internal/span"]
+<<<<<<< HEAD:data/Gopkg.lock
   revision = "c02aa52d2b72044787b2082c9844d129fe6d4d15"
+=======
+  revision = "0ae87fff1b85673ca22fae0603daf76d984734ac"
+>>>>>>> master:data/Gopkg.lock
 
 [[projects]]
   name = "google.golang.org/api"
