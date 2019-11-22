@@ -26,7 +26,7 @@ func getSettings(prefix string) *Settings {
 
 type Settings struct {
 	FirestoreCollection string `envconfig:"FIRESTORE_COLLECTION" default:"global"`
-	GcpProjectId        string `envconfig:"GCP_PROJECT_ID" default:"sigma-future-259702"`
+	GcpProjectID        string `envconfig:"GCP_PROJECT_ID" default:"sigma-future-259702"`
 	Port                int    `envconfig:"PORT" default:"9000"`
 }
 
@@ -37,7 +37,7 @@ func main() {
 	ctx, cancel := context.WithDeadline(ctx, time.Now().Add(time.Second*5))
 	defer cancel()
 
-	client, err := firestore.NewClient(ctx, settings.GcpProjectId)
+	client, err := firestore.NewClient(ctx, settings.GcpProjectID)
 	if err != nil {
 		panic(err)
 	}
