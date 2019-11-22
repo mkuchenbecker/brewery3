@@ -114,11 +114,3 @@ func TestFirestoreSink(t *testing.T) {
 		assert.Equal(t, expected, *response.Data[0])
 	})
 }
-
-func ValueToInterface(in map[string]*data.Value) (out map[string]interface{}) {
-	out = make(map[string]interface{})
-	for k, v := range in {
-		out[k] = v
-	}
-	return
-}
