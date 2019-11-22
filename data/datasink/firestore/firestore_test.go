@@ -1,4 +1,4 @@
-package datasink
+package firestore
 
 import (
 	"context"
@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mkuchenbecker/brewery3/data/datasink"
+	mock "github.com/mkuchenbecker/brewery3/data/datasink/mock"
 	"github.com/mkuchenbecker/brewery3/data/gomodel/data"
 	"github.com/stretchr/testify/assert"
 )
@@ -24,7 +26,7 @@ func TestFirestoreSink(t *testing.T) {
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 
-		mockClock := NewMockClock(mockCtrl)
+		mockClock := mock.NewMockClock(mockCtrl)
 		ts := time.Now()
 
 		key := fmt.Sprintf("%s:%d", id, ts.UnixNano())
@@ -54,10 +56,10 @@ func TestFirestoreSink(t *testing.T) {
 			"string": "1",
 		}
 
-		mockFirestoreClient := NewMockFirestoreClient(mockCtrl)
+		mockFirestoreClient := mock.NewMockFirestoreClient(mockCtrl)
 		mockFirestoreClient.EXPECT().Send(ctx, collection, key, rows).Return(nil).Times(1)
 
-		var store DataSink = &firestoreSink{collection: collection, clock: mockClock, client: mockFirestoreClient}
+		var store datasink.DataSink = &firestoreSink{collection: collection, clock: mockClock, client: mockFirestoreClient}
 
 		req := &data.DataObject{Key: key, Fields: fields}
 		_, err := store.Send(ctx, req)
@@ -69,7 +71,7 @@ func TestFirestoreSink(t *testing.T) {
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 
-		mockClock := NewMockClock(mockCtrl)
+		mockClock := mock.NewMockClock(mockCtrl)
 		ts := time.Now()
 
 		key := fmt.Sprintf("%s:%d", id, ts.UnixNano())
@@ -99,10 +101,10 @@ func TestFirestoreSink(t *testing.T) {
 			"string": "1",
 		}
 
-		mockFirestoreClient := NewMockFirestoreClient(mockCtrl)
-		mockFirestoreClient.EXPECT().Get(ctx, collection, key).Return([]ColValueMap{rows}, nil).Times(1)
+		mockFirestoreClient := mock.NewMockFirestoreClient(mockCtrl)
+		mockFirestoreClient.EXPECT().Get(ctx, collection, key).Return([]datasink.ColValueMap{rows}, nil).Times(1)
 
-		var store DataSink = &firestoreSink{collection: collection, clock: mockClock, client: mockFirestoreClient}
+		var store datasink.DataSink = &firestoreSink{collection: collection, clock: mockClock, client: mockFirestoreClient}
 
 		response, err := store.Get(ctx, &data.GetRequest{Key: key})
 		assert.NoError(t, err)

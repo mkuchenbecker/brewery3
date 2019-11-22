@@ -9,7 +9,7 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"github.com/kelseyhightower/envconfig"
-	"github.com/mkuchenbecker/brewery3/data/datasink"
+	firestoreSink "github.com/mkuchenbecker/brewery3/data/datasink/firestore"
 	"github.com/mkuchenbecker/brewery3/data/gomodel/data"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -42,8 +42,8 @@ func main() {
 		panic(err)
 	}
 
-	fc := datasink.NewFirestoreClient(client)
-	datasink := datasink.NewStore(settings.FirestoreCollection, fc)
+	fc := firestoreSink.NewFirestoreClient(client)
+	datasink := firestoreSink.NewStore(settings.FirestoreCollection, fc)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", settings.Port))
 	if err != nil {
