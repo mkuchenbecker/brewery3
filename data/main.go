@@ -31,6 +31,7 @@ type Settings struct {
 }
 
 func main() {
+	fmt.Printf("Main Method Started\n")
 	settings := getSettings("")
 
 	ctx := context.Background()
