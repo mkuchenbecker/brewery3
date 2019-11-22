@@ -23,14 +23,6 @@ func (c *clock) Now() time.Time {
 	return time.Now()
 }
 
-type FakeClock struct {
-	Ts time.Time
-}
-
-func (c *FakeClock) Now() time.Time {
-	return c.Ts
-}
-
 type DataSink interface {
 	data.DataProcessorClient
 }
@@ -82,7 +74,9 @@ func (s *firestoreSink) Get(ctx context.Context, in *data.GetRequest, opts ...gr
 		return response, err
 	}
 
-	do := &data.DataObject{}
+	do := &data.DataObject{Fields: make(map[string]*data.Value)}
+
+	do.Key = in.Key
 
 	for _, mapStringInterface := range lom {
 		for k, v := range mapStringInterface {
@@ -112,45 +106,3 @@ func (s *firestoreSink) Get(ctx context.Context, in *data.GetRequest, opts ...gr
 
 	return response, nil
 }
-
-// type inMemory struct {
-// 	data  map[string](map[int64](map[string]*Value))
-// 	mux   sync.RWMutex
-// 	clock Clock
-// }
-
-// func NewInMemory() DataSink {
-// 	return &inMemory{}
-// }
-
-// type point struct {
-// }
-
-// func (s *inMemory) Send(ctx context.Context, in *data.DataObject, opts ...grpc.CallOption) (*data.SendResponse, error) {
-// 	s.mux.Lock()
-// 	defer s.mux.Unlock()
-// 	timeMap, ok := s.data[in.Key]
-// 	if !ok {
-// 		timeMap = make(map[int64](map[string]*Value))
-// 	}
-// 	timeMap[s.clock.Now()] = in.Fields
-// 	s.data[in.Key] = timeMap
-// 	return &data.SendResponse{}, nil
-// }
-// func (s *inMemory) Get(ctx context.Context, in *data.GetRequest, opts ...grpc.CallOption) (*data.GetResponse, error) {
-// 	return nil, errors.New("not implemented")
-// }
-
-// type bigQuery struct {
-// }
-
-// func NewBigQuery() DataSink {
-// 	return &bigQuery{}
-// }
-
-// func (s *bigQuery) Send(ctx context.Context, in *data.DataObject, opts ...grpc.CallOption) (*data.SendResponse, error) {
-// 	return nil, errors.New("not implemented")
-// }
-// func (s *bigQuery) Get(ctx context.Context, in *data.GetRequest, opts ...grpc.CallOption) (*data.GetResponse, error) {
-// 	return nil, errors.New("not implemented")
-// }
