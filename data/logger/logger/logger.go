@@ -12,7 +12,6 @@ import (
 type standardLogger struct {
 	get logger.LoggerGetter
 	sev logger.Severity
-	err error
 
 	withMux sync.RWMutex
 	with    map[string]interface{}
@@ -27,7 +26,7 @@ func New(get logger.LoggerGetter) logger.Log {
 }
 
 func (log *standardLogger) Log(ctx context.Context, msg string) {
-	toLog := fmt.Sprintf("%s", msg)
+	toLog := msg
 	log.withMux.RLock()
 	defer log.withMux.RUnlock()
 	for k, v := range log.with {

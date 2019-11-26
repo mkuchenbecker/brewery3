@@ -40,20 +40,20 @@ func main() {
 	ctx, cancel := context.WithDeadline(ctx, time.Now().Add(time.Second*5))
 	defer cancel()
 
-	client, err := firestore.NewClient(ctx, settings.GcpProjectID)
-	if err != nil {
-		panic(err)
-	}
-
 	logClient, err := logging.NewClient(ctx, settings.GcpProjectID)
 	if err != nil {
 		log.Fatalf("failed to create logger: %v", err)
 	}
 	defer logClient.Close()
 
-	logger := logger.New(&logger.LogGetter{Logger: logClient.Logger("defaultName")})
+	logger := logger.New(&logger.Getter{Logger: logClient.Logger("defaultName")})
 
-	fc := firestoreSink.NewFirestoreClient(client)
+	fireClient, err := firestore.NewClient(ctx, settings.GcpProjectID)
+	if err != nil {
+		panic(err)
+	}
+
+	fc := firestoreSink.NewFirestoreClient(fireClient)
 	datasink := firestoreSink.NewStore(settings.FirestoreCollection, fc, logger)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", settings.Port))
@@ -64,7 +64,7 @@ func main() {
 	data.RegisterDataProcessorServer(serve, datasink)
 	// Register reflection service on gRPC server.
 	reflection.Register(serve)
-	fmt.Printf("Server Starting\n")
+	logger.Log(ctx, "Starting to Serve")
 	if err := serve.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

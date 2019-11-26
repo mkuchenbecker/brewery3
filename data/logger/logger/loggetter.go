@@ -5,10 +5,10 @@ import (
 	logger "github.com/mkuchenbecker/brewery3/data/logger"
 )
 
-type LogGetter struct {
+type Getter struct {
 	*logging.Logger
 }
 
-func (g *LogGetter) Get(sev logger.Severity) logger.Logger {
+func (g *Getter) Get(sev logger.Severity) logger.Logger {
 	return g.StandardLogger(sev.ToGoogleSeverity())
 }

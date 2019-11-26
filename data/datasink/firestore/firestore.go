@@ -27,7 +27,7 @@ type firestoreSink struct {
 }
 
 func (s *firestoreSink) Send(ctx context.Context, in *data.DataObject) (res *data.SendResponse, err error) {
-	s.log.Level(logger.Info).With("request", in).Log(ctx, "send request recieved")
+	s.log.Level(logger.Info).With("request", in).Log(ctx, "send request received")
 	defer func() { s.log.LogIfError(ctx, err, "send encountered an error") }()
 	defer utils.PanicRecover(&err)
 	row := make(map[string]interface{})
@@ -60,7 +60,7 @@ func (s *firestoreSink) Send(ctx context.Context, in *data.DataObject) (res *dat
 }
 
 func (s *firestoreSink) Get(ctx context.Context, in *data.GetRequest) (res *data.GetResponse, err error) {
-	s.log.Level(logger.Info).With("request", in).Log(ctx, "get request recieved")
+	s.log.Level(logger.Info).With("request", in).Log(ctx, "get request received")
 	defer func() { s.log.LogIfError(ctx, err, "get encountered an error") }()
 	defer utils.PanicRecover(&err)
 
