@@ -10,6 +10,7 @@ import (
 	"github.com/mkuchenbecker/brewery3/data/datasink"
 	mock "github.com/mkuchenbecker/brewery3/data/datasink/mock"
 	data "github.com/mkuchenbecker/brewery3/data/gomodel"
+	"github.com/mkuchenbecker/brewery3/data/logger/logger"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -58,7 +59,7 @@ func TestFirestoreSink(t *testing.T) {
 		mockFirestoreClient := mock.NewMockFirestoreClient(mockCtrl)
 		mockFirestoreClient.EXPECT().Send(ctx, collection, key, rows).Return(nil).Times(1)
 
-		store := NewStore(collection, mockFirestoreClient)
+		store := NewStore(collection, mockFirestoreClient, logger.NewSTD())
 
 		req := &data.DataObject{Key: key, Fields: fields}
 		_, err := store.Send(ctx, req)
@@ -102,7 +103,7 @@ func TestFirestoreSink(t *testing.T) {
 		mockFirestoreClient := mock.NewMockFirestoreClient(mockCtrl)
 		mockFirestoreClient.EXPECT().Get(ctx, collection, key).Return([]datasink.ColValueMap{rows}, nil).Times(1)
 
-		var store datasink.DataSink = NewStore(collection, mockFirestoreClient)
+		var store datasink.DataSink = NewStore(collection, mockFirestoreClient, logger.NewSTD())
 
 		response, err := store.Get(ctx, &data.GetRequest{Key: key})
 		assert.NoError(t, err)

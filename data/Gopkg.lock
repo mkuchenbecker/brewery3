@@ -3,7 +3,7 @@
 
 [[projects]]
   name = "cloud.google.com/go"
-  packages = [".","compute/metadata","firestore","firestore/apiv1","internal/btree","internal/fields","internal/trace","internal/version"]
+  packages = [".","compute/metadata","firestore","firestore/apiv1","internal/btree","internal/fields","internal/trace","internal/version","logging","logging/apiv2","logging/internal"]
   revision = "d1ee711ee996fa74abaffbdb572963f368f215a9"
   version = "v0.49.0"
 
@@ -62,6 +62,12 @@
   version = "v1.4.0"
 
 [[projects]]
+  name = "github.com/mkuchenbecker/brewery3"
+  packages = ["brewery/utils"]
+  revision = "7f7586a19a4de5810a369c2e34b37df3c39375e5"
+  version = "v0.1.0"
+
+[[projects]]
   name = "github.com/pkg/errors"
   packages = ["."]
   revision = "ba968bfe8b2f7e042a574c888954fccecfa385b4"
@@ -107,7 +113,13 @@
   branch = "master"
   name = "golang.org/x/oauth2"
   packages = [".","google","internal","jws","jwt"]
-  revision = "0f29369cfe4552d0e4bcddc57cc75f4d7e672a33"
+  revision = "5d9234df094ce600ff541158d1491aa10d078a47"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/sync"
+  packages = ["semaphore"]
+  revision = "cd5d95a43a6e21273425c7ae415d3df9ea832eeb"
 
 [[projects]]
   branch = "master"
@@ -125,11 +137,11 @@
   branch = "master"
   name = "golang.org/x/tools"
   packages = ["cmd/goimports","go/analysis","go/analysis/passes/inspect","go/ast/astutil","go/ast/inspector","go/buildutil","go/gcexportdata","go/internal/gcimporter","go/internal/packagesdriver","go/packages","go/types/objectpath","go/types/typeutil","internal/fastwalk","internal/gopathwalk","internal/imports","internal/module","internal/semver","internal/span"]
-  revision = "0ae87fff1b85673ca22fae0603daf76d984734ac"
+  revision = "c02aa52d2b72044787b2082c9844d129fe6d4d15"
 
 [[projects]]
   name = "google.golang.org/api"
-  packages = ["googleapi","googleapi/transport","internal","internal/third_party/uritemplates","iterator","option","transport","transport/grpc","transport/http","transport/http/internal/propagation"]
+  packages = ["googleapi","googleapi/transport","internal","internal/third_party/uritemplates","iterator","option","support/bundler","transport","transport/grpc","transport/http","transport/http/internal/propagation"]
   revision = "8a410c21381766a810817fd6200fce8838ecb277"
   version = "v0.14.0"
 
@@ -142,7 +154,7 @@
 [[projects]]
   branch = "master"
   name = "google.golang.org/genproto"
-  packages = ["googleapis/api/annotations","googleapis/firestore/v1","googleapis/rpc/code","googleapis/rpc/status","googleapis/type/latlng"]
+  packages = ["googleapis/api","googleapis/api/annotations","googleapis/api/distribution","googleapis/api/label","googleapis/api/metric","googleapis/api/monitoredres","googleapis/firestore/v1","googleapis/logging/type","googleapis/logging/v2","googleapis/rpc/code","googleapis/rpc/status","googleapis/type/latlng","protobuf/field_mask"]
   revision = "83cc0476cb11ea0da33dacd4c6354ab192de6fe6"
 
 [[projects]]
@@ -166,6 +178,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "9e49b0f6f11acd2bbb68f9a01b3154b8b0fd4ab21501828ad4d419f4e9862b2d"
+  inputs-digest = "57acb2837fa1e7b41fbbbfcdf5aed0df2c4f93e58e2728589a528ad45013bceb"
   solver-name = "gps-cdcl"
   solver-version = 1

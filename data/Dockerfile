@@ -8,6 +8,7 @@ COPY . .
 # Fetch dependencies.
 # Using go get.
 RUN go get -d -v
+RUN apk add ca-certificates
 # Build the binary.
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64  go build -a -tags netgo -ldflags='-w -s -extldflags "-static"' -o /go/bin/datastore
 ############################

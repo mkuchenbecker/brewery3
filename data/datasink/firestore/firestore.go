@@ -5,19 +5,31 @@ import (
 
 	"github.com/mkuchenbecker/brewery3/data/datasink"
 	data "github.com/mkuchenbecker/brewery3/data/gomodel"
+	"github.com/mkuchenbecker/brewery3/data/logger"
+	"github.com/mkuchenbecker/brewery3/data/utils"
 	"github.com/pkg/errors"
 )
 
-func NewStore(collection string, client datasink.FirestoreClient) datasink.DataSink {
-	return &firestoreSink{collection: collection, client: client}
+func NewStore(collection string,
+	client datasink.FirestoreClient,
+	log logger.Log) datasink.DataSink {
+	return &firestoreSink{
+		collection: collection,
+		client:     client,
+		log:        log,
+	}
 }
 
 type firestoreSink struct {
 	collection string
 	client     datasink.FirestoreClient
+	log        logger.Log
 }
 
-func (s *firestoreSink) Send(ctx context.Context, in *data.DataObject) (*data.SendResponse, error) {
+func (s *firestoreSink) Send(ctx context.Context, in *data.DataObject) (res *data.SendResponse, err error) {
+	s.log.Level(logger.Info).With("request", in).Log(ctx, "send request received")
+	defer func() { s.log.LogIfError(ctx, err, "send encountered an error") }()
+	defer utils.PanicRecover(&err)
 	row := make(map[string]interface{})
 	for key, val := range in.Fields {
 		switch t := val.Value.(type) {
@@ -43,11 +55,15 @@ func (s *firestoreSink) Send(ctx context.Context, in *data.DataObject) (*data.Se
 			return &data.SendResponse{}, errors.New("bad data")
 		}
 	}
-
-	return &data.SendResponse{}, errors.Wrap(s.client.Send(ctx, s.collection, in.Key, row), "error saving to database")
+	err = s.client.Send(ctx, s.collection, in.Key, row)
+	return &data.SendResponse{}, errors.Wrap(nil, "error saving data")
 }
 
-func (s *firestoreSink) Get(ctx context.Context, in *data.GetRequest) (*data.GetResponse, error) {
+func (s *firestoreSink) Get(ctx context.Context, in *data.GetRequest) (res *data.GetResponse, err error) {
+	s.log.Level(logger.Info).With("request", in).Log(ctx, "get request received")
+	defer func() { s.log.LogIfError(ctx, err, "get encountered an error") }()
+	defer utils.PanicRecover(&err)
+
 	response := &data.GetResponse{Data: []*data.DataObject{}}
 	lom, err := s.client.Get(ctx, s.collection, in.Key)
 	if err != nil {
