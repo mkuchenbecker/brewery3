@@ -19,7 +19,7 @@ func TestLogger(t *testing.T) {
 		t.Parallel()
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
-		mockGetter := mock.NewMockLoggerGetter(mockCtrl)
+		mockGetter := mock.NewMockGetter(mockCtrl)
 		mockLog := mock.NewMockLogger(mockCtrl)
 		mockLog.EXPECT().Printf(
 			`message
@@ -38,7 +38,7 @@ func TestLogger(t *testing.T) {
 		t.Parallel()
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
-		mockGetter := mock.NewMockLoggerGetter(mockCtrl)
+		mockGetter := mock.NewMockGetter(mockCtrl)
 		mockLog := mock.NewMockLogger(mockCtrl)
 		mockLog.EXPECT().Printf("%s%d", "1", 2).Times(1)
 		mockGetter.EXPECT().Get(logger.Info).Return(mockLog).Times(1)
@@ -66,7 +66,7 @@ func TestLogger(t *testing.T) {
 			t.Parallel()
 			mockCtrl := gomock.NewController(t)
 			defer mockCtrl.Finish()
-			mockGetter := mock.NewMockLoggerGetter(mockCtrl)
+			mockGetter := mock.NewMockGetter(mockCtrl)
 			mockLog := mock.NewMockLogger(mockCtrl)
 			mockLog.EXPECT().Printf("message\n\terror: error").Times(1)
 			mockGetter.EXPECT().Get(logger.Error).Return(mockLog).Times(1)
@@ -82,7 +82,7 @@ func TestLogger(t *testing.T) {
 			t.Parallel()
 			mockCtrl := gomock.NewController(t)
 			defer mockCtrl.Finish()
-			mockGetter := mock.NewMockLoggerGetter(mockCtrl)
+			mockGetter := mock.NewMockGetter(mockCtrl)
 
 			l := &standardLogger{
 				get:  mockGetter,

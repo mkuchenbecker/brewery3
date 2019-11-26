@@ -6,7 +6,7 @@ import (
 	"cloud.google.com/go/logging"
 )
 
-//go:generate mockgen -destination=./mock/mock.go github.com/mkuchenbecker/brewery3/data/logger Log,LoggerGetter,Logger
+//go:generate mockgen -destination=./mock/mock.go github.com/mkuchenbecker/brewery3/data/logger Log,Getter,Logger
 
 type Scope string
 
@@ -22,7 +22,7 @@ type Logger interface {
 	Printf(string, ...interface{})
 }
 
-type LoggerGetter interface {
+type Getter interface {
 	Get(Severity) Logger
 }
 

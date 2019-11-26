@@ -10,5 +10,6 @@ func PanicRecover(err *error) {
 	if r == nil {
 		return
 	}
-	*err = errors.New(fmt.Sprintf("encountered a panic: %+v", r))
+	// errors.New grabs a stacktrace, fmt.Errorf does not. Golint error prefers the latter.
+	*err = errors.New(fmt.Sprintf("encountered a panic: %+v", r)) //nolint:golint
 }

@@ -10,14 +10,14 @@ import (
 )
 
 type standardLogger struct {
-	get logger.LoggerGetter
+	get logger.Getter
 	sev logger.Severity
 
 	withMux sync.RWMutex
 	with    map[string]interface{}
 }
 
-func New(get logger.LoggerGetter) logger.Log {
+func New(get logger.Getter) logger.Log {
 	return &standardLogger{
 		get:  get,
 		sev:  logger.Info,
