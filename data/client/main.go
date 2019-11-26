@@ -28,7 +28,7 @@ func main() {
 			"double": {Value: &data.Value_Double{Double: 1}},
 		},
 	}
-	client, conn := makeDataClient("34.70.183.94:9000")
+	client, conn := makeDataClient("34.70.183.94:30000")
 	defer conn.Close()
 
 	_, err := client.Send(context.Background(), do)

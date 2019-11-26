@@ -21,7 +21,7 @@ tests: fmt lint
 	-covermode=count \
 	-coverprofile=coverage.out \
 	-tags test \
-	./brewery/...
+	./...
 
 .PHONY: test-ci
 test-ci:
@@ -35,7 +35,7 @@ lint-ci:
 .PHONY: fmt
 fmt:
 	@echo "fmt:"
-	scripts/fmt
+	../scripts/fmt
 
 
 .PHONY: dataproto

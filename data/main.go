@@ -8,9 +8,11 @@ import (
 	"time"
 
 	"cloud.google.com/go/firestore"
+	"cloud.google.com/go/logging"
 	"github.com/kelseyhightower/envconfig"
 	firestoreSink "github.com/mkuchenbecker/brewery3/data/datasink/firestore"
 	data "github.com/mkuchenbecker/brewery3/data/gomodel"
+	"github.com/mkuchenbecker/brewery3/data/logger/logger"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -43,8 +45,16 @@ func main() {
 		panic(err)
 	}
 
+	logClient, err := logging.NewClient(ctx, settings.GcpProjectID)
+	if err != nil {
+		log.Fatalf("failed to create logger: %v", err)
+	}
+	defer logClient.Close()
+
+	logger := logger.New(&logger.LogGetter{Logger: logClient.Logger("defaultName")})
+
 	fc := firestoreSink.NewFirestoreClient(client)
-	datasink := firestoreSink.NewStore(settings.FirestoreCollection, fc)
+	datasink := firestoreSink.NewStore(settings.FirestoreCollection, fc, logger)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", settings.Port))
 	if err != nil {
