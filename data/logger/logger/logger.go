@@ -56,6 +56,7 @@ func (log *standardLogger) With(key string, val interface{}) logger.Log {
 }
 
 func (log *standardLogger) Printf(format string, args ...interface{}) {
+	fmt.Printf(format, args...)
 	log.get.Get(logger.Info).Printf(format, args...)
 }
 
@@ -73,6 +74,7 @@ func NewSTD() logger.Log {
 }
 
 func (l *stdLogger) Printf(format string, args ...interface{}) {
+	fmt.Printf(format, args...)
 	log.Printf(format, args...)
 }
 

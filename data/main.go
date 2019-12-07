@@ -12,7 +12,8 @@ import (
 	"github.com/kelseyhightower/envconfig"
 	firestoreSink "github.com/mkuchenbecker/brewery3/data/datasink/firestore"
 	data "github.com/mkuchenbecker/brewery3/data/gomodel"
-	"github.com/mkuchenbecker/brewery3/data/logger/logger"
+	"github.com/mkuchenbecker/brewery3/data/logger"
+	stackdriver "github.com/mkuchenbecker/brewery3/data/logger/logger"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -46,15 +47,39 @@ func main() {
 	}
 	defer logClient.Close()
 
-	logger := logger.New(&logger.Getter{Logger: logClient.Logger("defaultName")})
+	fmt.Println("created logger client")
+
+	lg := logClient.Logger("defaultName")
+	lg.LogSync(ctx, logging.Entry{Payload: "Logging Started"})
+
+	l := stackdriver.New(&stackdriver.Getter{Logger: lg})
+	l.Log(ctx, "Started Logger")
 
 	fireClient, err := firestore.NewClient(ctx, settings.GcpProjectID)
 	if err != nil {
+		l.WithError(err).Level(logger.Critical).Log(ctx, "failed to start service")
+		return
 		panic(err)
 	}
 
 	fc := firestoreSink.NewFirestoreClient(fireClient)
-	datasink := firestoreSink.NewStore(settings.FirestoreCollection, fc, logger)
+	datasink := firestoreSink.NewStore(settings.FirestoreCollection, fc, l)
+
+	ts := time.Now()
+	_, err = datasink.Send(ctx, &data.DataObject{
+		Key: fmt.Sprintf("debug:datasink-connect-%d", ts.Unix()),
+		Fields: map[string](*data.Value){
+			"timestamp": &data.Value{Value: &data.Value_Int64{Int64: ts.Unix()}},
+			"message":   &data.Value{Value: &data.Value_String_{String_: "connected to data sink"}},
+		},
+	})
+
+	if err != nil {
+		l.WithError(err).Level(logger.Critical).Log(ctx, "failed to start service")
+		panic(err)
+	}
+
+	fmt.Println("stored a piece of info")
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", settings.Port))
 	if err != nil {
@@ -64,7 +89,7 @@ func main() {
 	data.RegisterDataProcessorServer(serve, datasink)
 	// Register reflection service on gRPC server.
 	reflection.Register(serve)
-	logger.Log(ctx, "Starting to Serve")
+	l.Log(ctx, "Starting to Serve")
 	if err := serve.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
