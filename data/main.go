@@ -43,7 +43,7 @@ func main() {
 
 	logClient, err := logging.NewClient(ctx, settings.GcpProjectID)
 	if err != nil {
-		log.Fatalf("failed to create logger: %v", err)
+		log.Fatalf("failed to create logger client: %v", err)
 	}
 	defer logClient.Close()
 
@@ -52,8 +52,7 @@ func main() {
 	lg := logClient.Logger("defaultName")
 	err = lg.LogSync(ctx, logging.Entry{Payload: "Logging Started"})
 	if err != nil {
-		l.WithError(err).Level(logger.Critical).Log(ctx, "failed to start logger")
-		return
+		log.Fatalf("failed to create logger: %v", err)
 	}
 
 	l := stackdriver.New(&stackdriver.Getter{Logger: lg})
