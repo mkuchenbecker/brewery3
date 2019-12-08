@@ -50,7 +50,11 @@ func main() {
 	fmt.Println("created logger client")
 
 	lg := logClient.Logger("defaultName")
-	lg.LogSync(ctx, logging.Entry{Payload: "Logging Started"})
+	err = lg.LogSync(ctx, logging.Entry{Payload: "Logging Started"})
+	if err != nil {
+		l.WithError(err).Level(logger.Critical).Log(ctx, "failed to start logger")
+		return
+	}
 
 	l := stackdriver.New(&stackdriver.Getter{Logger: lg})
 	l.Log(ctx, "Started Logger")
@@ -59,7 +63,6 @@ func main() {
 	if err != nil {
 		l.WithError(err).Level(logger.Critical).Log(ctx, "failed to start service")
 		return
-		panic(err)
 	}
 
 	fc := firestoreSink.NewFirestoreClient(fireClient)
