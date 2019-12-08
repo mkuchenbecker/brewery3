@@ -1,7 +1,7 @@
 FROM golang:alpine AS builder
 # Install git.
 # Git is required for fetching the dependencies.
-# RUN apk update && apk add --no-cache git
+RUN apk update && apk add --no-cache git
 
 WORKDIR $GOPATH/src/github.com/mkuchenbecker/brewery3/data
 COPY . .
