@@ -175,9 +175,15 @@
   revision = "afd67930eec2a9ed3e9b19f684d17a062285f16a"
   version = "2019.2.3"
 
+[[projects]]
+  name = "k8s.io/klog"
+  packages = ["."]
+  revision = "2ca9ad30301bf30a8a6e0fa2110db6b8df699a91"
+  version = "v1.0.0"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "57acb2837fa1e7b41fbbbfcdf5aed0df2c4f93e58e2728589a528ad45013bceb"
+  inputs-digest = "c77a6a85272e53e33d8871a10c137168bc261898776e3cc4889121ccf15d4670"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -3,9 +3,10 @@ package logger
 import (
 	"context"
 	"fmt"
-	"log"
 	"sort"
 	"sync"
+
+	"k8s.io/klog"
 
 	logger "github.com/mkuchenbecker/brewery3/data/logger"
 )
@@ -82,7 +83,7 @@ func NewSTD() logger.Log {
 
 func (l *stdLogger) Printf(format string, args ...interface{}) {
 	fmt.Printf(format, args...)
-	log.Printf(format, args...)
+	klog.Infof(format, args...)
 }
 
 func (l *stdLogger) Get(logger.Severity) logger.Logger {
