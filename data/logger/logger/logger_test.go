@@ -12,6 +12,7 @@ import (
 	mock "github.com/mkuchenbecker/brewery3/data/logger/mock"
 )
 
+
 func TestLogger(t *testing.T) {
 	t.Parallel()
 

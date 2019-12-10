@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"sync"
+	"sort"
 
 	logger "github.com/mkuchenbecker/brewery3/data/logger"
 )
@@ -29,8 +30,14 @@ func (log *standardLogger) Log(ctx context.Context, msg string) {
 	toLog := msg
 	log.withMux.RLock()
 	defer log.withMux.RUnlock()
-	for k, v := range log.with {
-		toLog = fmt.Sprintf("%s\n\t%s: %+v", toLog, k, v)
+	var withKeys []string
+	for k := range log.with {
+		withKeys = append(withKeys, k)
+	}
+	sort.Strings(withKeys)
+
+	for _,k := range withKeys {
+		toLog = fmt.Sprintf("%s\n\t%s: %+v", toLog, k, log.with[k])
 	}
 	l := log.get.Get(log.sev)
 	l.Printf(toLog)
