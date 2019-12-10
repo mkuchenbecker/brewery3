@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"sort"
 	"sync"
 
 	logger "github.com/mkuchenbecker/brewery3/data/logger"
@@ -29,8 +30,14 @@ func (log *standardLogger) Log(ctx context.Context, msg string) {
 	toLog := msg
 	log.withMux.RLock()
 	defer log.withMux.RUnlock()
-	for k, v := range log.with {
-		toLog = fmt.Sprintf("%s\n\t%s: %+v", toLog, k, v)
+	var withKeys []string
+	for k := range log.with {
+		withKeys = append(withKeys, k)
+	}
+	sort.Strings(withKeys)
+
+	for _, k := range withKeys {
+		toLog = fmt.Sprintf("%s\n\t%s: %+v", toLog, k, log.with[k])
 	}
 	l := log.get.Get(log.sev)
 	l.Printf(toLog)
@@ -56,6 +63,7 @@ func (log *standardLogger) With(key string, val interface{}) logger.Log {
 }
 
 func (log *standardLogger) Printf(format string, args ...interface{}) {
+	fmt.Printf(format, args...)
 	log.get.Get(logger.Info).Printf(format, args...)
 }
 
@@ -73,6 +81,7 @@ func NewSTD() logger.Log {
 }
 
 func (l *stdLogger) Printf(format string, args ...interface{}) {
+	fmt.Printf(format, args...)
 	log.Printf(format, args...)
 }
 

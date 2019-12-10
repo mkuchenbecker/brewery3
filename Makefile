@@ -11,22 +11,11 @@ bootstrap:
 lint: fmt
 	golangci-lint run
 
-.PHONY: tests
-tests: fmt lint
-	@echo "tests:"
-	${GOPATH}/bin/richgo test \
-	-timeout 10s \
-	-cover \
-	-v \
-	-covermode=count \
-	-coverprofile=coverage.out \
-	-tags test \
-	./brewery/...
-
 .PHONY: test-ci
 test-ci:
 	@echo "tests:"
-	go test -v -covermode=count -coverprofile=coverage.out ./...
+	go test -v -covermode=count -coverprofile=data/coverage.out ./data/...
+	go test -v -covermode=count -coverprofile=brewery/coverage.out ./brewery/...
 
 .PHONY: install-golang-ci
 lint-ci:
