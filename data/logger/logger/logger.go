@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"sync"
 	"sort"
+	"sync"
 
 	logger "github.com/mkuchenbecker/brewery3/data/logger"
 )
@@ -36,7 +36,7 @@ func (log *standardLogger) Log(ctx context.Context, msg string) {
 	}
 	sort.Strings(withKeys)
 
-	for _,k := range withKeys {
+	for _, k := range withKeys {
 		toLog = fmt.Sprintf("%s\n\t%s: %+v", toLog, k, log.with[k])
 	}
 	l := log.get.Get(log.sev)
