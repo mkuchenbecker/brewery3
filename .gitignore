@@ -3,3 +3,4 @@
 coverage.out
 *.code-workspace
 *target/debug*
+*.vscode*

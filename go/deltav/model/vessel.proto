@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package deltav.model;
+
+enum RadiationType {
+    UNKNOWN_RADIATION_TYPE = 0;
+    RF = 1;
+    GAMMA = 2;
+    THERM = 3;
+}
+
+message Sensor {
+    enum Type {
+        UNKNOWN = 0;
+        PASSIVE = 1;
+        ACTIVE = 2;
+    }
+    Type sensor_type = 1;
+    RadiationType radiation_type = 2;
+    // float mass = 3;
+    // float power_draw = 4;
+}
+
+message SensorSystem {
+    repeated Sensor sensors = 1;
+    // float idle_power = 2;
+    // float base_mass = 3;
+}
+
+message Vessel {
+    string id = 1;
+    SensorSystem sensors = 2;
+    // Driver driver = 3;
+    // WeaponSystem weapons = 4;
+    // float chassis_mass = 5; // Replace with a database lookup.
+}

@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package deltav.model;
+
+import "position.proto";
+import "vessel.proto";
+
+message IdentificationProperty {
+    string transponder = 1;
+    string internal_id = 2;
+}
+
+message RadiationProperty {
+    RadiationType type = 1;
+}
+
+message SensorProperty {
+
+}
+
+message DetectableProperty{
+    oneof property{
+        IdentificationProperty id = 1;
+        RadiationProperty radiation = 2;
+    }
+    float intensity = 100; // Range this property is detectable.
+}
+
+message RegisterRequest {
+    string id = 1;  // Unique id for the object.
+    Position position = 2;
+    repeated DetectableProperty properties = 3;
+}
+
+message RegisterResponse {
+    string effect = 1;
+}
+
+message DetectRequest {
+}
+
+message DetectResponse{
+}
+
+
+message GetRequest {
+}
+
+message GetResponse{
+}
+
+message InitializeRequest {
+    Vessel vessel = 1;
+}
+
+message InitializeResponse {
+    Vessel vessel = 1; // Sends back the initialized vessel.
+}
+
+service WorldModel
+ {
+    rpc Register(RegisterRequest) returns (RegisterResponse) {}
+    rpc Detect(DetectRequest) returns (DetectResponse) {}
+    rpc Get(GetRequest) returns (GetResponse) {}
+    rpc Initialize(InitializeRequest) returns (InitializeResponse) {}
+ }
+
