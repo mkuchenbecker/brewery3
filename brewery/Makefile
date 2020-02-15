@@ -98,10 +98,5 @@ tag:
 	docker tag local/element mkuchenbecker/brewery3:element-latest
 	docker tag local/thermometer mkuchenbecker/brewery3:thermometer-latest
 
-.PHONY: run
-publish:
-	docker  run -d  mkuchenbecker/brewery3:element-latest
-	docker  run -d  mkuchenbecker/brewery3:thermometer-latest
-	docker run -d mkuchenbecker/brewery3:brewery-latest
 
 
