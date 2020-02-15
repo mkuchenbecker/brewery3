@@ -8,11 +8,11 @@ bootstrap:
 	go get -v golang.org/x/tools/cmd/goimports
 
 .PHONY: lint
-lint: fmt
+lint:
 	golangci-lint run
 
 .PHONY: tests
-tests: fmt lint
+tests:
 	@echo "tests:"
 	${GOPATH}/bin/richgo test \
 	-timeout 10s \
@@ -21,7 +21,7 @@ tests: fmt lint
 	-covermode=count \
 	-coverprofile=coverage.out \
 	-tags test \
-	./brewery/...
+	./...
 
 .PHONY: test-ci
 test-ci:
@@ -32,10 +32,6 @@ test-ci:
 lint-ci:
 	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh
 
-.PHONY: fmt
-fmt:
-	@echo "fmt:"
-	scripts/fmt
 
 .PHONY: breweryproto
 breweryproto:
@@ -102,8 +98,10 @@ tag:
 	docker tag local/element mkuchenbecker/brewery3:element-latest
 	docker tag local/thermometer mkuchenbecker/brewery3:thermometer-latest
 
-.PHONY: publish
+.PHONY: run
 publish:
-	docker push mkuchenbecker/brewery3:brewery-latest
-	docker push mkuchenbecker/brewery3:element-latest
-	docker push mkuchenbecker/brewery3:thermometer-latest
+	docker  run -d  mkuchenbecker/brewery3:element-latest
+	docker  run -d  mkuchenbecker/brewery3:thermometer-latest
+	docker run -d mkuchenbecker/brewery3:brewery-latest
+
+
