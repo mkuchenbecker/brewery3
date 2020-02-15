@@ -1,11 +1,11 @@
-//+build !test
-
 package main
 
 import (
 	"fmt"
 	"log"
 	"net"
+
+	"github.com/mkuchenbecker/brewery3/brewery/utils"
 
 	"github.com/mkuchenbecker/brewery3/brewery/element/element"
 	"github.com/mkuchenbecker/brewery3/brewery/gpio/integration"
@@ -17,6 +17,7 @@ import (
 func main() { // nolint: deadcode
 	port := 9100
 	pin := uint8(1)
+	utils.Printf("Starting heater on port: %d", port)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {

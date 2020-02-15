@@ -81,7 +81,7 @@ stop:
 
 .PHONY: client
 client:
-	docker build -t local/client -f Dockerfile.client .
+	docker build -t local/client -f ./cli/Dockerfile ./cli
 	docker tag local/client mkuchenbecker/brewery3:client-latest
 	docker push mkuchenbecker/brewery3:client-latest
 

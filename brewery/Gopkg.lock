@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/cpuguy83/go-md2man"
+  packages = ["md2man"]
+  revision = "7762f7e404f8416dfa1d9bb6a8c192aa9acb4d19"
+  version = "v1.0.10"
+
+[[projects]]
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   revision = "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
@@ -32,6 +38,12 @@
   version = "v1.0.0"
 
 [[projects]]
+  name = "github.com/russross/blackfriday"
+  packages = ["."]
+  revision = "05f3235734ad95d0016f6a23902f06461fcf567a"
+  version = "v1.5.2"
+
+[[projects]]
   name = "github.com/stianeikeland/go-rpio"
   packages = ["."]
   revision = "d43a3ce8186d47f497a6785f997400a1b2f1fdc7"
@@ -42,6 +54,12 @@
   packages = ["assert"]
   revision = "221dbe5ed46703ee255b1da0dec05086f5035f62"
   version = "v1.4.0"
+
+[[projects]]
+  name = "github.com/urfave/cli"
+  packages = ["."]
+  revision = "bfe2e925cfb6d44b40ad3a779165ea7e8aff9212"
+  version = "v1.22.0"
 
 [[projects]]
   branch = "master"
@@ -88,6 +106,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "ee607ee274c206d5aecf393ac41d9712614bf7a084887eb10616d7bbd25b5d40"
+  inputs-digest = "4f6f085db87d3ca8fcd10889e0917873bfee1f2ea3c6076aec6224a82e8ec8eb"
   solver-name = "gps-cdcl"
   solver-version = 1
