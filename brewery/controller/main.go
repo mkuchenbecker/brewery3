@@ -14,8 +14,8 @@ import (
 	"github.com/mkuchenbecker/brewery3/brewery/logger"
 
 	"github.com/kelseyhightower/envconfig"
+	brewery "github.com/mkuchenbecker/brewery3/brewery/controller/controller"
 	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
-	"github.com/mkuchenbecker/brewery3/brewery/servers/brewery"
 	"github.com/mkuchenbecker/brewery3/brewery/utils"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
