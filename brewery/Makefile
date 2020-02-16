@@ -69,6 +69,7 @@ structmockgen:
 generate: proto protomockgen structmockgen
 
 
+
 .PHONY: start
 start:
 	kubectl create -f brewery.yml
