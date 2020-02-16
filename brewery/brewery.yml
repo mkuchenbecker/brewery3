@@ -117,4 +117,4 @@ spec:
   type: NodePort
   ports:
     - port: 9000
-      nodePort: 30000
+      nodePort: 20000
