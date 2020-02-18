@@ -15,11 +15,11 @@ spec:
         app: brewery
     spec:
       containers:
-        - name: brewery
-          image: mkuchenbecker/brewery3:brewery-latest
+        - name: controller
+          image: mkuchenbecker/brewery3:controller-latest
           imagePullPolicy: Always
           ports:
-            - name: brewery-service
+            - name: controller-service
               containerPort: 9000
           resources:
             requests:
