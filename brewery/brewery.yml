@@ -19,7 +19,7 @@ spec:
           image: mkuchenbecker/brewery3:controller-latest
           imagePullPolicy: Always
           ports:
-            - name: controller-service
+            - name: control-service
               containerPort: 9000
           resources:
             requests:
