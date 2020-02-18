@@ -70,12 +70,12 @@ func Run(client model.BreweryClient, args []string) error {
 	app := cli.NewApp()
 
 	app.Flags = []cli.Flag{
-		cli.StringFlag{
+		&cli.StringFlag{
 			Name:  "mash",
 			Value: "float64",
 			Usage: "temperature",
 		},
-		cli.BoolFlag{
+		&cli.BoolFlag{
 			Name:  "boil",
 			Usage: "temperature",
 		},
