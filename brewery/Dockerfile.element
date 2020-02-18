@@ -21,4 +21,4 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certifi
 COPY --from=builder /go/bin/cli /go/bin/element
 
 ENTRYPOINT ["/go/bin/element"]
-EXPOSE 9000:9009
+EXPOSE 9100:9109
