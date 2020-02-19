@@ -8,11 +8,11 @@ bootstrap:
 	go get -v golang.org/x/tools/cmd/goimports
 
 .PHONY: lint
-lint: fmt
+lint:
 	golangci-lint run
 
 .PHONY: tests
-tests: fmt lint
+tests:
 	@echo "tests:"
 	${GOPATH}/bin/richgo test \
 	-timeout 10s \
@@ -21,7 +21,7 @@ tests: fmt lint
 	-covermode=count \
 	-coverprofile=coverage.out \
 	-tags test \
-	./brewery/...
+	./...
 
 .PHONY: test-ci
 test-ci:
@@ -32,10 +32,6 @@ test-ci:
 lint-ci:
 	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh
 
-.PHONY: fmt
-fmt:
-	@echo "fmt:"
-	scripts/fmt
 
 .PHONY: breweryproto
 breweryproto:
@@ -73,6 +69,7 @@ structmockgen:
 generate: proto protomockgen structmockgen
 
 
+
 .PHONY: start
 start:
 	kubectl create -f brewery.yml
@@ -85,25 +82,29 @@ stop:
 
 .PHONY: client
 client:
-	docker build -t local/client -f Dockerfile.client .
+	docker build -t local/client -f ./Dockerfile.client .
 	docker tag local/client mkuchenbecker/brewery3:client-latest
 	docker push mkuchenbecker/brewery3:client-latest
 
 
 .PHONY: build
 build:
-	docker build -t local/brewery -f Dockerfile.brewery . \
-	&& docker build -t local/element -f Dockerfile.element . \
+	docker build -t local/controller -f Dockerfile.controller . \
+	&& docker build -t local/heater -f Dockerfile.element . \
 	&& docker build -t local/thermometer -f Dockerfile.thermometer . \
 
 .PHONY: tag
 tag:
-	docker tag local/brewery mkuchenbecker/brewery3:brewery-latest
+	docker tag local/controller mkuchenbecker/brewery3:controller-latest
 	docker tag local/element mkuchenbecker/brewery3:element-latest
 	docker tag local/thermometer mkuchenbecker/brewery3:thermometer-latest
 
+
 .PHONY: publish
 publish:
-	docker push mkuchenbecker/brewery3:brewery-latest
+	docker push mkuchenbecker/brewery3:controller-latest
 	docker push mkuchenbecker/brewery3:element-latest
 	docker push mkuchenbecker/brewery3:thermometer-latest
+
+
+

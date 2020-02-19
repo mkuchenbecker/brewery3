@@ -1,5 +1,3 @@
-//+build !test
-
 package main
 
 import (
@@ -7,9 +5,11 @@ import (
 	"log"
 	"net"
 
+	"github.com/mkuchenbecker/brewery3/brewery/utils"
+
+	"github.com/mkuchenbecker/brewery3/brewery/element/element"
 	"github.com/mkuchenbecker/brewery3/brewery/gpio/integration"
 	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
-	"github.com/mkuchenbecker/brewery3/brewery/servers/element"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -17,6 +17,7 @@ import (
 func main() { // nolint: deadcode
 	port := 9100
 	pin := uint8(1)
+	utils.Printf("Starting heater on port: %d", port)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
