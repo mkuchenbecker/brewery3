@@ -119,6 +119,10 @@ tag-cli:
 publish-cli:
 	docker push mkuchenbecker/brewery3:cli-full-image-latest
 
+.PHONY: probe
+probe:
+	ssh -Y pi@raspi-1 'sudo modprobe w1-gpio && sudo modprobe w1-therm && ls /sys/bus/w1/devices'
+
 
 
 
