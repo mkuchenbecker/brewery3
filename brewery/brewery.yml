@@ -106,16 +106,6 @@ spec:
             limits:
               memory: "128Mi"
               cpu: "250m"
-        - name: cli
-          image: mkuchenbecker/brewery3:cli-full-image-latest
-          imagePullPolicy: Always
-          resources:
-            requests:
-              memory: "64Mi"
-              cpu: "125m"
-            limits:
-              memory: "128Mi"
-              cpu: "250m"
 ---
 apiVersion: v1
 kind: Service
