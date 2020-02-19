@@ -20,6 +20,6 @@ FROM scratch
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=builder /go/bin/thermometer /go/bin/thermometer
 
-ENTRYPOINT ["sudo modprobe w1-gpio && sudo modprobe w1-therm && /go/bin/thermometer"]
+ENTRYPOINT ["/go/bin/thermometer"]
 EXPOSE 9100:9109
 
