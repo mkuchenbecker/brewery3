@@ -106,6 +106,24 @@ spec:
             limits:
               memory: "128Mi"
               cpu: "250m"
+        - name: cli
+          image: mkuchenbecker/brewery3:cli-full-image-latest
+          imagePullPolicy: Always
+          ports:
+            - name: cli-srv
+              containerPort: 9112
+          env:
+            - name: THERM_PORT
+              value: "9112"
+            - name: THERM_ADDR
+              value: "28-031571188aff"
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "125m"
+            limits:
+              memory: "128Mi"
+              cpu: "250m"
 ---
 apiVersion: v1
 kind: Service
