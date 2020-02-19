@@ -109,14 +109,6 @@ spec:
         - name: cli
           image: mkuchenbecker/brewery3:cli-full-image-latest
           imagePullPolicy: Always
-          ports:
-            - name: cli-srv
-              containerPort: 9112
-          env:
-            - name: THERM_PORT
-              value: "9112"
-            - name: THERM_ADDR
-              value: "28-031571188aff"
           resources:
             requests:
               memory: "64Mi"
