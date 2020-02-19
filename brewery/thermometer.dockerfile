@@ -19,8 +19,7 @@ FROM scratch
 # # Copy our static executable.
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=builder /go/bin/thermometer /go/bin/thermometer
-COPY --from=builder /go/src/github.com/mkuchenbecker/brewery3/brewery/scripts/start_temp.sh /go/bin/start_temp.sh
 
-ENTRYPOINT ["./go/bin/start_temp.sh && /go/bin/thermometer"]
+ENTRYPOINT ["sudo modprobe w1-gpio && sudo modprobe w1-therm && /go/bin/thermometer"]
 EXPOSE 9100:9109
 
