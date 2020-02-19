@@ -106,5 +106,20 @@ publish:
 	docker push mkuchenbecker/brewery3:element-latest
 	docker push mkuchenbecker/brewery3:thermometer-latest
 
+.PHONY: build-cli
+build-cli:
+	docker build -t local/cli-full-image-latest -f client_full_image.dockerfile .
+
+.PHONY: tag-cli
+tag-cli:
+	docker tag local/cli-full-image-latest mkuchenbecker/brewery3:cli-full-image-latest
+
+
+.PHONY: publish-cli
+publish-cli:
+	docker push mkuchenbecker/brewery3:cli-full-image-latest
+
+
+
 
 
