@@ -62,7 +62,7 @@ func getPowerRequst(power int64) *model.ControlRequest {
 }
 
 func getBoilRequest() *model.ControlRequest {
-	return getPowerRequst(75)
+	return getPowerRequst(100)
 }
 
 // Run takes a command to det the empterature of the mash or boil server.
