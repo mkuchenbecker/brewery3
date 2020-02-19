@@ -82,16 +82,16 @@ stop:
 
 .PHONY: client
 client:
-	docker build -t local/client -f ./Dockerfile.client .
+	docker build -t local/client -f ./client.dockerfile .
 	docker tag local/client mkuchenbecker/brewery3:client-latest
 	docker push mkuchenbecker/brewery3:client-latest
 
 
 .PHONY: build
 build:
-	docker build -t local/controller -f Dockerfile.controller . \
-	&& docker build -t local/heater -f Dockerfile.element . \
-	&& docker build -t local/thermometer -f Dockerfile.thermometer . \
+	docker build -t local/controller -f controller.dockerfile . \
+	&& docker build -t local/heater -f element.dockerfile . \
+	&& docker build -t local/thermometer -f thermometer.dockerfile .
 
 .PHONY: tag
 tag:
