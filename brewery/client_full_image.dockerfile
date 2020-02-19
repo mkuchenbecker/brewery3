@@ -14,7 +14,7 @@ RUN go get -u github.com/golang/dep/cmd/dep
 RUN go get ./...
 RUN apk add ca-certificates
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -tags netgo -ldflags='-w -s -extldflags "-static"' -o /go/bin/cli ./cli
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -a -tags netgo -ldflags='-w -s -extldflags "-static"' -o /go/bin/cli ./cli
 
 EXPOSE 9100:9109
 ENTRYPOINT ["/go/bin/cli"]
