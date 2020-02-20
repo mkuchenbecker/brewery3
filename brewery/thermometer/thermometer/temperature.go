@@ -19,6 +19,7 @@ type ThermometerServer struct {
 	currentTemp        float64
 	err                error
 	logIntervalSeconds time.Duration
+	updateCount        int64
 }
 
 // NewThermometerServer creates a new Thermometer Server.
@@ -53,6 +54,10 @@ func (s *ThermometerServer) update() (err error) {
 	if err != nil {
 		return err
 	}
+	if s.updateCount%10 == 0 {
+		utils.Printf("Temperature Sensor %s: %f\n", s.address, temp)
+	}
+	s.updateCount = s.updateCount + 1
 	s.currentTemp = temp
 	return s.err
 }
