@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/mkuchenbecker/brewery3/brewery/utils"
 
@@ -107,8 +108,10 @@ func Run(client model.BreweryClient, args []string) error {
 			return fmt.Errorf("no arguments specified")
 		}
 
+		clientDeadline := time.Now().Add(time.Duration(60000) * time.Millisecond)
+		ctx, cancel := context.WithDeadline(ctx, clientDeadline)
 		utils.Printf("sending request:\n%+v\n", req)
-		_, err = client.Control(context.Background(), req)
+		_, err = client.Control(ctx, req)
 		return err
 	}
 	return app.Run(args)
