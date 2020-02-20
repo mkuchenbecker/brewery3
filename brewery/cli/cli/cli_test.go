@@ -53,7 +53,7 @@ func TestGetBoilRequest(t *testing.T) {
 	pow := req.Scheme.GetPower()
 
 	assert.Equal(t, &model.ControlScheme_Power{
-		PowerLevel: 75,
+		PowerLevel: 100,
 	}, pow)
 }
 

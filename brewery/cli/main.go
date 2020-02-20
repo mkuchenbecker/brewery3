@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	conn, err := grpc.Dial(fmt.Sprintf("brewpi:9000"),
+	conn, err := grpc.Dial(fmt.Sprintf("localhost:9000"),
 		grpc.WithInsecure())
 	if err != nil {
 		panic(err)
