@@ -109,7 +109,8 @@ func Run(client model.BreweryClient, args []string) error {
 		}
 
 		clientDeadline := time.Now().Add(time.Duration(60000) * time.Millisecond)
-		ctx, cancel := context.WithDeadline(ctx, clientDeadline)
+		ctx, cancel := context.WithDeadline(context.Background(), clientDeadline)
+		defer cancel()
 		utils.Printf("sending request:\n%+v\n", req)
 		_, err = client.Control(ctx, req)
 		return err
