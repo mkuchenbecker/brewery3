@@ -90,8 +90,8 @@ client:
 .PHONY: build-base
 build-base:
 	docker build -t local/base -f base.dockerfile . \
-	&& docker tag local/base mkuchenbecker/brewery3:base-latest . \
-	&& 	docker push mkuchenbecker/brewery3:thermometer-latest
+	&& docker tag local/base mkuchenbecker/brewery3:base-latest \
+	&& docker push mkuchenbecker/brewery3:base-latest
 
 .PHONY: build
 build: controller element thermometer
@@ -109,8 +109,8 @@ element:
 	&& docker build -t local/element -f element.dockerfile .
 
 .PHONY: cli
-element:
-	&& docker build -t local/element -f element.dockerfile .
+cli:
+	 docker build -t local/cli -f client.dockerfile .
 
 .PHONY: tag
 tag:
