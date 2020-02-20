@@ -87,6 +87,10 @@ client:
 	docker push mkuchenbecker/brewery3:client-latest
 
 
+.PHONY: build-base
+build-base:
+	docker build -t local/base -f base.dockerfile . \
+
 .PHONY: build
 build:
 	docker build -t local/controller -f controller.dockerfile . \
