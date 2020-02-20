@@ -16,7 +16,7 @@ import (
 
 func main() { // nolint: deadcode
 	port := 9100
-	pin := uint8(1)
+	pin := uint8(28)
 	utils.Printf("Starting heater on port: %d", port)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
