@@ -53,6 +53,7 @@ spec:
               memory: "128Mi"
               cpu: "250m"
           args:
+            - "--privileged"
             - "--device /dev/mem"
             - "--device /dev/gpiomem"
         - name: therm-mash
