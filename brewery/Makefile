@@ -89,7 +89,7 @@ client:
 
 .PHONY: build-base
 build-base:
-	docker build -t local/base -f base.dockerfile . \
+	docker build --platform linux/arm/v7 -t local/base -f base.dockerfile . \
 	&& docker tag local/base mkuchenbecker/brewery3:base-latest \
 	&& docker push mkuchenbecker/brewery3:base-latest
 
@@ -98,31 +98,29 @@ build: controller element thermometer
 
 .PHONY: controller
 controller:
-	docker build -t local/controller -f controller.dockerfile . \
+	docker build --platform linux/arm/v7 -t local/controller -f controller.dockerfile . \
 
 .PHONY: thermometer
 thermometer:
-	docker build -t local/thermometer -f thermometer.dockerfile . \
+	docker build --platform linux/arm/v7 -t local/thermometer -f thermometer.dockerfile . \
 
 .PHONY: element
 element:
-	&& docker build -t local/element -f element.dockerfile .
+	docker build --platform linux/arm/v7 -t local/element -f element.dockerfile .
 
 .PHONY: cli
 cli:
-	 docker build -t local/cli -f client.dockerfile .
+	 docker build --platform linux/arm/v7 -t local/cli -f client.dockerfile .
 
 .PHONY: tag
 tag:
 	docker tag local/controller mkuchenbecker/brewery3:controller-latest
 	docker tag local/element mkuchenbecker/brewery3:element-latest
 	docker tag local/thermometer mkuchenbecker/brewery3:thermometer-latest
-	docker tag local/cli mkuchenbecker/brewery3:cli-latest
 
 .PHONY: publish
 publish:
 	docker push mkuchenbecker/brewery3:controller-latest
-	docker push mkuchenbecker/brewery3:cli-latest
 	docker push mkuchenbecker/brewery3:element-latest
 	docker push mkuchenbecker/brewery3:thermometer-latest
 
