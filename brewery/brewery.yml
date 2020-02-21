@@ -54,6 +54,7 @@ spec:
               cpu: "250m"
           args:
             - "--device /dev/mem"
+            - "--device /dev/gpiomem"
         - name: therm-mash
           image: mkuchenbecker/brewery3:thermometer-latest
           imagePullPolicy: Always
