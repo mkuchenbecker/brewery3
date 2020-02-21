@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/mkuchenbecker/brewery3/brewery/gpio"
 	"github.com/mkuchenbecker/brewery3/brewery/utils"
+	"github.com/pkg/errors"
 )
 
 // GPIOController is an implementation of the Controller interface.
@@ -19,10 +20,11 @@ func NewController(sensors gpio.GPIOTemperature, gpioPins gpio.IGPIO) gpio.Contr
 func (ctrl *gpioController) PowerPin(pinNum uint8, on bool) (err error) {
 	err = ctrl.gpioPins.Open()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "unable to open gpio")
 	}
 	defer utils.DeferErrReturn(ctrl.gpioPins.Close, &err)
 	pin := ctrl.gpioPins.Pin(pinNum)
+	pin.Output()
 	if on {
 		pin.High()
 	} else {

@@ -24,6 +24,7 @@ type IGPIO interface {
 type GPIOPin interface { //nolint:golint
 	High()
 	Low()
+	Output()
 }
 
 // GPIOTemperature is the interface for interacting with github.com/yryz/ds18b20
