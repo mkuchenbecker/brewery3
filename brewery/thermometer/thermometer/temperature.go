@@ -66,7 +66,7 @@ func (s *ThermometerServer) update() (err error) {
 		return err
 	}
 	if s.updateCount%10 == 0 {
-		utils.Printf("Temperature Sensor %s: %f\n", s.address, temp)
+		utils.Printf("Temperature Sensor %s: %f\n(adjustment: %f)", s.address, temp, s.adjustment)
 	}
 	s.updateCount = s.updateCount + 1
 	s.currentTemp = temp

@@ -61,6 +61,11 @@ spec:
             name: dev-mem
           securityContext:
             privileged: true
+          env:
+            - name: GPIO_PIN
+              value: "26"
+            - name: PORT
+              value: "9100"
         - name: therm-mash
           image: mkuchenbecker/brewery3:thermometer-latest
           imagePullPolicy: Always
