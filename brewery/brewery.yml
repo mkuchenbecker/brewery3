@@ -52,6 +52,9 @@ spec:
             limits:
               memory: "128Mi"
               cpu: "250m"
+          args:
+            - "--device=/dev/mem"
+
         - name: therm-mash
           image: mkuchenbecker/brewery3:thermometer-latest
           imagePullPolicy: Always
