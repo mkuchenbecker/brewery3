@@ -51,10 +51,7 @@ spec:
               cpu: "125m"
             limits:
               memory: "128Mi"
-              cpu: "250m"v
-              volumeMounts:
-                - name: sec-ctx-vol
-                  mountPath: /data/demo
+              cpu: "250m"
           args:
             - --privileged
             - --device=/dev/mem
