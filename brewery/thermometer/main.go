@@ -53,6 +53,8 @@ func main() {
 	address := os.Getenv("THERM_ADDR")
 	strAdjustment := os.Getenv("CALIBRATION_ADJUSTMENT")
 
+	utils.Printf("Port:%s; address: %s; adjustment: %s", strPort, address, strAdjustment)
+
 	port, err := strconv.ParseInt(strPort, 10, 32)
 	if err != nil {
 		log.Fatalf("Invalid port is not 32 bit int: %s", strPort)
