@@ -51,13 +51,19 @@ spec:
               cpu: "125m"
             limits:
               memory: "128Mi"
-              cpu: "250m"
+              cpu: "250m"v
+              volumeMounts:
+                - name: sec-ctx-vol
+                  mountPath: /data/demo
           args:
             - --privileged
             - --device=/dev/mem
             - --device=/dev/gpiomem
+          volumeMounts:
+          - mountPath: /dev/mem
+            name: dev-mem
           securityContext:
-            allowPrivilegeEscalation: true
+            privileged: true
         - name: therm-mash
           image: mkuchenbecker/brewery3:thermometer-latest
           imagePullPolicy: Always
@@ -112,6 +118,10 @@ spec:
             limits:
               memory: "128Mi"
               cpu: "250m"
+      volumes:
+        - name: dev-mem
+          hostPath:
+            path: /dev/mem
 ---
 apiVersion: v1
 kind: Service
