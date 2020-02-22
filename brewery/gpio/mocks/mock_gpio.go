@@ -173,3 +173,15 @@ func (mr *MockGPIOPinMockRecorder) Low() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Low", reflect.TypeOf((*MockGPIOPin)(nil).Low))
 }
+
+// Output mocks base method
+func (m *MockGPIOPin) Output() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Output")
+}
+
+// Output indicates an expected call of Output
+func (mr *MockGPIOPinMockRecorder) Output() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Output", reflect.TypeOf((*MockGPIOPin)(nil).Output))
+}

@@ -87,11 +87,30 @@ client:
 	docker push mkuchenbecker/brewery3:client-latest
 
 
+.PHONY: build-base
+build-base:
+	docker build --platform linux/arm/v7 -t local/base -f base.dockerfile . \
+	&& docker tag local/base mkuchenbecker/brewery3:base-latest \
+	&& docker push mkuchenbecker/brewery3:base-latest
+
 .PHONY: build
-build:
-	docker build -t local/controller -f controller.dockerfile . \
-	&& docker build -t local/heater -f element.dockerfile . \
-	&& docker build -t local/thermometer -f thermometer.dockerfile .
+build: controller element thermometer
+
+.PHONY: controller
+controller:
+	docker build --platform linux/arm/v7 -t local/controller -f controller.dockerfile . \
+
+.PHONY: thermometer
+thermometer:
+	docker build --platform linux/arm/v7 -t local/thermometer -f thermometer.dockerfile . \
+
+.PHONY: element
+element:
+	docker build --platform linux/arm/v7 -t local/element -f element.dockerfile .
+
+.PHONY: cli
+cli:
+	 docker build --platform linux/arm/v7 -t local/cli -f client.dockerfile .
 
 .PHONY: tag
 tag:
@@ -99,36 +118,17 @@ tag:
 	docker tag local/element mkuchenbecker/brewery3:element-latest
 	docker tag local/thermometer mkuchenbecker/brewery3:thermometer-latest
 
-
 .PHONY: publish
 publish:
 	docker push mkuchenbecker/brewery3:controller-latest
 	docker push mkuchenbecker/brewery3:element-latest
 	docker push mkuchenbecker/brewery3:thermometer-latest
 
-.PHONY: build-cli
-build-cli:
-	docker build -t local/cli-full-image-latest -f client_full_image.dockerfile .
-
-.PHONY: tag-cli
-tag-cli:
-	docker tag local/cli-full-image-latest mkuchenbecker/brewery3:cli-full-image-latest
-
-
-.PHONY: publish-cli
-publish-cli:
-	docker push mkuchenbecker/brewery3:cli-full-image-latest
-
 .PHONY: probe
 probe:
 	ssh -Y pi@raspi-1 'sudo modprobe w1-gpio && sudo modprobe w1-therm && ls /sys/bus/w1/devices'
 
-
 .PHONY: gpio-owner
 gpio-owner:
 	ssh -Y pi@raspi-1 'sudo chown root.gpio /dev/gpiomem && sudo chmod g+rw /dev/gpiomem'
-
-
-
-
 

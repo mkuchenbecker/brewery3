@@ -29,6 +29,9 @@ func NewHeaterServer(ctrl gpio.Controller, pin uint8) *HeaterServer {
 func (s *HeaterServer) On(ctx context.Context, req *model.OnRequest) (*model.OnResponse, error) {
 	utils.Print("Heater On")
 	err := s.controller.PowerPin(s.Pin, true)
+	if err != nil {
+		utils.Printf("%+v", err)
+	}
 	return &model.OnResponse{}, err
 }
 
@@ -36,6 +39,9 @@ func (s *HeaterServer) On(ctx context.Context, req *model.OnRequest) (*model.OnR
 func (s *HeaterServer) Off(ctx context.Context, req *model.OffRequest) (*model.OffResponse, error) {
 	utils.Print("Heater Off")
 	err := s.controller.PowerPin(s.Pin, false)
+	if err != nil {
+		utils.Printf("%+v", err)
+	}
 	return &model.OffResponse{}, err
 }
 

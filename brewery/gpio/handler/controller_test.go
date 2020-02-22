@@ -10,6 +10,7 @@ import (
 
 	"github.com/mkuchenbecker/brewery3/brewery/gpio"
 	mocks "github.com/mkuchenbecker/brewery3/brewery/gpio/mocks"
+	"github.com/pkg/errors"
 )
 
 func TestControllerReadTemperature(t *testing.T) {
@@ -34,6 +35,7 @@ func TestControllerPowerPinHigh(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockPin := mocks.NewMockGPIOPin(mockCtrl)
+	mockPin.EXPECT().Output().Times(1)
 	mockPin.EXPECT().High().Times(1)
 
 	mockPins := mocks.NewMockIGPIO(mockCtrl)
@@ -52,6 +54,7 @@ func TestControllerPowerPinLow(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockPin := mocks.NewMockGPIOPin(mockCtrl)
+	mockPin.EXPECT().Output().Times(1)
 	mockPin.EXPECT().Low().Times(1)
 
 	mockPins := mocks.NewMockIGPIO(mockCtrl)
@@ -74,7 +77,7 @@ func TestControllerPowerPinOpenError(t *testing.T) {
 	mockPins.EXPECT().Open().Return(err).Times(1)
 
 	ctrl := NewController(nil, mockPins)
-	assert.Equal(t, err, ctrl.PowerPin(5, false))
+	assert.Equal(t, err, errors.Cause(ctrl.PowerPin(5, false)))
 }
 
 func TestControllerPowerPinCloseError(t *testing.T) {
@@ -84,6 +87,7 @@ func TestControllerPowerPinCloseError(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockPin := mocks.NewMockGPIOPin(mockCtrl)
+	mockPin.EXPECT().Output().Times(1)
 	mockPin.EXPECT().Low().Times(1)
 
 	err := fmt.Errorf("error")

@@ -3,7 +3,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/mkuchenbecker/brewery3/brewery/cli/cli"
@@ -13,12 +12,11 @@ import (
 )
 
 func main() {
-	conn, err := grpc.Dial(fmt.Sprintf("localhost:9000"),
-		grpc.WithInsecure())
+	conn, err := grpc.Dial("localhost:9000", grpc.WithInsecure())
 	if err != nil {
 		panic(err)
 	}
-	defer utils.DeferErrReturn(conn.Close, &err)
+	defer conn.Close()
 	client := model.NewBreweryClient(conn)
 	err = cli.Run(client, os.Args)
 	if err != nil {
