@@ -53,14 +53,8 @@ spec:
               memory: "128Mi"
               cpu: "250m"
           args:
-<<<<<<< HEAD
-            - "--device=/dev/mem"
-
-=======
             - "--privileged"
-            - "--device /dev/mem"
-            - "--device /dev/gpiomem"
->>>>>>> 67ba948b00ddaad1ae7569227101084c67f90375
+            - "--device=/dev/mem"
         - name: therm-mash
           image: mkuchenbecker/brewery3:thermometer-latest
           imagePullPolicy: Always
