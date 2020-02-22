@@ -73,7 +73,7 @@ spec:
             - name: THERM_ADDR
               value: "28-0315712c08ff"
             - name: CALIBRATION_ADJUSTMENT
-              value: 2.5
+              value: "2.5"
           resources:
             requests:
               memory: "64Mi"
