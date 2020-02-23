@@ -98,7 +98,7 @@ spec:
             - name: THERM_ADDR
               value: "28-0315715039ff"
             - name: CALIBRATION_ADJUSTMENT
-              value: "0"
+            value: "3.5"
           resources:
             requests:
               memory: "64Mi"
@@ -118,7 +118,7 @@ spec:
             - name: THERM_ADDR
               value: "28-031571188aff"
             - name: CALIBRATION_ADJUSTMENT
-              value: "0"
+              value: "3.5"
           resources:
             requests:
               memory: "64Mi"
