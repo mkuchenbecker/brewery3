@@ -68,7 +68,7 @@ func getBoilRequest() *model.ControlRequest {
 
 // Run takes a command to det the empterature of the mash or boil server.
 func Run(client model.BreweryClient, args []string) error {
-	utils.Print("recieved CLI command\n")
+	utils.Print("received CLI command\n")
 	app := cli.NewApp()
 
 	app.Flags = []cli.Flag{
