@@ -97,7 +97,8 @@ spec:
               value: "9111"
             - name: THERM_ADDR
               value: "28-0315715039ff"
-            - nameSe: "0"
+            - name: CALIBRATION_ADJUSTMENT
+              value: "0"
           resources:
             requests:
               memory: "64Mi"
