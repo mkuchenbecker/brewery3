@@ -66,5 +66,5 @@ func TestTemperatureConstructor(t *testing.T) {
 
 	res, err := server.Get(context.Background(), &model.GetRequest{})
 	assert.NoError(t, err)
-	assert.Equal(t, &model.GetResponse{Temperature: 60}, res) // Equal to the second call temperature and not the first.
+	assert.Equal(t, &model.GetResponse{Temperature: 62.5}, res) // Equal to the second call temperature and not the first.
 }
