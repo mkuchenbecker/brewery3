@@ -18,7 +18,7 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-func startThermometer(port int, address string) { // nolint: deadcode
+func startThermometer(port int, address string, adjustment float64) { // nolint: deadcode
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	utils.Print("Thermometer Starting")
 	if err != nil {
@@ -31,7 +31,7 @@ func startThermometer(port int, address string) { // nolint: deadcode
 	if err != nil {
 		utils.LogError(&utils.DefualtPrinter{}, err, "failed to read address")
 	}
-	server, err := sensors.NewThermometerServer(integration.NewDefaultController(), addr)
+	server, err := sensors.NewThermometerServer(integration.NewDefaultController(), addr, adjustment)
 	if err != nil {
 		utils.Printf("failed to temperature")
 		utils.LogError(&utils.DefualtPrinter{}, err, "failed to temperature")
@@ -51,11 +51,19 @@ func startThermometer(port int, address string) { // nolint: deadcode
 func main() {
 	strPort := os.Getenv("THERM_PORT")
 	address := os.Getenv("THERM_ADDR")
+	strAdjustment := os.Getenv("CALIBRATION_ADJUSTMENT")
+
+	utils.Printf("Port:%s; address: %s; adjustment: %s", strPort, address, strAdjustment)
 
 	port, err := strconv.ParseInt(strPort, 10, 32)
 	if err != nil {
 		log.Fatalf("Invalid port is not 32 bit int: %s", strPort)
 	}
 
-	startThermometer(int(port), address)
+	adjustment, err := strconv.ParseFloat(strAdjustment, 64)
+	if err != nil {
+		log.Fatalf("invalid calibration adjustment: %s", strAdjustment)
+	}
+
+	startThermometer(int(port), address, adjustment)
 }

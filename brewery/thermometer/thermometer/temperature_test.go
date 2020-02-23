@@ -59,12 +59,12 @@ func TestTemperatureConstructor(t *testing.T) {
 	mockController.EXPECT().ReadTemperature(gpio.TemperatureAddress("address123")).Return(float64(50), nil).Times(1)
 	mockController.EXPECT().ReadTemperature(gpio.TemperatureAddress("address123")).Return(float64(60), nil).Times(1)
 
-	server, err := NewThermometerServer(mockController, gpio.TemperatureAddress("address123"))
+	server, err := NewThermometerServer(mockController, gpio.TemperatureAddress("address123"), 2.5)
 	assert.NoError(t, err)
 
 	time.Sleep(100 * time.Millisecond) // Sleep so the background process has time to fire.
 
 	res, err := server.Get(context.Background(), &model.GetRequest{})
 	assert.NoError(t, err)
-	assert.Equal(t, &model.GetResponse{Temperature: 60}, res) // Equal to the second call temperature and not the first.
+	assert.Equal(t, &model.GetResponse{Temperature: 62.5}, res) // Equal to the second call temperature and not the first.
 }

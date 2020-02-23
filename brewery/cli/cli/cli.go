@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/mkuchenbecker/brewery3/brewery/utils"
 
@@ -67,6 +68,7 @@ func getBoilRequest() *model.ControlRequest {
 
 // Run takes a command to det the empterature of the mash or boil server.
 func Run(client model.BreweryClient, args []string) error {
+	utils.Print("received CLI command\n")
 	app := cli.NewApp()
 
 	app.Flags = []cli.Flag{
@@ -87,22 +89,30 @@ func Run(client model.BreweryClient, args []string) error {
 		var req *model.ControlRequest
 		var err error
 		if c.IsSet("mash") {
+			utils.Print("mash\n")
 			var temp float64
 			if temp, err = parseTemp(c.String("mash")); err != nil || temp < 0 || temp > 100 {
 				err = fmt.Errorf("mash temp invalid, must be a float from 0-100: %s", c.String("mash"))
 				utils.Print(err.Error())
 				return err
 			}
+
+			utils.Printf("mash: %f\n", temp)
 			req = getMashRequest(temp)
 		}
 		if c.IsSet("boil") {
+			utils.Print("boil\n")
 			req = getBoilRequest()
 		}
 		if req == nil {
 			return fmt.Errorf("no arguments specified")
 		}
 
-		_, err = client.Control(context.Background(), req)
+		clientDeadline := time.Now().Add(time.Duration(60000) * time.Millisecond)
+		ctx, cancel := context.WithDeadline(context.Background(), clientDeadline)
+		defer cancel()
+		utils.Printf("sending request:\n%+v\n", req)
+		_, err = client.Control(ctx, req)
 		return err
 	}
 	return app.Run(args)

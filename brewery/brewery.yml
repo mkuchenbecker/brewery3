@@ -52,6 +52,20 @@ spec:
             limits:
               memory: "128Mi"
               cpu: "250m"
+          args:
+            - --privileged
+            - --device=/dev/mem
+            - --device=/dev/gpiomem
+          volumeMounts:
+          - mountPath: /dev/mem
+            name: dev-mem
+          securityContext:
+            privileged: true
+          env:
+            - name: GPIO_PIN
+              value: "26"
+            - name: PORT
+              value: "9100"
         - name: therm-mash
           image: mkuchenbecker/brewery3:thermometer-latest
           imagePullPolicy: Always
@@ -63,6 +77,8 @@ spec:
               value: "9110"
             - name: THERM_ADDR
               value: "28-0315712c08ff"
+            - name: CALIBRATION_ADJUSTMENT
+              value: "2.5"
           resources:
             requests:
               memory: "64Mi"
@@ -81,6 +97,8 @@ spec:
               value: "9111"
             - name: THERM_ADDR
               value: "28-0315715039ff"
+            - name: CALIBRATION_ADJUSTMENT
+              value: "3.5"
           resources:
             requests:
               memory: "64Mi"
@@ -99,6 +117,8 @@ spec:
               value: "9112"
             - name: THERM_ADDR
               value: "28-031571188aff"
+            - name: CALIBRATION_ADJUSTMENT
+              value: "3.5"
           resources:
             requests:
               memory: "64Mi"
@@ -106,6 +126,10 @@ spec:
             limits:
               memory: "128Mi"
               cpu: "250m"
+      volumes:
+        - name: dev-mem
+          hostPath:
+            path: /dev/mem
 ---
 apiVersion: v1
 kind: Service

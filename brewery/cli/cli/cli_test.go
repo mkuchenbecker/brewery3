@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"context"
 	"os"
 	"testing"
 
@@ -64,7 +63,7 @@ func TestCLIMash(t *testing.T) {
 	brewery := mock.NewMockBreweryClient(mockCtrl)
 
 	req := getMashRequest(65)
-	brewery.EXPECT().Control(context.Background(),
+	brewery.EXPECT().Control(gomock.Any(),
 		req).Return(&model.ControlResponse{}, nil).Times(1)
 
 	args := os.Args[0:1]
@@ -90,7 +89,7 @@ func TestCLIBoil(t *testing.T) {
 	brewery := mock.NewMockBreweryClient(mockCtrl)
 
 	req := getBoilRequest()
-	brewery.EXPECT().Control(context.Background(),
+	brewery.EXPECT().Control(gomock.Any(),
 		req).Return(&model.ControlResponse{}, nil).Times(1)
 
 	args := os.Args[0:1]
