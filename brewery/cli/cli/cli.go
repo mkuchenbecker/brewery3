@@ -51,19 +51,24 @@ func getMashRequest(temp float64) *model.ControlRequest {
 	}
 }
 
-func getPowerRequst(power int64) *model.ControlRequest {
-	return &model.ControlRequest{Scheme: &model.ControlScheme{
-		Scheme: &model.ControlScheme_Power_{
-			Power: &model.ControlScheme_Power{
-				PowerLevel: float64(power),
+func getOffRequest() *model.ControlRequest {
+	return &model.ControlRequest{
+		Scheme: &model.ControlScheme{
+			Scheme: &model.ControlScheme_Off_{
+				Off: &model.ControlScheme_Off{},
 			},
 		},
-	},
 	}
 }
 
 func getBoilRequest() *model.ControlRequest {
-	return getPowerRequst(100)
+	return &model.ControlRequest{
+		Scheme: &model.ControlScheme{
+			Scheme: &model.ControlScheme_Boil_{
+				Boil: &model.ControlScheme_Boil{},
+			},
+		},
+	}
 }
 
 // Run takes a command to det the empterature of the mash or boil server.
@@ -80,6 +85,10 @@ func Run(client model.BreweryClient, args []string) error {
 		&cli.BoolFlag{
 			Name:  "boil",
 			Usage: "temperature",
+		},
+		&cli.BoolFlag{
+			Name:  "off",
+			Usage: "off",
 		},
 	}
 
@@ -103,6 +112,10 @@ func Run(client model.BreweryClient, args []string) error {
 		if c.IsSet("boil") {
 			utils.Print("boil\n")
 			req = getBoilRequest()
+		}
+		if c.IsSet("off") {
+			utils.Print("boil\n")
+			req = getOffRequest()
 		}
 		if req == nil {
 			return fmt.Errorf("no arguments specified")

@@ -31,6 +31,10 @@ message ControlScheme {
     message Boil {
     }
 
+
+    message Off {
+    }
+
     message Mash {
         double mash_min_temp = 1;
         double mash_max_temp = 2;
@@ -43,6 +47,7 @@ message ControlScheme {
     oneof scheme {
         Boil boil = 1;
         Mash mash = 2;
+        Off off = 3;
     }
 }
 

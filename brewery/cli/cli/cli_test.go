@@ -49,11 +49,9 @@ func TestGetMashRequest(t *testing.T) {
 func TestGetBoilRequest(t *testing.T) {
 	t.Parallel()
 	req := getBoilRequest()
-	pow := req.Scheme.GetPower()
+	boil := req.Scheme.GetBoil()
 
-	assert.Equal(t, &model.ControlScheme_Power{
-		PowerLevel: 100,
-	}, pow)
+	assert.Equal(t, &model.ControlScheme_Boil{}, boil)
 }
 
 func TestCLIMash(t *testing.T) {
