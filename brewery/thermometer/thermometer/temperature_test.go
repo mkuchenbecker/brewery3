@@ -20,10 +20,10 @@ func TestReadTemperature(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	mockController := mocks.NewMockController(mockCtrl)
-	mockController.EXPECT().ReadTemperature(gpio.TemperatureAddress("address123")).Return(float64(50), nil).Times(1)
+	mockTemp := mocks.NewMockTemperature(mockCtrl)
+	mockTemp.EXPECT().Temperature(gpio.TemperatureAddress("address123")).Return(float64(50), nil).Times(1)
 
-	server := ThermometerServer{controller: mockController, address: gpio.TemperatureAddress("address123")}
+	server := ThermometerServer{temperature: mockTemp, address: gpio.TemperatureAddress("address123")}
 	err := server.update()
 	assert.NoError(t, err)
 
@@ -37,10 +37,10 @@ func TestReadTemperatureError(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	mockController := mocks.NewMockController(mockCtrl)
-	mockController.EXPECT().ReadTemperature(gpio.TemperatureAddress("address123")).Return(float64(0), fmt.Errorf("temperatureError")).Times(1)
+	mockTemp := mocks.NewMockTemperature(mockCtrl)
+	mockTemp.EXPECT().Temperature(gpio.TemperatureAddress("address123")).Return(float64(0), fmt.Errorf("temperatureError")).Times(1)
 
-	server := ThermometerServer{controller: mockController, address: gpio.TemperatureAddress("address123")}
+	server := ThermometerServer{temperature: mockTemp, address: gpio.TemperatureAddress("address123")}
 	err := server.update()
 	assert.Error(t, err)
 
@@ -54,12 +54,12 @@ func TestTemperatureConstructor(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	mockController := mocks.NewMockController(mockCtrl)
+	mockTemp := mocks.NewMockTemperature(mockCtrl)
 	// The expected number of calls is 2, once in the background and once in the foreground.
-	mockController.EXPECT().ReadTemperature(gpio.TemperatureAddress("address123")).Return(float64(50), nil).Times(1)
-	mockController.EXPECT().ReadTemperature(gpio.TemperatureAddress("address123")).Return(float64(60), nil).Times(1)
+	mockTemp.EXPECT().Temperature(gpio.TemperatureAddress("address123")).Return(float64(50), nil).Times(1)
+	mockTemp.EXPECT().Temperature(gpio.TemperatureAddress("address123")).Return(float64(60), nil).Times(1)
 
-	server, err := NewThermometerServer(mockController, gpio.TemperatureAddress("address123"), 2.5)
+	server, err := NewThermometerServer(mockTemp, gpio.TemperatureAddress("address123"), 2.5)
 	assert.NoError(t, err)
 
 	time.Sleep(100 * time.Millisecond) // Sleep so the background process has time to fire.

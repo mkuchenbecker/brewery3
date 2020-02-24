@@ -31,7 +31,7 @@ func startThermometer(port int, address string, adjustment float64) { // nolint:
 	if err != nil {
 		utils.LogError(&utils.DefualtPrinter{}, err, "failed to read address")
 	}
-	server, err := sensors.NewThermometerServer(integration.NewDefaultController(), addr, adjustment)
+	server, err := sensors.NewThermometerServer(integration.DefaultTemperature{}, addr, adjustment)
 	if err != nil {
 		utils.Printf("failed to temperature")
 		utils.LogError(&utils.DefualtPrinter{}, err, "failed to temperature")

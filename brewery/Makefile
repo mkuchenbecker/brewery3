@@ -33,23 +33,16 @@ lint-ci:
 	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh
 
 
-.PHONY: breweryproto
-breweryproto:
+.PHONY: proto
+proto:
 	@echo "compiling protos:"
-	protoc -I brewery/model \
-	brewery/model/config.proto \
-	brewery/model/switch.proto \
-	brewery/model/thermometer.proto \
+	protoc -I model \
+	model/config.proto \
+	model/switch.proto \
+	model/thermometer.proto \
 	--proto_path=. \
-	--go_out=plugins=grpc:brewery/model/gomodel
+	--go_out=plugins=grpc:model/gomodel
 
-.PHONY: dataproto
-dataproto:
-	@echo "compiling protos:"
-	protoc -I data/protos/ \
-	data.proto \
-	--proto_path=. \
-	--go_out=plugins=grpc:data/gomodel
 
 .PHONY: protomockgen
 protomockgen:
@@ -58,7 +51,7 @@ protomockgen:
 	SwitchClient,\
 	ThermometerClient,\
 	BreweryClient \
-	> brewery/model/gomock/gomock_models.go
+	> model/gomock/gomock_models.go
 
 .PHONY: structmockgen
 structmockgen:

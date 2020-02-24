@@ -13,7 +13,7 @@ import (
 
 // ThermometerServer implements thermometer service interface.
 type ThermometerServer struct {
-	controller         gpio.Controller
+	temperature        gpio.Temperature
 	address            gpio.TemperatureAddress
 	mux                sync.Mutex // Ensures multiple reads are not simultaneous.
 	currentTemp        float64
@@ -24,11 +24,13 @@ type ThermometerServer struct {
 }
 
 // NewThermometerServer creates a new Thermometer Server.
-func NewThermometerServer(controller gpio.Controller,
+func NewThermometerServer(
+	temperature gpio.Temperature,
 	address gpio.TemperatureAddress,
-	adjustment float64) (*ThermometerServer, error) {
+	adjustment float64,
+) (*ThermometerServer, error) {
 	s := ThermometerServer{
-		controller:         controller,
+		temperature:        temperature,
 		address:            address,
 		currentTemp:        0,
 		err:                nil,
@@ -60,7 +62,7 @@ func (s *ThermometerServer) update() (err error) {
 	s.mux.Lock()
 	defer s.mux.Unlock()
 	var temp float64
-	temp, s.err = s.controller.ReadTemperature(s.address)
+	temp, s.err = s.temperature.Temperature(s.address)
 	temp = temp + s.adjustment
 	if err != nil {
 		return err

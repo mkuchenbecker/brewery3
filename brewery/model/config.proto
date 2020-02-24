@@ -40,14 +40,9 @@ message ControlScheme {
         double boil_max_temp = 6;
     }
 
-    message Power {
-        double power_level = 1; //0-100
-    }
-
     oneof scheme {
         Boil boil = 1;
         Mash mash = 2;
-        Power power = 3;
     }
 }
 

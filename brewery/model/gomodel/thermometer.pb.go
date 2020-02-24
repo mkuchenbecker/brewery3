@@ -3,13 +3,14 @@
 
 package brewery_model
 
-import proto "github.com/golang/protobuf/proto"
-import fmt "fmt"
-import math "math"
-
 import (
-	context "golang.org/x/net/context"
+	context "context"
+	fmt "fmt"
+	proto "github.com/golang/protobuf/proto"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
+	math "math"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -21,7 +22,7 @@ var _ = math.Inf
 // is compatible with the proto package it is being compiled against.
 // A compilation error at this line likely means your copy of the
 // proto package needs to be updated.
-const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 type GetRequest struct {
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -33,16 +34,17 @@ func (m *GetRequest) Reset()         { *m = GetRequest{} }
 func (m *GetRequest) String() string { return proto.CompactTextString(m) }
 func (*GetRequest) ProtoMessage()    {}
 func (*GetRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_thermometer_f0daa006d596a49b, []int{0}
+	return fileDescriptor_145f758ba5fee658, []int{0}
 }
+
 func (m *GetRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_GetRequest.Unmarshal(m, b)
 }
 func (m *GetRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_GetRequest.Marshal(b, m, deterministic)
 }
-func (dst *GetRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetRequest.Merge(dst, src)
+func (m *GetRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetRequest.Merge(m, src)
 }
 func (m *GetRequest) XXX_Size() int {
 	return xxx_messageInfo_GetRequest.Size(m)
@@ -64,16 +66,17 @@ func (m *GetResponse) Reset()         { *m = GetResponse{} }
 func (m *GetResponse) String() string { return proto.CompactTextString(m) }
 func (*GetResponse) ProtoMessage()    {}
 func (*GetResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_thermometer_f0daa006d596a49b, []int{1}
+	return fileDescriptor_145f758ba5fee658, []int{1}
 }
+
 func (m *GetResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_GetResponse.Unmarshal(m, b)
 }
 func (m *GetResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_GetResponse.Marshal(b, m, deterministic)
 }
-func (dst *GetResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetResponse.Merge(dst, src)
+func (m *GetResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetResponse.Merge(m, src)
 }
 func (m *GetResponse) XXX_Size() int {
 	return xxx_messageInfo_GetResponse.Size(m)
@@ -96,13 +99,28 @@ func init() {
 	proto.RegisterType((*GetResponse)(nil), "brewery.model.GetResponse")
 }
 
+func init() { proto.RegisterFile("thermometer.proto", fileDescriptor_145f758ba5fee658) }
+
+var fileDescriptor_145f758ba5fee658 = []byte{
+	// 144 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2c, 0xc9, 0x48, 0x2d,
+	0xca, 0xcd, 0xcf, 0x4d, 0x2d, 0x49, 0x2d, 0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x4d,
+	0x2a, 0x4a, 0x2d, 0x4f, 0x2d, 0xaa, 0xd4, 0xcb, 0xcd, 0x4f, 0x49, 0xcd, 0x51, 0xe2, 0xe1, 0xe2,
+	0x72, 0x4f, 0x2d, 0x09, 0x4a, 0x2d, 0x2c, 0x4d, 0x2d, 0x2e, 0x51, 0xd2, 0xe7, 0xe2, 0x06, 0xf3,
+	0x8a, 0x0b, 0xf2, 0xf3, 0x8a, 0x53, 0x85, 0x14, 0xb8, 0xb8, 0x4b, 0x52, 0x73, 0x0b, 0x52, 0x8b,
+	0x12, 0x4b, 0x4a, 0x8b, 0x52, 0x25, 0x18, 0x15, 0x18, 0x35, 0x18, 0x83, 0x90, 0x85, 0x8c, 0x7c,
+	0xb9, 0xb8, 0x43, 0x10, 0x56, 0x08, 0xd9, 0x71, 0x31, 0xbb, 0xa7, 0x96, 0x08, 0x49, 0xea, 0xa1,
+	0x58, 0xa2, 0x87, 0xb0, 0x41, 0x4a, 0x0a, 0x9b, 0x14, 0xc4, 0x3a, 0x25, 0x86, 0x24, 0x36, 0xb0,
+	0x1b, 0x8d, 0x01, 0x01, 0x00, 0x00, 0xff, 0xff, 0x24, 0xc1, 0x15, 0xce, 0xb8, 0x00, 0x00, 0x00,
+}
+
 // Reference imports to suppress errors if they are not otherwise used.
 var _ context.Context
-var _ grpc.ClientConn
+var _ grpc.ClientConnInterface
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpc package it is being compiled against.
-const _ = grpc.SupportPackageIsVersion4
+const _ = grpc.SupportPackageIsVersion6
 
 // ThermometerClient is the client API for Thermometer service.
 //
@@ -112,10 +130,10 @@ type ThermometerClient interface {
 }
 
 type thermometerClient struct {
-	cc *grpc.ClientConn
+	cc grpc.ClientConnInterface
 }
 
-func NewThermometerClient(cc *grpc.ClientConn) ThermometerClient {
+func NewThermometerClient(cc grpc.ClientConnInterface) ThermometerClient {
 	return &thermometerClient{cc}
 }
 
@@ -131,6 +149,14 @@ func (c *thermometerClient) Get(ctx context.Context, in *GetRequest, opts ...grp
 // ThermometerServer is the server API for Thermometer service.
 type ThermometerServer interface {
 	Get(context.Context, *GetRequest) (*GetResponse, error)
+}
+
+// UnimplementedThermometerServer can be embedded to have forward compatible implementations.
+type UnimplementedThermometerServer struct {
+}
+
+func (*UnimplementedThermometerServer) Get(ctx context.Context, req *GetRequest) (*GetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
 }
 
 func RegisterThermometerServer(s *grpc.Server, srv ThermometerServer) {
@@ -166,19 +192,4 @@ var _Thermometer_serviceDesc = grpc.ServiceDesc{
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "thermometer.proto",
-}
-
-func init() { proto.RegisterFile("thermometer.proto", fileDescriptor_thermometer_f0daa006d596a49b) }
-
-var fileDescriptor_thermometer_f0daa006d596a49b = []byte{
-	// 144 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2c, 0xc9, 0x48, 0x2d,
-	0xca, 0xcd, 0xcf, 0x4d, 0x2d, 0x49, 0x2d, 0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x4d,
-	0x2a, 0x4a, 0x2d, 0x4f, 0x2d, 0xaa, 0xd4, 0xcb, 0xcd, 0x4f, 0x49, 0xcd, 0x51, 0xe2, 0xe1, 0xe2,
-	0x72, 0x4f, 0x2d, 0x09, 0x4a, 0x2d, 0x2c, 0x4d, 0x2d, 0x2e, 0x51, 0xd2, 0xe7, 0xe2, 0x06, 0xf3,
-	0x8a, 0x0b, 0xf2, 0xf3, 0x8a, 0x53, 0x85, 0x14, 0xb8, 0xb8, 0x4b, 0x52, 0x73, 0x0b, 0x52, 0x8b,
-	0x12, 0x4b, 0x4a, 0x8b, 0x52, 0x25, 0x18, 0x15, 0x18, 0x35, 0x18, 0x83, 0x90, 0x85, 0x8c, 0x7c,
-	0xb9, 0xb8, 0x43, 0x10, 0x56, 0x08, 0xd9, 0x71, 0x31, 0xbb, 0xa7, 0x96, 0x08, 0x49, 0xea, 0xa1,
-	0x58, 0xa2, 0x87, 0xb0, 0x41, 0x4a, 0x0a, 0x9b, 0x14, 0xc4, 0x3a, 0x25, 0x86, 0x24, 0x36, 0xb0,
-	0x1b, 0x8d, 0x01, 0x01, 0x00, 0x00, 0xff, 0xff, 0x24, 0xc1, 0x15, 0xce, 0xb8, 0x00, 0x00, 0x00,
 }
