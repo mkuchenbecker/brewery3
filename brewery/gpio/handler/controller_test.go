@@ -79,30 +79,3 @@ func TestControllerPowerPinOpenError(t *testing.T) {
 	ctrl := NewController(nil, mockPins)
 	assert.Equal(t, err, errors.Cause(ctrl.PowerPin(5, false)))
 }
-
-func TestControllerPowerPinCloseError(t *testing.T) {
-	t.Parallel()
-
-	mockCtrl := gomock.NewController(t)
-	defer mockCtrl.Finish()
-
-	mockPin := mocks.NewMockGPIOPin(mockCtrl)
-	mockPin.EXPECT().Output().Times(1)
-	mockPin.EXPECT().Low().Times(1)
-
-	err := fmt.Errorf("error")
-	mockPins := mocks.NewMockIGPIO(mockCtrl)
-	mockPins.EXPECT().Open().Return(nil).Times(1)
-	mockPins.EXPECT().Close().Return(err).Times(1)
-	mockPins.EXPECT().Pin(uint8(5)).Return(mockPin).Times(1)
-
-	ctrl := NewController(nil, mockPins)
-	assert.Equal(t, err, ctrl.PowerPin(5, false))
-}
-
-func TestFakeSensorUnimplemented(t *testing.T) {
-
-	sensor := newFakeSensor()
-	_, err := sensor.Sensors()
-	assert.Equal(t, fmt.Errorf("unimplemented"), err)
-}

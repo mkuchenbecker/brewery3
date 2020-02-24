@@ -2,7 +2,6 @@ package handler
 
 import (
 	"github.com/mkuchenbecker/brewery3/brewery/gpio"
-	"github.com/mkuchenbecker/brewery3/brewery/utils"
 	"github.com/pkg/errors"
 )
 
@@ -22,7 +21,7 @@ func (ctrl *gpioController) PowerPin(pinNum uint8, on bool) (err error) {
 	if err != nil {
 		return errors.Wrap(err, "unable to open gpio")
 	}
-	defer utils.DeferErrReturn(ctrl.gpioPins.Close, &err)
+	defer ctrl.gpioPins.Close()
 	pin := ctrl.gpioPins.Pin(pinNum)
 	pin.Output()
 	if on {

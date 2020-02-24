@@ -57,13 +57,13 @@ spec:
             - --device=/dev/mem
             - --device=/dev/gpiomem
           volumeMounts:
-          - mountPath: /dev/mem
-            name: dev-mem
+            - mountPath: /dev/mem
+              name: dev-mem
           securityContext:
             privileged: true
           env:
             - name: GPIO_PIN
-              value: "26"
+              value: "5"
             - name: PORT
               value: "9100"
         - name: therm-mash
