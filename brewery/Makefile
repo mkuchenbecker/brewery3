@@ -91,15 +91,15 @@ build: controller element thermometer
 
 .PHONY: controller
 controller:
-	docker build  -t local/controller -f controller.dockerfile . \
+	docker build --no-cache -t mkuchenbecker/brewery3:base-latest -f controller.dockerfile . \
 
 .PHONY: thermometer
 thermometer:
-	docker build  -t local/thermometer -f thermometer.dockerfile . \
+	docker build --no-cache -t mkuchenbecker/brewery3:base-latest -f thermometer.dockerfile . \
 
 .PHONY: element
 element:
-	docker build  -t local/element -f element.dockerfile .
+	docker build --no-cache -t mkuchenbecker/brewery3:base-latest -f element.dockerfile .
 
 .PHONY: cli
 cli:
