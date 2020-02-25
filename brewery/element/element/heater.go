@@ -2,8 +2,6 @@ package element
 
 import (
 	"context"
-	"sync"
-	"time"
 
 	"github.com/mkuchenbecker/brewery3/brewery/utils"
 
@@ -13,56 +11,25 @@ import (
 
 // HeaterServer implements switch.
 type HeaterServer struct {
-	controller gpio.Controller
-	Pin        uint8
-	offError   error
-	toggleMux  sync.Mutex
+	elementPin gpio.Pin
 }
 
 // NewHeaterServer constructs a HeaterServer from the supplied parameters.
 // ctrl is the GPIOController and pin is the GPIO pin for the server to use.
-func NewHeaterServer(ctrl gpio.Controller, pin uint8) *HeaterServer {
-	return &HeaterServer{controller: ctrl, Pin: pin}
+func NewHeaterServer(pin gpio.Pin) *HeaterServer {
+	return &HeaterServer{elementPin: pin}
 }
 
 // On handles the Switch.On function.
 func (s *HeaterServer) On(ctx context.Context, req *model.OnRequest) (*model.OnResponse, error) {
 	utils.Print("Heater On")
-	err := s.controller.PowerPin(s.Pin, true)
-	if err != nil {
-		utils.Printf("%+v", err)
-	}
-	return &model.OnResponse{}, err
+	s.elementPin.High()
+	return &model.OnResponse{}, nil
 }
 
 // Off handles the Switch.Off function.
 func (s *HeaterServer) Off(ctx context.Context, req *model.OffRequest) (*model.OffResponse, error) {
 	utils.Print("Heater Off")
-	err := s.controller.PowerPin(s.Pin, false)
-	if err != nil {
-		utils.Printf("%+v", err)
-	}
-	return &model.OffResponse{}, err
-}
-
-// ToggleOn handles the Switch.ToggleOn function. It turns the switch on and then off
-// after a period of time.
-func (s *HeaterServer) ToggleOn(ctx context.Context, req *model.ToggleOnRequest) (*model.ToggleOnResponse, error) {
-	utils.Print("Heater On")
-	s.toggleMux.Lock()
-	defer s.toggleMux.Unlock()
-
-	go utils.BackgroundErrReturn(nil, func() error {
-		timer := time.NewTimer(time.Duration(req.IntervalMs) * time.Millisecond)
-		<-timer.C
-		defer utils.Print("Heater Off")
-		s.offError = s.controller.PowerPin(s.Pin, false)
-		return s.offError
-	})
-	err := s.controller.PowerPin(s.Pin, true)
-	if err != nil {
-		return &model.ToggleOnResponse{}, err
-	}
-
-	return &model.ToggleOnResponse{}, err
+	s.elementPin.Low()
+	return &model.OffResponse{}, nil
 }

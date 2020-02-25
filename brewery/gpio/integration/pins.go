@@ -5,17 +5,17 @@ import (
 	rpio "github.com/stianeikeland/go-rpio"
 )
 
-type defaultPins struct {
+type DefaultPins struct {
 }
 
-func (d *defaultPins) Open() error {
+func (d *DefaultPins) Open() error {
 	return rpio.Open()
 }
 
-func (d *defaultPins) Close() error {
+func (d *DefaultPins) Close() error {
 	return rpio.Close()
 }
 
-func (d *defaultPins) Pin(pin uint8) gpio.GPIOPin {
+func (d *DefaultPins) Pin(pin uint8) gpio.Pin {
 	return rpio.Pin(pin)
 }

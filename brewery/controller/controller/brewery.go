@@ -107,9 +107,8 @@ func (b *Brewery) run() error {
 	case *model.ControlScheme_Mash_:
 		utils.Print(fmt.Sprintf("Mashing: %+v", sch.Mash))
 		return b.mash()
-	case *model.ControlScheme_Power_:
-		utils.Print(fmt.Sprintf("Power level: %f", sch.Power.PowerLevel))
-		return b.powerLevel(int(sch.Power.PowerLevel)) // Toggle for one hour.
+	case *model.ControlScheme_Boil_:
+		return b.elementOn(context.Background()) // Toggle for one hour.
 	}
 	return nil
 }
@@ -118,14 +117,6 @@ func (b *Brewery) elementOn(ctx context.Context) (err error) {
 	_, err = b.Element.On(ctx, &model.OnRequest{})
 	if err != nil {
 		utils.LogError(nil, err, "encountered error turning coil on")
-	}
-	return err
-}
-
-func (b *Brewery) elementToggle(intervalMs int64) (err error) {
-	_, err = b.Element.ToggleOn(context.Background(), &model.ToggleOnRequest{IntervalMs: intervalMs})
-	if err != nil {
-		utils.LogError(nil, err, "encountered error toggling coil")
 	}
 	return err
 }
@@ -152,54 +143,4 @@ func (b *Brewery) mash() error {
 		return b.elementOff(ctx)
 	}
 	return b.elementOn(ctx)
-}
-
-func (b *Brewery) powerLevel(powerLevel int) error {
-	ctx := context.Background()
-	if powerLevel < 1 {
-		return b.elementOff(ctx)
-	}
-	if powerLevel > 100 {
-		return b.elementOff(ctx)
-	}
-	if powerLevel == 100 {
-		return b.elementOn(ctx)
-	}
-	interval := int64(2)
-	intervalMs := int64((1000*powerLevel)/100) * interval
-	return b.powerToggle(intervalMs, time.Duration(interval)*time.Second, 10*time.Second)
-}
-
-func (b *Brewery) powerToggle(intervalMs int64, loopInterval time.Duration, ttl time.Duration) (err error) {
-	ticker := time.NewTicker(loopInterval)
-	quit := make(chan bool)
-	resErr := make(chan error)
-
-	defer utils.DeferErrReturn(func() error { return b.elementOff(context.Background()) }, &err)
-	go func() {
-		for {
-			select {
-			case <-ticker.C:
-				utils.Print(".")
-				err := b.elementToggle(intervalMs)
-				if err != nil {
-					utils.LogError(nil, err, "element toggle error")
-					resErr <- err
-					return
-				}
-			case <-quit:
-				ticker.Stop()
-				resErr <- nil
-				return
-			}
-		}
-	}()
-
-	go func() { // Make sure the process always exits.
-		timer := time.NewTimer(ttl)
-		<-timer.C
-		quit <- true
-	}()
-
-	return <-resErr
 }

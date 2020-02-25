@@ -25,19 +25,28 @@ func main() { // nolint: deadcode
 		log.Fatalf("Invalid port is not 32 bit int: %s", strPort)
 	}
 
-	pin, err := strconv.ParseInt(strPin, 10, 8)
+	pinNum, err := strconv.ParseInt(strPin, 10, 8)
 	if err != nil {
 		log.Fatalf("invalid pin : %s", strPin)
 	}
 
-	utils.Printf("Starting heater on port: %d; pin: %d", port, pin)
+	utils.Printf("Starting heater on port: %d; pin: %d", port, pinNum)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	serve := grpc.NewServer()
-	heater := element.NewHeaterServer(integration.NewDefaultController(), uint8(pin))
+
+	pins := integration.DefaultPins{}
+	if err = pins.Open(); err != nil {
+		log.Fatalf("failed to open gpio: %v", err)
+	}
+	defer pins.Close()
+	pin := pins.Pin(uint8(pinNum))
+	pin.Output()
+
+	heater := element.NewHeaterServer(pin)
 	model.RegisterSwitchServer(serve, heater)
 	// Register reflection service on gRPC server.
 	reflection.Register(serve)

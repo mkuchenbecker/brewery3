@@ -8,14 +8,14 @@ import (
 	temperature "github.com/yryz/ds18b20"
 )
 
-type defaulttemperature struct {
+type DefaultTemperature struct {
 }
 
-func (d *defaulttemperature) Sensors() ([]string, error) {
+func (d *DefaultTemperature) Sensors() ([]string, error) {
 	return temperature.Sensors()
 }
 
-func (d *defaulttemperature) Temperature(sensor gpio.TemperatureAddress) (float64, error) {
+func (d *DefaultTemperature) Temperature(sensor gpio.TemperatureAddress) (float64, error) {
 	return temperature.Temperature(string(sensor))
 }
 
