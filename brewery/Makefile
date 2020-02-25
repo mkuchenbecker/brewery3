@@ -80,7 +80,7 @@ client:
 	docker push mkuchenbecker/brewery3:client-latest
 
 
-.PHONY: build-base
+.PHONY: base
 build-base:
 	docker build --no-cache -t local/base -f base.dockerfile . \
 	&& docker tag local/base mkuchenbecker/brewery3:base-latest \
