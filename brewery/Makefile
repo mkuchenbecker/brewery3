@@ -81,13 +81,14 @@ client:
 
 
 .PHONY: base
-build-base:
+base:
 	docker build --no-cache -t local/base -f base.dockerfile . \
 	&& docker tag local/base mkuchenbecker/brewery3:base-latest \
 	&& docker push mkuchenbecker/brewery3:base-latest
 
 .PHONY: build
 build: controller element thermometer
+	echo "success"
 
 .PHONY: controller
 controller:
