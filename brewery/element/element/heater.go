@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"time"
 
 	"github.com/mkuchenbecker/brewery3/brewery/gpio/integration"
 	"github.com/mkuchenbecker/brewery3/brewery/utils"
@@ -56,6 +57,15 @@ func StartElement(pinNum int64, port int64) {
 	defer pins.Close()
 	pin := pins.Pin(uint8(pinNum))
 	pin.Output()
+
+	for i := 0; i < 60; i++ {
+		utils.Printf("on %d", pinNum)
+		pin.High()
+		time.Sleep(time.Second)
+		utils.Printf("off %d", pinNum)
+		pin.Low()
+		time.Sleep(time.Second)
+	}
 
 	heater := NewHeaterServer(pin)
 	model.RegisterSwitchServer(serve, heater)
