@@ -108,7 +108,9 @@ func (b *Brewery) run() error {
 		utils.Print(fmt.Sprintf("Mashing: %+v", sch.Mash))
 		return b.mash()
 	case *model.ControlScheme_Boil_:
-		return b.elementOn(context.Background()) // Toggle for one hour.
+		return b.elementOn(context.Background())
+	case *model.ControlScheme_Off_:
+		return b.elementOff(context.Background())
 	}
 	return nil
 }
