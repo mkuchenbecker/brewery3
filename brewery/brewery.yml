@@ -59,6 +59,8 @@ spec:
           volumeMounts:
             - mountPath: /dev/mem
               name: dev-mem
+            - mountPath: /sys/class/gpio
+              name: sysfs-gpio
           securityContext:
             privileged: true
           env:
@@ -130,6 +132,9 @@ spec:
         - name: dev-mem
           hostPath:
             path: /dev/mem
+        - name: sysfs-gpio
+          hostPath:
+            path: /sys/class/gpio
 ---
 apiVersion: v1
 kind: Service

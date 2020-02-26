@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  digest = "1:87f157a7bafc09d6a721a8768bbce5d744066dcc18e586e3a25826f2bdf516fa"
+  name = "github.com/brian-armstrong/gpio"
+  packages = ["."]
+  pruneopts = ""
+  revision = "3846dfc1984fa6404f927b6a332452c9990a2d6c"
+  version = "v1.0"
+
+[[projects]]
   digest = "1:141635a36d65611d06a05ec1d17be950e386426b6540169fe7c9476df41f6493"
   name = "github.com/cpuguy83/go-md2man"
   packages = ["md2man"]
@@ -211,6 +219,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/brian-armstrong/gpio",
     "github.com/golang/mock/gomock",
     "github.com/golang/protobuf/proto",
     "github.com/kelseyhightower/envconfig",
