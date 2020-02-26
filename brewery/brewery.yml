@@ -134,8 +134,8 @@ spec:
           hostPath:
             path: /sys/class/gpio
         - name: sysfs-gpio5
-            hostPath:
-              path: /sys/class/gpio/gpio5
+          hostPath:
+            path: /sys/class/gpio/gpio5
 ---
 apiVersion: v1
 kind: Service
