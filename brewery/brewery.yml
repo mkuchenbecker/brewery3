@@ -54,11 +54,7 @@ spec:
               cpu: "250m"
           args:
             - --privileged
-            - --device=/dev/mem
-            - --device=/dev/gpiomem
           volumeMounts:
-            - mountPath: /dev/mem
-              name: dev-mem
             - mountPath: /sys/class/gpio
               name: sysfs-gpio
           securityContext:
