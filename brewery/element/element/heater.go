@@ -50,11 +50,15 @@ func StartElement(pinNum int64, port int64) {
 	}
 	serve := grpc.NewServer()
 
+	utils.Print("setting pu pins")
 	pins := integration.SysfsPins{}
+	utils.Print("opening GPIO")
 	if err = pins.Open(); err != nil {
 		log.Fatalf("failed to open gpio: %v", err)
 	}
 	defer pins.Close()
+
+	utils.Print("getting pin")
 	pin := pins.Pin(uint(pinNum))
 	pin.Output()
 

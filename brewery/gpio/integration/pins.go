@@ -34,6 +34,7 @@ func (d *SysfsPins) Close() error {
 }
 
 func (d *SysfsPins) Pin(pin uint) gpio.Pin {
+	utils.Printf("getting pin: %d", pin)
 	return &sysfsPin{pin: sysfsGPIO.NewOutput(pin, false)}
 }
 
@@ -43,12 +44,16 @@ type sysfsPin struct {
 
 func (pin *sysfsPin) High() {
 	err := pin.pin.High()
-	utils.LogIfError(&utils.DefualtPrinter{}, err, "error setting pin high")
+	if err != nil {
+		utils.Printf("error setting pin high: %+v", err)
+	}
 }
 
 func (pin *sysfsPin) Low() {
 	err := pin.pin.Low()
-	utils.LogIfError(&utils.DefualtPrinter{}, err, "error setting pin high")
+	if err != nil {
+		utils.Printf("error setting pin low: %+v", err)
+	}
 }
 
 func (pin *sysfsPin) Output() {
