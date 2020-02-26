@@ -54,11 +54,11 @@ spec:
               cpu: "250m"
           args:
             - --privileged
-            - --device=/dev/mem
-            - --device=/dev/gpiomem
           volumeMounts:
-            - mountPath: /dev/mem
-              name: dev-mem
+            - mountPath: /sys/class/gpio
+              name: sysfs-gpio
+            - mountPath: /sys/class/gpio/gpio5
+              name: sysfs-gpio5
           securityContext:
             privileged: true
           env:
@@ -130,6 +130,12 @@ spec:
         - name: dev-mem
           hostPath:
             path: /dev/mem
+        - name: sysfs-gpio
+          hostPath:
+            path: /sys/class/gpio
+        - name: sysfs-gpio5
+          hostPath:
+            path: /sys/class/gpio/gpio5
 ---
 apiVersion: v1
 kind: Service

@@ -80,26 +80,27 @@ client:
 	docker push mkuchenbecker/brewery3:client-latest
 
 
-.PHONY: build-base
-build-base:
-	docker build  -t local/base -f base.dockerfile . \
+.PHONY: base
+base:
+	docker build --no-cache -t local/base -f base.dockerfile . \
 	&& docker tag local/base mkuchenbecker/brewery3:base-latest \
 	&& docker push mkuchenbecker/brewery3:base-latest
 
 .PHONY: build
 build: controller element thermometer
+	echo "success"
 
 .PHONY: controller
 controller:
-	docker build  -t local/controller -f controller.dockerfile . \
+	docker build --no-cache -t mkuchenbecker/brewery3:controller-latest -f controller.dockerfile . \
 
 .PHONY: thermometer
 thermometer:
-	docker build  -t local/thermometer -f thermometer.dockerfile . \
+	docker build --no-cache -t mkuchenbecker/brewery3:thermometer-latest -f thermometer.dockerfile . \
 
 .PHONY: element
 element:
-	docker build  -t local/element -f element.dockerfile .
+	docker build --no-cache -t mkuchenbecker/brewery3:element-latest -f element.dockerfile .
 
 .PHONY: cli
 cli:
