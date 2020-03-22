@@ -12,6 +12,7 @@ import (
 	"github.com/mkuchenbecker/brewery3/brewery/utils"
 )
 
+
 // Brewery is the central controller for various heating elements, sensors, and switches.
 // It coordinates all actions of the brewery.
 type Brewery struct {
@@ -79,7 +80,7 @@ func (b *Brewery) mashThermOn(ctx context.Context) (bool, error) {
 	if resHerms.Temperature < scheme.HermsMinTemp {
 		return true, nil
 	}
-	// If the mash is less than target, turn on iff herms isn't too high.
+	// If the mash is less than target, turn off if HERMS is above HERMS target.
 	if resMash.Temperature < scheme.MashMinTemp {
 		return resHerms.Temperature < scheme.HermsMaxTemp, nil
 	}

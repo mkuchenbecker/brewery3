@@ -23,10 +23,6 @@ func TestParseTemp(t *testing.T) {
 	assert.Equal(t, float64(0), temp)
 	assert.NoError(t, err)
 
-	temp, err = parseTemp("32f")
-	assert.Equal(t, float64(0), temp)
-	assert.NoError(t, err)
-
 	_, err = parseTemp("abc")
 	assert.Error(t, err)
 }
@@ -39,10 +35,10 @@ func TestGetMashRequest(t *testing.T) {
 	assert.Equal(t, &model.ControlScheme_Mash{
 		MashMaxTemp:  50.5,
 		MashMinTemp:  50,
-		HermsMaxTemp: 65,
+		HermsMaxTemp: 55,
 		HermsMinTemp: 50,
 		BoilMinTemp:  50,
-		BoilMaxTemp:  100,
+		BoilMaxTemp:  95,
 	}, mash)
 }
 

@@ -6,45 +6,44 @@ import (
 
 	"github.com/mkuchenbecker/brewery3/brewery/utils"
 
+	"github.com/pkg/errors"
+
 	"context"
 	"strconv"
-	"strings"
 
 	model "github.com/mkuchenbecker/brewery3/brewery/model/gomodel"
 
 	"github.com/urfave/cli"
 )
 
+const (
+	// MaxBoil is the maximum boil kettle temerature.
+	MaxBoil = 95
+	// HERMSTolerance is temperature above the mash target the HERMS temperature is allowed to drift above. A higher herms tolerance will speed heating at risk of overshooting the temperature.
+	HERMSTolerance = 3
+	// MashTolerance is the maximum drift above the target for the mash kettle before turning off the element. Note: a HERMSTolerance setto high will still cause the mash to overshoot.
+	MashTolerance = 0.5
+)
+
 func parseTemp(in string) (float64, error) {
-	i := strings.Index(in, "f")
-	str := in
-	if i > -1 {
-		str = str[:i]
-	}
-	t, err := strconv.ParseFloat(str, 64)
+	t, err := strconv.ParseFloat(in, 64)
 	if err != nil {
-		return 0, err
+		return 0, errors.Wrap(err, fmt.Sprintf("unable to parse temperature '%s'", in))
 	}
-
-	if i > -1 {
-		return (t - 32) * 5 / 9, nil
-	}
-
 	return t, nil
 }
 
 func getMashRequest(temp float64) *model.ControlRequest {
 	utils.Print(fmt.Sprintf("Mashing @ %fC", temp))
-
 	return &model.ControlRequest{Scheme: &model.ControlScheme{
 		Scheme: &model.ControlScheme_Mash_{
 			Mash: &model.ControlScheme_Mash{
-				HermsMaxTemp: temp + 15,
+				HermsMaxTemp: temp + HERMSTolerance,
 				HermsMinTemp: temp,
 				MashMinTemp:  temp,
-				MashMaxTemp:  temp + .5,
+				MashMaxTemp:  temp + MashTolerance,
 				BoilMinTemp:  temp,
-				BoilMaxTemp:  100,
+				BoilMaxTemp:  MaxBoil,
 			},
 		},
 	},
@@ -73,27 +72,27 @@ func getBoilRequest() *model.ControlRequest {
 
 // Run takes a command to det the empterature of the mash or boil server.
 func Run(client model.BreweryClient, args []string) error {
-	utils.Print("received CLI command\n")
+	utils.Print("Starting CLI\n")
 	app := cli.NewApp()
 
 	app.Flags = []cli.Flag{
 		&cli.StringFlag{
 			Name:  "mash",
 			Value: "float64",
-			Usage: "temperature",
+			Usage: "controls the temperature of the mash tun",
 		},
 		&cli.BoolFlag{
 			Name:  "boil",
-			Usage: "temperature",
+			Usage: "turn the element on",
 		},
 		&cli.BoolFlag{
 			Name:  "off",
-			Usage: "off",
+			Usage: "turns the element off",
 		},
 	}
 
-	app.Name = "brew"
-	app.Usage = "brew the beer!"
+	app.Name = "Brewery3 CLI"
+	app.Usage = "Control the brewery with a CLI"
 	app.Action = func(c *cli.Context) error {
 		var req *model.ControlRequest
 		var err error
