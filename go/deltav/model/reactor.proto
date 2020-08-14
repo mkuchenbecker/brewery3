@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package deltav.model;
+
+message ReactRequest {
+    double desiredEnergyTeraJoules = 1;
+}
+
+message ReactorOutput {
+    enum Type {
+        UNKNOWN = 0;
+        ENERGY_TJOULES = 1; // TerraJoules
+        HEAT_TJOULES = 2; // TerraJoules
+        GAMMA_TJOULES = 3; // TerraJoules
+    }
+    Type type = 1;
+    double amount = 2; 
+}
+
+message ReactResponse {
+    repeated ReactorOutput outputs = 1;
+}
+
+service Reactor {
+    rpc React(ReactRequest) returns (ReactResponse) {}
+}   

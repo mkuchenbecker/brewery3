@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package deltav.model;
+
+
+// Vector3 is a 3D vector. Double is used as compared to float
+// despite being 30% slower because the Math library uses Doubles.
+message Vector3 {
+    double X = 1;
+    double Y = 2;
+    double Z = 3;
+}
+
+
+// Position is a Vector3 spacial position combined with time.
+message Position {
+    Vector3 position = 1;
+    int64 T = 2;
+}
